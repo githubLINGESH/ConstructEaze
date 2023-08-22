@@ -40,7 +40,7 @@
         app.use(express.static(__dirname));
 
         // Mount the routers on the corresponding paths
-        app.use('/login', loginRouter);
+        app.use('/', loginRouter);
         app.use('/client',clientRouter);
         app.use('/prodf', prodfRouter);
         app.use('/vendor', vendorRouter);
