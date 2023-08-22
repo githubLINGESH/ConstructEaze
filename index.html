@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css"/>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      .navbar .navbar-brand {
+        font-weight: bold;
+      }
+      /*ksudfauysfuagtuy*/
+
+
+      body {
+        padding-top: 0; /* Adjust this value to match the height of your fixed navbar */
+        margin: 0; /* Reset the default margin */
+      }
+      
+      
+      .navbar {
+        box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+        font-family: "Sora", sans-serif;
+        height: 80px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 9999;
+      }
+      
+      
+      .navbar-nav .nav-item.active .nav-link {
+        color: white !important;
+        background-color: #293492 !important;
+        border-radius: 30px;
+        font-weight: 500;
+        padding: 12px 20px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+      }
+      
+      .navbar-nav {
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .navbar-nav .nav-item {
+        padding: 10px 40px;
+      }
+      
+      .navbar-brand img {
+        max-height: 40px;
+        max-width: 100%;
+      }
+      
+      .navbar-nav .nav-item .nav-link {
+        color: black;
+        font-size: 16px;
+        font-weight: 400;
+      }
+      
+      .navbar-nav .nav-item .nav-link:hover,
+      .navbar-nav .nav-item .nav-link:focus {
+        color: #808080;
+      }
+      
+      .logout-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        border: 4px solid #f2d300;
+        border-radius: 30px;
+        padding: 8px 20px;
+        cursor: pointer;
+        box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2);
+      }
+      
+      .logout-text {
+        margin-right: 5px;
+      }
+      
+      .unselectable {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      
+      
+      #content {
+        width: 100%;
+        height: 100vh; /* Set the height to 100% of the viewport height */
+      }
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      /* vendor */
+      
+      
+      
+      
+      .vendor-heading {
+        font-family: 'Sora', sans-serif;
+        color: #414141;
+        font-weight: bold;
+      }
+      
+      .vendor-button i {
+        color: rgb(26, 26, 26);
+      }
+      
+      .vendor-button {
+        padding: 5px 40px;
+      }
+      
+      #vendor .vendor-button {
+        font-family: 'Sora', sans-serif;
+        font-weight: 400;
+        color: #0A0A0A;
+      }
+      
+      #vendor .vendor-button i {
+        height: 15px;
+        width: 15px;
+      }
+      
+      #vendor .vendor-button {
+        font-family: 'Sora', sans-serif;
+        font-weight: 400;
+        color: #0A0A0A;
+        box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        padding: 10px 40px 10px 40;
+      }
+      
+      #vendor .vendor-button i {
+        height: 15px;
+        width: 15px;
+      }
+      
+      #vendor {
+        display: flex;
+      }
+      
+      #vendor .container {
+        display: flex;
+        flex: 1;
+      }
+      
+      #vendor .sidebar {
+        width: 200px;
+        background-color: #f2f2f2;
+        position: fixed;
+        left: 0;
+        top: 80px; /* Adjust this value based on the height of your top navbar */
+        bottom: 0;
+      }
+      
+      #vendor .content {
+        flex: 1;
+        padding: 20px;
+        margin-left: 200px;
+        height: 100%;
+      }
+
+      /* side */
+      
+      .sidebar {
+        width: 300px !important;
+        background-color: #293492 !important;
+        height: 100vh;
+        padding-top: 70px;
+      }
+      
+      .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .sidebar-menu-item {
+        padding: 16px 20px !important;
+        margin-bottom: 20px !important;
+        cursor: pointer;
+      }
+      
+      .sidebar-menu-item.active {
+        font-weight: 600;
+        background-color: #1d2a72;
+        border-left: 5px solid yellow;
+      }
+      
+      .sidebar-menu-item.active span {
+        padding-left: 20px;
+      }
+      
+      .sidebar-menu-item span {
+        color: white;
+        font-family: 'Sora', sans-serif;
+        font-size: 16px;
+      }
+      
+      .sidebar-menu-item:hover {
+        color: antiquewhite;
+        font-size: 17px;
+        font-weight: 600;
+      }
+      
+      .sidebar-menu-item:hover span {
+        color: white;
+      }
+      
+      
+      
+      
+      
+      
+      
+      .content {
+        background-color: #ffffff;
+        width: 100% !important;
+      }
+      
+      .button-container {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      
+      
+      
+      
+      
+      
+      
+      /* Labour */
+      
+      
+      
+      
+      .sidebar {
+        position: fixed;
+        top: 20;
+        left: 0;
+        height: 100vh;
+        width: 250px;
+        background-color: #f8f9fa;
+      }
+      
+      .content {
+        margin-left: 250px; /* Adjust this value to match the sidebar width */
+        padding: 20px;
+      }
+      
+      
+      
+      
+      
+      
+      
+      /* Expense */
+      
+      
+      
+      .expense    .container {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .text{
+        text-align: center;
+        display: flex;
+        align-items: center;
+        margin-top: -100px;
+        margin-right: 200px;
+      }
+      
+      .expense .download-button {
+        padding: 10px 20px;
+        background-color: #6f84c9;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        margin-left:500px;
+        margin-bottom: 5px;
+      
+      }
+      
+      
+      .expense .h1{
+      font-family: 'Poppins', sans-serif;
+      color:#282828;
+      padding-top: 5%;
+      }
+      
+      .expense .button{
+      margin-top: 100px;
+      
+      }
+      .expense #down{
+      font-family: 'Times New Roman', Times, serif;
+      color:aliceblue;
+      text-align:center;
+      font-size: 14px;
+      padding-bottom: 4px;
+      padding: 10px 18px;
+      height:25px;
+      width:175px;
+      right: 400px;
+      border-radius:8px;
+      background-color: darkblue;
+      }
+      
+      .expense #down1{
+      
+      display: inline-block;
+      font-weight: bold;
+      text-align: center;
+      color:black;
+      width: 350px;
+      height: 70px;
+      background-color: #eef1f3;
+      border-radius: 8px;
+      border: #838996;
+      font-size:15px;
+      padding-right: 25%;
+      
+      }
+      
+      .expense #down2{
+      display: inline-block;
+      font-weight: bold;
+      text-align: center;
+      color:black;
+      width: 350px;
+      height: 70px;
+      background-color: #eef1f3;
+      border-radius: 8px;
+      border: #838996;
+      font-size:15px;
+      padding-right: 25%;
+      
+      }
+      
+      .expense #down3{
+      display: inline-block;
+      font-weight: bold;
+      text-align: center;
+      color:black;
+      width: 350px;
+      height: 70px;
+      background-color:#eef1f3;
+      border-radius: 8px;
+      border: #838996;
+      font-size:15px;
+      padding-right: 25%;
+      
+      }
+      
+      .expense #down4{
+      display: inline-block;
+      font-weight: bold;
+      text-align: center;
+      color:black;
+      width: 350px;
+      height: 70px;
+      background-color: #eef1f3;
+      border-radius: 8px;
+      border: #dcdde1;
+      font-size:15px;
+      padding-right: 25%;
+      
+      }
+      .expense *{
+      margin: 0;
+      padding: 0;
+      font-family: 'Times New Roman', Times, serif;
+      box-sizing: border-box;
+      }
+      
+      .expense .hero{
+      width: 100px;
+      min-height: 10px;
+      display: flex;
+      margin-right: 500px;
+      }
+      
+      .expense .calender{
+      width: 290px;
+      height: 100px;
+      background: rgb(244, 248, 249);
+      display: flex;
+      align-items: center;
+      border-radius: 10px;
+      border-color: #282828;
+      }
+      
+      .expense .left,.expense .right{
+      
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-direction: column;
+      }
+      .expense .right{
+      width: 50px;
+      background: rgb(132, 141, 234);
+      color: white;
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      }
+      .expense .left{
+      width: 58%;
+      }
+      .expense #date{
+      font-size: 10px;
+      line-height: 10px;
+      }
+      .expense #year{
+      font-size: 10px;
+      line-height: 5px;
+      }
+      .expense #month{
+      font-size: 15px;
+      line-height: 25px;
+      }
+      .expense #day{
+      font-size: 15px;
+      }
+      
+      
+      
+      
+      
+      
+      
+      
+      /* Work Done */
+      
+      .page{
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      }
+      .page .container {
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .page .text{
+          text-align: center;
+          display: flex;
+          align-items: center;
+          margin-top: 22px;
+          margin-left: 80px;
+      }
+      .page h1 {
+          font-size:40px;
+          margin-bottom: 10px;
+          color:rgb(15, 12, 12);
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+      
+        .page .search-bar {
+          display: flex;
+            align-items: center;
+            margin-top: 20px;
+            margin-left: 70px;
+        }
+        .page .search-input-container {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+        
+        .page .search-icon {
+          position: absolute;
+          top: 50%;
+          left: 10px;
+          transform: translateY(-50%);
+        }
+        .page .search-input {
+          padding: 10px;
+          width: 300px;
+          border: 1px solid #ccc;
+          border-radius: 20px;
+        }
+        
+        
+        .page .download-button {
+          padding: 10px 20px;
+          background-color: #6f84c9;
+          color: white;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          margin-left: 70px;
+      
+        }
+      
+        .page .current-date {
+          text-align: center;
+          font-size: 20px;
+          margin-top: 25px;
+          margin-right: 640px;
+        }
+      
+        .page .rectangle-box {
+          width: 500px;
+          height: 40px;
+          border: 1px solid #ccc;
+          margin-top: 50px;
+          border-radius: 10px;
+          margin-right: 240px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      
+        }
+        .page .rectangle-box p {
+          margin: 10px;
+          font-size: 18px;
+          margin-right: 300px;
+        }
+        .page .current-date1{
+          text-align: center;
+          font-size: 20px;
+          margin-top: 40px;
+          margin-right: 640px;
+      
+        }
+        
+        .page .rectangle-box1{
+          width: 500px;
+          height: 40px;
+          border: 1px solid #ccc;
+          margin-top: 40px;
+          border-radius: 10px;
+          margin-right: 240px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      
+        }
+      
+        .page .rectangle-box1 p {
+          margin: 10px;
+          font-size: 18px;
+          margin-right: 300px;
+      
+        }
+      
+        
+        .page .rectangle-box2{
+          width: 500px;
+          height: 40px;
+          border: 1px solid #ccc;
+          margin-top: 40px;
+          border-radius: 10px;
+          margin-right: 240px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      
+      
+        }
+        .page .form-check{
+          margin-bottom: 400px;
+      
+        }
+      
+        .page .rectangle-box1 label {
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+        }
+        
+        .page .rectangle-box1 input[type="checkbox"] {
+          margin-right: 10px;
+        }
+      
+      
+      
+      
+        /* Material Outward */
+      
+        .mtout{
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+          position: relative;
+        overflow: hidden;
+        }
+        .mtout .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .mtout .text{
+            text-align: center;
+            display: flex;
+            align-items: center;
+            margin-top: 100px;
+            margin-right: 600px;
+        }
+        .mtout h1 {
+            font-size:40px;
+            margin-bottom: 10px;
+            color:rgb(15, 12, 12);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          }
+      
+          .mtout .search-bar {
+              display: flex;
+                align-items: center;
+                margin-top: 20px;
+                margin-right: 310px;
+            }
+            .mtout .search-input-container {
+              position: relative;
+              display: flex;
+              align-items: center;
+            }
+            
+            .mtout .search-icon {
+              position: absolute;
+              top: 50%;
+              left: 10px;
+              transform: translateY(-50%);
+            }
+            .mtout .search-input {
+              padding: 10px;
+              width: 300px;
+              border: 1px solid #ccc;
+              border-radius: 20px;
+            }
+            
+            
+            .mtout .download-button {
+              padding: 10px 20px;
+              background-color: #17328c;
+              color: white;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+              margin-left: 10px;
+          
+            }
+      
+            .mtout .add-button{
+              padding: 10px 20px;
+              background-color: #17328c;
+              color: white;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+              margin-left: 70px;
+            }
+      
+            .mtout .table-container {
+              margin-top: 100px;
+              margin-right: 450px;
+            }
+            
+            .mtout table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            
+            .mtout th,.mtout td {
+              padding: 8px;
+              text-align: left;
+              border-bottom: 1px solid #ddd;
+            }
+            .mtout td {
+              padding-right: 90px; 
+            }
+            
+            .mtout th {
+              background-color: #f2f2f2;
+              font-weight: bold;
+            }
+      
+            
+            .mtout .form-popup {
+              
+              display: none;
+              position: fixed;
+              z-index: 1;
+              left: 0;
+              left: 12%;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              overflow: auto;
+            }
+            
+            .mtout .form-container{
+              background-color: #fefefe;
+              margin: 10% auto; 
+              padding: 20px;
+              border: 1px solid #1e0202;
+              width: 50%;
+              height: 75%;
+              max-width: 350px;
+              right: 500px; 
+              left: 100px; 
+              transform: translateX(100%); 
+      
+      
+            }
+            .mtout .form-container h2 {
+              margin-bottom: 10px;
+            }
+            
+            .mtout .form-container input,
+            .mtout .form-container button {
+              margin-bottom: 10px;
+            }
+      
+            .mtout .add{
+          margin-top: -40px;
+          background-color: rgb(41, 48, 176);
+          width: 390px;
+          margin-left: -20px;
+          height: 60px;
+          color: #fefefe;
+          
+      }
+      
+      .mtout h3{
+          top: 10px;
+      }
+      .mtout .material{
+          margin-right: 70px;
+          color:black;
+      }
+      
+      .mtout .form-container input[type="text"] {
+          width: 90%;
+          height: 20px;
+          padding: 10px;
+          border-radius: 15px;
+          color:gray;
+        }
+      
+        
+        .mtout .add1-button {
+          position: absolute;
+          background-color: #17328c;
+          color: white;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          padding: 10px 20px;
+          margin-left: 50px;
+          margin-top: 10px;
+      
+        }
+      
+        .mtout .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          background-color: #17328c;
+          color: white;
+          width: 400px; 
+          box-sizing: border-box; 
+          margin-left: -20px;
+          margin-top: -20px;
+      
+        }
+        
+        .mtout .navbar h2 {
+          margin: 0;
+        }
+        
+        .mtout .cancel-button {
+          background-color: transparent;
+          color: white;
+          border: none;
+          cursor: pointer;
+          padding: 5px 10px;
+        }
+      
+      
+      
+      
+        /* Material Inward */
+      
+        .mtin{
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+          position: relative;
+        overflow: hidden;
+        }
+        .mtin .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .mtin .text{
+            text-align: center;
+            display: flex;
+            align-items: center;
+            margin-top: 100px;
+            margin-right: 600px;
+        }
+        .mtin  h1 {
+            font-size:40px;
+            margin-bottom: 10px;
+            color:rgb(15, 12, 12);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          }
+      
+          .mtin .search-bar {
+              display: flex;
+                align-items: center;
+                margin-top: 20px;
+                margin-right: 310px;
+            }
+            .mtin  .search-input-container {
+              position: relative;
+              display: flex;
+              align-items: center;
+            }
+            
+            .mtin .search-icon {
+              position: absolute;
+              top: 50%;
+              left: 10px;
+              transform: translateY(-50%);
+            }
+            .mtin .search-input {
+              padding: 10px;
+              width: 300px;
+              border: 1px solid #ccc;
+              border-radius: 20px;
+            }
+            
+            
+            .mtin .download-button {
+              padding: 10px 20px;
+              background-color: #122869;
+              color: white;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+              margin-left: 10px;
+          
+            }
+      
+            .mtin .add-button{
+              padding: 10px 20px;
+              background-color: #0f2570;
+              color: white;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+              margin-left: 70px;
+            }
+      
+            .mtin .table-container {
+              margin-top: 100px;
+              margin-right: 320px;
+            }
+            
+            .mtin table {
+              width: 100%;
+              border-collapse: collapse;
+            }
+            
+            .mtin th,.mtin td {
+              padding: 8px;
+              text-align: left;
+              border-bottom: 1px solid #ddd;
+            }
+            .mtin td {
+              padding-right: 90px;
+            }
+            
+            .mtin th {
+              background-color: #f2f2f2;
+              font-weight: bold;
+            }
+      
+            
+            .mtin .form-popup {
+              
+              display: none;
+              position: fixed;
+              z-index: 1;
+              left: 0;
+              left: 12%;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              overflow: auto;
+            }
+            
+            .mtin .form-container{
+              background-color: #fefefe;
+              margin: 10% auto;
+              padding: 20px;
+              border: 1px solid #1e0202;
+              width: 50%;
+              height: 75%;
+              max-width: 350px;
+                right: 500px; 
+                left: 100px; 
+                transform: translateX(100%); 
+      
+      
+            }
+            .mtin .form-container h2 {
+              margin-bottom: 10px;
+            }
+            
+            .mtin .form-container input,
+            .mtin .form-container button {
+              margin-bottom: 10px;
+            }
+      
+            .mtin .add{
+          margin-top: -40px;
+          background-color: rgb(41, 48, 176);
+          width: 390px;
+          margin-left: -20px;
+          height: 60px;
+          color: #fefefe;
+          
+      }
+      
+      .mtin h3{
+          top: 10px;
+      }
+      .mtin .material{
+          margin-right: 150px;
+          color:black;
+      }
+      
+      .mtin .form-container input[type="text"] {
+          width: 90%;
+          height: 20px;
+          padding: 10px;
+          border-radius: 15px;
+          color:gray;
+        }
+      
+        
+        .mtin  .add1-button {
+          position: absolute;
+          background-color: #05164e;
+          color: white;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          padding: 10px 20px;
+          margin-left: 50px;
+          margin-top: 10px;
+      
+        }
+      
+        .mtin .navbar {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px;
+          background-color: #061b60;
+          color: white;
+          width: 400px; 
+          box-sizing: border-box; 
+          margin-left: -20px;
+          margin-top: -20px;
+      
+        }
+        
+        .mtin .navbar h2 {
+          margin: 0;
+        }
+        
+        .mtin .cancel-button {
+          background-color: transparent;
+          color: white;
+          border: none;
+          cursor: pointer;
+          padding: 5px 10px;
+        }
+      
+        .project .page{
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+        }
+        .project .container {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+          }
+          .project .text{
+            text-align: center;
+            display: flex;
+            align-items: center;
+            margin-top: 50px;
+            margin-right: 600px;
+        }
+        .project h1 {
+            font-size:40px;
+            margin-bottom: 10px;
+            color:rgb(15, 12, 12);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          }
+        
+          .project .search-bar {
+            display: flex;
+              align-items: center;
+              margin-top: -50px;
+              margin-left: 600px;
+          }
+          .project .search-input-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+          }
+          
+          .project .search-icon {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+          }
+          .project .search-input {
+            padding: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+          }
+          
+          
+          .project .download-button {
+            padding: 10px 20px;
+            background-color: #6f84c9;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 30px;
+          }
+            
+    #tasks-table {
+      border-collapse: collapse;
+      width: 100%;
+  }
+
+  #tasks-table th,
+  #tasks-table td {
+      padding: 8px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+  }
+
+  #tasks-table th {
+      background-color: #f2f2f2;
+      font-weight: bold;
+  }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand unselectable" href="#"
+        ><img src="logo.png" alt="Construct Eaze"
+      /></a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div
+        class="collapse navbar-collapse justify-content-center"
+        id="navbarNav"
+      >
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link unselectable" href="#">Labour Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link unselectable" href="#">Vendor Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link unselectable" href="#">Site Activity</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link unselectable" href="#">Report Generation</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link unselectable" href="#"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar-nav">
+        <div class="logout-button">
+          <span class="logout-text unselectable">Logout</span>
+          <i class="fas fa-sign-out-alt"></i>
+        </div>
+      </div>
+    </nav>
+    <div id="content" style="width: 100%; height: 100%;">
+    
+    
+      <div class="project">
+        <div class="container">
+        <div  class = "text">
+          <h1>PROJECTS</h1>
+        </div>
+          <div class="search-bar">
+            <div class="search-input-container">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" class="search-input" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search Material">
+              </div>
+          
+              <a href="home.html"><button class="download-button"><i class="fas fa-plus"></i>&nbsp;&nbsp;Create Project</button></a>
+          
+          </div>
+        
+      </div>
+      </div>
+
+
+    </div>
+
+
+    <div id="labour" style="width: 100%; height: 100%; display: none;">
+      <div class="container">
+        <div class="sidebar">
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item active" data-content-id="attendance"><span>Attendance</span></li>
+            <li class="sidebar-menu-item" data-content-id="daily-wages"><span>Daily Wages</span></li>
+          </ul>
+        </div>
+        <div class="content">
+          <div class="content-item" id="attendance" style="display: none;">Attendance</div>
+          <div class="content-item" id="daily-wages" style="display: none;">Daily Wages</div>
+        </div>
+      </div>
+    </div>
+    
+
+
+      
+    
+    
+    <div id="vendor" style="width: 100%; height: 100%; display: none;">
+      <div class="container">
+        <div class="sidebar">
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item active" data-content-id="purchase-order"><span>Purchase Order</span></li>
+            <li class="sidebar-menu-item" data-content-id="purchase-entry"><span>Purchase Entry</span></li>
+            <li class="sidebar-menu-item" data-content-id="account-statement"><span>Account Statement</span></li>
+          </ul>
+        </div>
+        <div class="content">
+          <div class="content-item" id="purchase-order"  style="display: none;">Purchase Order</div>
+          <div class="content-item" id="purchase-entry"  style="display: none;">Purchase Entry</div>
+          <div class="content-item" id="account-statement"  style="display: none;">Account Statement</div>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+    
+
+    <div id="site" style="width: 100%; height: 100%; display: none;">
+      <div class="container">
+        <div class="sidebar">
+          <ul class="sidebar-menu">
+            <li class="sidebar-menu-item active" data-content-id="to-do"><span>To Do</span></li>
+            <li class="sidebar-menu-item" data-content-id="checklist"><span>Checklist</span></li>
+            <li class="sidebar-menu-item" data-content-id="material-inward"><span>Material Inward</span></li>
+            <li class="sidebar-menu-item" data-content-id="material-outward"><span>Material Outward</span></li>
+            <li class="sidebar-menu-item" data-content-id="work-done"><span>Work Done</span></li>
+            <li class="sidebar-menu-item" data-content-id="expense"><span>Expenses</span></li>
+          </ul>
+        </div>
+        <div class="content">
+          <div class="content-item" id="to-do"  style="display: none;">To Do</div>
+          <div class="content-item" id="checklist" style="display: none;">Checklist</div>
+          <div class="content-item" id="material-inward" style="display: none;">
+          
+          
+
+
+            <div class="mtin">
+              <div class="container">
+                  <div class="text">
+                      <h1>MATERIAL INWARD</h1>
+                  </div>
+      
+      
+                  <div class="search-bar">
+                      <div class="search-input-container">
+                          <i class="fas fa-search search-icon"></i>
+      
+                          <input type="text" class="search-input"
+                              placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search Material">
+                      </div>
+                      <button class="add-button" onclick="openFormin()"><i class="fas fa-plus"></i> Add Material</button>
+      
+                      <button class="download-button"><i class="fas fa-download"></i> &nbsp;&nbsp;Download</button>
+      
+                  </div>
+      
+                          <table id = "tasks-table">
+                              <thead>
+                                  <tr>
+                                      <th>Vendor_name</th>
+                                      <th>Name_of_Material</th>
+                                      <th>Required_quantity</th>
+                                      <th>Supplied_quantity</th>
+                                      <th>Unit_prize</th>
+                                      <th>Date</th>
+                                      <th>Current_stock</th>
+                                      <th>Pay_expenses</th>
+                                  </tr>
+                              </thead>
+                              <tbody></tbody>
+                          </table>
+                  <div class="form-popup" id="myFormin">
+      
+                      <form class="form-container" action="http://localhost:5502/submit-task" method="POST">
+                          <div class="navbar">
+                              <h2>Add Material</h2>
+                              <button type="button" class="cancel-button" onclick="closeFormin()">Cancel</button>
+                            </div>
+                          <div class="material">
+                              <h3>MATERIALS DETAILS</h3>
+                          </div>
+                          <div class="name">
+                              
+                          <input type="text" id="Vendor_name" name="Vendor_name" placeholder="Vendor Name" required>
+                          </div>
+                          <div>
+                              <input type="text" id="Name_of_Material" name="Name_of_Material" placeholder="Name of the Material" required>
+                          </div>
+                          <div>
+                              <input type="text" id="Required_quantity" name="Required_quantity" placeholder="Required Quantity" required>
+                          </div>
+                          <div>
+                              <input type="text"  id="Supplied_quantity" name="Supplied_quantity" placeholder="Supplied quantity" required>
+                          </div>
+                          <div>
+                            <input type ="text" id="Unit_prize" name="Unit_prize" placeholder="Unit prize" required>
+                          </div>
+                          <div>
+                            <input type="text" id="Current_stock" name="Current_stock" placeholder="Current stock" required>
+                          </div>
+                          <div>
+                            <input type="text" id="Date" name="Date" placeholder="Date" required>
+                          </div>
+                          <div>
+                            <input type="text" id="Pay_expenses" name="Pay_expenses" placeholder="Pay expenses" required>
+                          </div>
+                          <button type="button" class="cancel-button" onclick="closeFormin()">Cancel</button>
+                          <button type="submit" class="add1-button">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <script>
+            document.addEventListener("DOMContentLoaded", () => {
+              const materialInwardNavItem = document.querySelector('.nav-item.material-inward');
+              const materialInwardContent = document.getElementById('material-inward');
+              const tableBody = document.querySelector('#tasks-table tbody');
+              const sidebarItems = document.querySelectorAll(".sidebar-menu-item");
+              const contentItems = document.querySelectorAll(".content-item");
+            
+              function removeActiveClasses() {
+                sidebarItems.forEach((item) => {
+                  item.classList.remove("active");
+                });
+            
+                contentItems.forEach((item) => {
+                  item.style.display = "none";
+                });
+              }
+            
+              sidebarItems.forEach((item, index) => {
+                item.addEventListener("click", () => {
+                  if (!item.classList.contains("active")) {
+                    removeActiveClasses();
+                    item.classList.add("active");
+                    const itemId = item.getAttribute("data-content-id");
+                    document.getElementById(itemId).style.display = "block";
+            
+                    // Check if the clicked item is "Material Inward"
+                    if (itemId === "material-inward") {
+                      // Update the URL route
+                      history.pushState(null, null, "http://localhost:5502/retrieve-documents");
+                      // Fetch and display material inward records
+                      fetchAndDisplayDocuments();
+                    }
+                  }
+                });
+              });
+            
+              // Function to hide all content elements
+              function hideAllContent() {
+                const allContentItems = document.querySelectorAll('.content-item');
+                allContentItems.forEach(contentItem => {
+                  contentItem.style.display = 'none';
+                });
+              }
+            
+              // Function to fetch and display documents
+              const fetchAndDisplayDocuments = () => {
+                fetch("http://localhost:5502/retrieve-documents")
+                  .then((response) => response.json())
+                  .then((documents) => {
+                    tableBody.innerHTML = ""; // Clear existing table rows
+            
+                    documents.forEach((document) => {
+                      const row = document.createElement("tr");
+                      row.innerHTML = `
+                        <td>${document.Vendor_name}</td>
+                        <td>${document.Name_of_Material}</td>
+                        <td>${document.Required_quantity}</td>
+                        <td>${document.Supplied_quantity}</td>
+                        <td>${document.Unit_prize}</td>
+                        <td>${document.Date}</td>
+                        <td>${document.Current_stock}</td>
+                        <td>${document.Pay_expenses}</td>
+                      `;
+                      tableBody.appendChild(row);
+                    });
+                  })
+                  .catch((error) => console.error("Error retrieving documents:", error));
+              };
+            });
+        </script>
+          </div>
+          <div class="content-item" id="material-outward" style="display: none;">
+            <div class="mtout">
+              <div class="container">
+                  <div class="text">
+                      <h1>MATERIAL OUTWARD</h1>
+                  </div>
+      
+      
+                  <div class="search-bar">
+                      <div class="search-input-container">
+                          <i class="fas fa-search search-icon"></i>
+      
+                          <input type="text" class="search-input"
+                              placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search Material">
+                      </div>
+                      <button class="add-button" onclick="openFormout()"><i class="fas fa-plus"></i> Used</button>
+      
+                      <button class="download-button"><i class="fas fa-download"></i> &nbsp;&nbsp;Download</button>
+      
+                  </div>
+                      <div class="table-container">
+                      <form>
+                          <table>
+                              <thead>
+                                  <tr>
+                                      <th>Material</th>
+                                      <th>Quantity</th>
+                                      <th>Name</th>
+                                      <th>Date</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                              </tbody>
+                          </table>
+                      </form>
+                  </div>
+      
+      
+                  <div class="form-popup" id="myFormout">
+      
+                      <form class="form-container">
+                          <div class="navbar">
+                              <h2>Material Used</h2>
+                              <button type="button" class="cancel-button" onclick="closeFormout()">Cancel</button>
+                            </div>
+                          <div class="material">
+                              <h3>MATERIALS USED DETAILS</h3>
+                                                          
+                          </div>
+                          <div class="name">
+                              
+                          <input type="text" placeholder="Vendor Name" required>
+                          </div>
+                          <div>
+                              <input type="text" placeholder="Nams of the Material" required>
+                          </div>
+                          <div>
+                              <input type="text" placeholder="Used Quamtity" required>
+                          </div>
+                          <button type="button" class="cancel-button" onclick="closeFormout()">Cancel</button>
+      
+                          <button type="submit" class="add1-button">&nbsp;&nbsp;Add&nbsp;&nbsp;</button>
+                      </form>
+                  </div>
+        
+        
+                </div>
+            </div>
+  
+            </div>
+          <div class="content-item" id="work-done" style="display: none;">
+          
+          
+            <div class="page">
+              <div class="container">
+              <div  class = "text">
+                <h1>Work Done</h1>
+                <div class="search-bar">
+                  <div class="search-input-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Search Material">
+                  </div>
+                
+                    <button class="download-button">Download Report</button>
+                
+                </div>
+              </div>
+              
+              <div class="current-date">
+                <span id="today-date"></span>
+              </div>
+              
+            <div class="rectangle-box">
+              <p> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</p>
+              </div>
+            
+              <div class="current-date1">
+                <span>June 20, 2023</span>
+              </div>
+            
+            <div class="rectangle-box1">
+              <p> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</p>
+              </div>
+              
+            <div class="rectangle-box1">
+              <p> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</p>
+              </div>
+            
+              <div class="current-date1">
+                <span>June 20, 2023</span>
+              </div>
+            
+                
+              <div class="rectangle-box1">
+                <p> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</p>
+              
+                </div>
+
+            </div>
+              </div>
+          
+          
+          </div>
+
+
+          <div class="content-item" id="expense" style="display: none;">
+          
+            <div class="expense">
+              <div class="body">
+                  <div class="text">
+              <h1>EXPENSES</h1>
+          </div>
+              <div>
+      <button class="download-button">Download Report</button>
+      </div>
+      
+      </div>
+      
+      <div class="hero">
+          <div class="calender">
+              <div class="left">
+                  <p id="date">21</p>
+                  <p id="day">tuesday</p>
+              </div>
+              <div class="right">
+                  <p id="month">June</p>
+                  <p id="year">2023</p>
+              </div>
+          </div>
+      </div>
+      
+          <div class="button ">
+              <button type="button" id="down1">
+                  Material Expenses
+              </button>
+      
+              <button type="button" id="down2">
+                  Worker's Salary
+              </button><br><br><br>
+      
+              <button type="button" id="down3">
+                  Equipment Expenses
+              </button>
+      
+              <button type="button" id="down4">
+                  Total Expenses
+              </button>
+              
+          </div>
+      
+          </div>
+          
+          
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div id="report" style="width: 100%; height: 100%; display: none;">Report</div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var navItems = document.querySelectorAll(".navbar-nav .nav-item:not(:last-child)");
+        var logoutButton = document.querySelector(".navbar-nav .nav-item:last-child");
+        var contentDivs = document.querySelectorAll("#content, #labour, #vendor, #site, #report");
+        
+            function removeActiveClasses() {
+            navItems.forEach(function (item) {
+                item.classList.remove("active");
+            });
+            }
+        
+            navItems.forEach(function (item, index) {
+            item.addEventListener("click", function () {
+                if (!this.classList.contains("active")) {
+                removeActiveClasses();
+                this.classList.add("active");
+        
+                // Hide all content divs
+                contentDivs.forEach(function (div) {
+                    div.style.display = "none";
+                });
+        
+                // Show the corresponding content div based on the index
+                contentDivs[index + 1].style.display = "block";
+                }
+            });
+            });
+        
+            logoutButton.addEventListener("click", function () {
+            removeActiveClasses();
+            // Show only the default content div
+            document.getElementById("content").style.display = "block";
+            });
+            
+            document.addEventListener('DOMContentLoaded', () => {
+              // Get the elements for navigation menu items
+              const materialInwardNavItem = document.querySelector('.nav-item.material-inward');
+              const materialInwardContent = document.getElementById('material-inward');
+            
+              // Add click event listener to material inward nav item
+              materialInwardNavItem.addEventListener('click', () => {
+                // Hide all other content elements
+                hideAllContent();
+            
+                // Show material inward content
+                materialInwardContent.style.display = 'block';
+              });
+            
+              // Function to hide all content elements
+              function hideAllContent() {
+                const allContentItems = document.querySelectorAll('.content-item');
+                allContentItems.forEach((contentItem) => {
+                  contentItem.style.display = 'none';
+                });
+              }
+            });
+            
+            var reportGenerationItem = document.querySelector(".navbar-nav .nav-item:nth-child(4)");
+        
+            reportGenerationItem.addEventListener("click", function () {
+            if (!this.classList.contains("active")) {
+                removeActiveClasses();
+                this.classList.add("active");
+                // Show only the report div
+                document.getElementById("report").style.display = "block";
+            }
+            });
+        
+            navItems.forEach(function (item) {
+            item.addEventListener("click", function () {
+                if (reportGenerationItem.classList.contains("active") && this !== reportGenerationItem) {
+                reportGenerationItem.classList.remove("active");
+                // Hide the report div
+                document.getElementById("report").style.display = "none";
+                }
+            });
+            });
+        });
+        
+        
+        
+        
+        
+        
+        
+        // document.addEventListener("DOMContentLoaded", function() {
+        //   var sidebarItems = document.querySelectorAll(".sidebar-menu-item");
+        //   var contentItems = document.querySelectorAll(".content-item");
+        
+        //   function removeActiveClasses() {
+        //     sidebarItems.forEach(function(item) {
+        //       item.classList.remove("active");
+        //     });
+        
+        //     contentItems.forEach(function(item) {
+        //       item.style.display = "none";
+        //     });
+        //   }
+        
+        //   sidebarItems.forEach(function(item, index) {
+        //     item.addEventListener("click", function() {
+        //       if (!this.classList.contains("active")) {
+        //         removeActiveClasses();
+        //         this.classList.add("active");
+        //         contentItems[index].style.display = "block";
+        //       }
+        //     });
+        //   });
+        
+        //   // Initially set the first sidebar item as active
+        //   sidebarItems[0].classList.add("active");
+        //   contentItems[0].style.display = "block";
+        // });
+        
+        
+        
+        // $(document).ready(function() {
+        //   // Click event for sidebar items
+        //   $('.sidebar-menu-item').click(function() {
+        //     // Remove 'active' class from all sidebar items
+        //     $('.sidebar-menu-item').removeClass('active');
+        
+        //     // Add 'active' class to the clicked sidebar item
+        //     $(this).addClass('active');
+        
+        //     // Get the index of the clicked sidebar item
+        //     var index = $(this).index();
+        
+        //     // Show the corresponding content item based on the index
+        //     $('.content-item').eq(index).show().siblings('.content-item').hide();
+        //   });
+        // });
+            
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            var sidebarItems = document.querySelectorAll(".sidebar-menu-item");
+            var contentItems = document.querySelectorAll(".content-item");
+        
+            function removeActiveClasses() {
+            sidebarItems.forEach(function(item) {
+                item.classList.remove("active");
+            });
+        
+            contentItems.forEach(function(item) {
+                item.style.display = "none";
+            });
+            }
+        
+            sidebarItems.forEach(function(item, index) {
+            item.addEventListener("click", function() {
+                if (!this.classList.contains("active")) {
+                removeActiveClasses();
+                this.classList.add("active");
+                var itemId = this.getAttribute("data-content-id");
+                document.getElementById(itemId).style.display = "block";
+                }
+            });
+            });
+        });
+        // MaterialOutward
+        function openFormout() {
+            var formPopup = document.getElementById("myFormout");
+            formPopup.style.display = "block";
+            formPopup.style.backgroundColor = "transparent";
+        }
+            
+            function closeFormout() {
+            document.getElementById("myFormout").style.display = "none";
+            }
+        
+        
+        // MaterialInward
+        
+        function openFormin() {
+            var formPopup = document.getElementById("myFormin");
+            formPopup.style.display = "block";
+            formPopup.style.backgroundColor = "transparent";
+        }
+            
+            function closeFormin() {
+            document.getElementById("myFormin").style.display = "none";
+            }
+    </script>
+  </body>
+</html>

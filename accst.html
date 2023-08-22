@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="assets/css/pent.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid" style="margin: 10px 20px;">
+          <a class="navbar-brand" href="#">
+            <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+              
+              <li class="nav-item">
+                <a class="nav-link" href="masnode.html">Master</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="conts.html">Labour Management</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="prod.html">Vendor Management</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="todo.html">Site Activity</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="labrep.html">Report Generation</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <button class="btn" type="submit"><span class="txt">Logout</span></button>
+            </form>
+          </div>
+        </div>
+      </nav>
+
+      <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+        <div class="col-lg-2">
+          <div class="sidebar" style="height: 100%;">
+            <nav class="nav flex-column" style="padding-top: 100px; ">
+              <a class="nav-link active space" href="prod.html">Purchase Order</a>
+              <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#">Account Statement</a>
+            </nav>
+          </div>
+        </div>
+        <div class="col-lg-10" style="padding: 5% 5% !important;">
+          
+
+          <div class="account-statement">
+            <h1>A C C O U N T &nbsp; &nbsp; S T A T E M E N T</h1>
+            <table style="margin-top: 3% !important; justify-content:center; align-items:center;" class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Transaction Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="statement-table-body">
+                    <!-- The transaction data will be dynamically populated here -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3">Total Balance:</td>
+                        <td id="total-balance">0.00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    
+
+
+        </div>
+
+
+      </div>
+
+
+
+      <script>
+        // Example data to simulate API response. Replace this with your actual API call.
+        const apiData = [
+            { date: "2023-07-01", description: "Opening Balance", transactionType: "inward", amount: 1000.00 },
+            { date: "2023-07-05", description: "Deposit", transactionType: "inward", amount: 500.00 },
+            { date: "2023-07-10", description: "Withdrawal", transactionType: "outward", amount: -200.00 },
+        ];
+        
+        // Function to dynamically populate the account statement table with data.
+        function populateAccountStatement(data) {
+            const tableBody = document.getElementById("statement-table-body");
+            let totalBalance = 0.00;
+        
+            // Clear any existing rows in the table body.
+            tableBody.innerHTML = "";
+        
+            // Loop through the data and create rows for each transaction.
+            data.forEach((transaction) => {
+                const { date, description, transactionType, amount } = transaction;
+                totalBalance += amount;
+        
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${date}</td>
+                    <td>${description}</td>
+                    <td>${transactionType === "inward" ? "Material Inward" : "Material Outward"}</td>
+                    <td>${amount.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        
+            // Update the total balance in the footer.
+            const totalBalanceCell = document.getElementById("total-balance");
+            totalBalanceCell.textContent = totalBalance.toFixed(2);
+        }
+        
+        // Call the function with the API data when the page loads.
+        window.onload = function () {
+            populateAccountStatement(apiData); // Replace 'apiData' with your actual API response.
+        };
+    </script>
+
+      
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

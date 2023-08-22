@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LOGIN</title>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/login.css" />
+  <style>
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+    .password-toggle i {
+    color: #999;
+  }
+  .pass-textbox {
+  position: relative;
+}
+
+.pass-textbox .password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.pass-textbox .password-toggle i {
+  color: #888;
+  font-size: 18px;
+}
+
+.pass-textbox .password-toggle i:hover {
+  color: #333;
+}
+.password-toggle {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.password-toggle i {
+  color: #888;
+  font-size: 18px;
+}
+
+.password-toggle i:hover {
+  color: #333;
+}
+
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand unselectable" href="#">
+      <img src="./assets/img/logo.png" alt="Construct Eaze" />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav"></div>
+  </nav>
+  <div id="content"></div>
+  <div class="img-container">
+    <img src="./assets/img/logo-F6W.png" alt="Your Image">
+  </div>
+  <div class="login-container">
+    <strong>
+      <h1><b>L O G I N</b></h1>
+    </strong>
+  </div>
+  <div class="eng-container">
+    <br><br>
+    <strong>
+      <h3 style="display: inline-block; margin-right: 10px;">ENGINEER</h3>
+    </strong>
+    <label class="switch" style="display: inline-block;">
+      <input type="checkbox" id="myToggle" onclick="showHideInput()">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div id="message"></div>
+  <div>
+    <form style="margin-left: 7.9%; margin-top: 3%;" action="/login" method="POST">
+      <input type="text" class="custom-textbox" id="email" name="email" placeholder="Username" required><br><br>
+      <div style="position: relative;">
+        <input type="password" class="pass-textbox" id="password" name="password" placeholder="Password" required>
+        <i class="far fa-eye" id="toggleButton"style="margin-left: -30px; cursor: pointer; "></i>
+      </div>
+      <div style="margin-top: 1.5%; display: none;" id="auth">
+        <input type="text" class="pass-textbox" id="authCode" name="auth" placeholder="Authentication Code"><br>
+      </div>
+      <div style="margin-top: 1.5%;">
+        <button type="submit" class="custom-button">Login</button>
+      </div>
+    </form>
+  </div>
+  
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    function showHideInput() {
+      var authCodeInput = document.getElementById("authCode");
+      var toggle = document.getElementById("myToggle");
+      var input = document.getElementById("auth");
+
+      if (toggle.checked) {
+        input.style.display = "block";
+        authCodeInput.setAttribute("required", "required");
+      } else {
+        input.style.display = "none";
+        authCodeInput.removeAttribute("required");
+      }
+    }
+
+    function togglePasswordVisibility() {
+      var passwordInput = document.getElementById("password");
+      var toggleButton = document.getElementById("toggleButton");
+
+      if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        toggleButton.classList.remove("fa-eye");
+        toggleButton.classList.add("fa-eye-slash");
+      } else {
+        passwordInput.type = "password";
+        toggleButton.classList.remove("fa-eye-slash");
+        toggleButton.classList.add("fa-eye");
+      }
+    }
+    const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#Xpassword');
+
+  togglePassword.addEventListener('click', function (e) {
+    // toggle the type attribute
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    // toggle the eye slash icon
+    this.classList.toggle('fa-eye-slash');
+});
+  </script>
+  <script>
+
+    // Add an event listener to the form submission
+    document.getElementById("loginForm").addEventListener("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+  
+      // Get the form data
+      const formData = new FormData(event.target);
+  
+      // Make an AJAX request to submit the form data
+      fetch("/login", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          // Display the response message on the page
+          document.getElementById("responseMessage").innerText = data;
+        })
+        .catch((error) => {
+          console.error("Error submitting login form", error);
+        });
+    });
+  </script>
+</body>
+</html>

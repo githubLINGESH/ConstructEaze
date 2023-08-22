@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Project</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+
+  <style>
+    .form-group label,
+    .form-control,
+    .btn-block,
+     .btn{
+      font-family: 'Sora', sans-serif;
+    }
+    .form-control {
+      border: 0.4px solid #ccc; /* Border color */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-radius: 10px; /* Border radius */
+      padding: 10px; /* Padding inside the input field */
+      font-size: 16px; /* Font size of the input text */
+    }
+
+    /* Style for placeholder text */
+    ::placeholder {
+      font-size: 13px;
+      color: #999; /* Placeholder text color */
+    }
+
+    /* Style for placeholder text on focus */
+    .form-control:focus::placeholder {
+      color: #707070; /* Placeholder text color when input field is focused */
+    } 
+    .btn-block{
+      font-size: 14px;
+      border: 0;
+      color: white;   
+      width:150px;
+      height: 40px;
+      border-radius: 20px;
+      background: #242E82;
+      box-shadow: 0px 0px 3px 0.5px rgba(0, 0, 0, 0.25);
+    }
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid" style="margin: 10px 20px;">
+          <a class="navbar-brand" href="home.html">
+            <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+          </div>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6" style="padding-right: 5%; padding-left: 5%; padding-top: 10%;">
+                <!-- Form -->
+                <form action="http://localhost:3000/proj/submitproj" method="POST">
+                    <a href="home.html"><i class="fa-solid fa-circle-arrow-left fa-2xl" style="color: #a1a1a1;"></i></a>
+                    <h2 class="btn" style="font-weight: 600; font-size: 36px;">P R O J E C T &nbsp;&nbsp;D E T A I L S</h2>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name" name="Project_name" placeholder="Project Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="address" name="Address" placeholder="Address">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="city" name="City" placeholder="City">
+                    </div>
+                    <button type="submit" class="btn-block" style="background-color: #242E82; width: 20%; border-radius: 18px; ">Create</button>
+                </form>
+            </div>
+            <div class="col-lg-6" style="padding-top: 5%;">
+                <!-- Image -->
+                <img src="assets/img/Logo (1).png" alt="Image" class="img-fluid">
+            </div>
+        </div>
+    </div>
+
+  <!-- Bootstrap JS (optional) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Your existing HTML code -->
+<script>
+  
+  document.querySelector('form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const data = {};
+    formData.forEach((value, key) => {
+      data[key] = value;
+    });
+
+    fetch('http://localhost:3000/proj/submitproj', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        // Redirect to the home.html page after successful form submission
+        window.location.href = 'home.html';
+      })
+      .catch((error) => {
+        console.error('Error submitting form:', error);
+        // Handle error if needed
+      });
+  });
+
+
+</script>
+
+</body>
+</html>

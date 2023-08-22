@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <script>
+            function openFormin() {
+            var formPopup = document.getElementById("myFormin");
+            formPopup.style.display = "block";
+            formPopup.style.backgroundColor = "transparent";
+            }
+            function closeFormin() {
+                document.getElementById("myFormin").style.display = "none";
+            }
+        </script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="/assets/css/pent.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            *{
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-sizing: border-box;
+    font-family: 'Sora', sans-serif;
+    }
+
+    input[type="checkbox"]{
+    display: none;
+    }
+    .container{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    width: 510px;
+    height: 600px;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    #show:checked ~ .container{
+    display: block;
+    }
+    .container .close-btn{
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 18px;
+    cursor: pointer;
+    }
+    .container .text{
+    font-size: 35px;
+    font-weight: 600;
+    text-align: center;
+    }
+    .container form{
+    margin-top: -20px;
+    }
+    .container form .data{
+    height: 35px;
+    width: 100%;
+    margin: 30px 0;
+    }
+    form .data input{
+    height: 100%;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 17px;
+    border: 1px solid silver;
+    border-radius: 5px;
+    }
+    form .data input:focus{
+    border-color: #242E82;
+    border-bottom-width: 2px;
+    }
+
+    form .btn1{
+    margin: 45% 0 0 0;
+    height: 45px;
+    width: 100%;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    }
+    form .btn1 .inner{
+    height: 100%;
+    width: 300%;
+    position: absolute;
+    left: -100%;
+    z-index: -1;
+    background-color: #242E82;
+    transition: all 0.4s;
+    }
+    form .btn1 button{
+    height: 100%;
+    width: 100%;
+    background: none;
+    border : none;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    cursor: pointer;
+    }
+    .popup{
+        width: 400px;
+        background: #fff;
+        border-radius: 6px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        text-align: center;
+        padding: 0 30px 30px;
+        color: #333;
+    }
+    .popup img{
+        width: 100px;
+        margin-top: -50px;
+        border-radius: 50px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .popup h2{
+        font-size: 38px;
+        font-weight: 500;
+        font-family: 'Sora' sans-serif !important;
+        margin: 30px 0 10px;
+    }
+    .popup button{
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px 0;
+        background: #242e82;
+        color: #fff;
+        border: 0;
+        outline: none;
+        font-size: 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+    }
+
+.modal {
+display: none; /* Hidden by default */
+position: fixed;
+z-index: 1;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+overflow: auto;
+background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+}
+
+.modal-content {
+background-color: #fefefe;
+margin: 15% auto;
+padding: 20px;
+border: 1px solid #888;
+width: 80%;
+}
+
+.close {
+color: #aaa;
+float: right;
+font-size: 28px;
+font-weight: bold;
+cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+color: black;
+}
+
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid" style="margin: 10px 20px;">
+            <a class="navbar-brand" href="home.html">
+                <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="masnode.html">Master</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="conts.html">Labour Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="matinf.html">Site Activity</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="labrep.html">Report Generation</a>
+                </li>
+                </ul>
+                <form class="d-flex">
+                <button class="btn" type="submit"><span class="txt">Logout</span></button>
+                </form>
+            </div>
+            </div>
+        </nav>
+
+        <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+            <div class="col-lg-2">
+            <div class="sidebar" style="height: 100%;">
+                <nav class="nav flex-column" style="padding-top: 100px; ">
+                <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;"href="todo.html">To Do</a>
+                <a class="nav-link space" href="#">Check List</a>
+                <a class="nav-link space" href="matinf.html">Material Inward</a>
+                <a class="nav-link space" href="matoutf.html">Material Outward</a>
+                <a class="nav-link space" href="wrkdone.html">Work Done</a>
+                <a class="nav-link space" href="totexp.html">Total Expense</a>
+                </nav>
+            </div>
+            </div>
+            <div class="col-lg-10">
+            <div class="content" style="height: 100%;margin-top: 5%;">
+                <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <h1>T O &nbsp;&nbsp;D O</h1></div>
+                </div>
+        
+        
+                <div class="row">
+    
+                        <div  style="display: flex;">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 form-group">
+                            <div class="input-group">
+                                <div class="input-group-addon" style="background-color: rgb(177, 177, 177);">
+                                    <i  style="margin: 10px 10px;" class="fas fa-search"></i>
+                                </div>
+                                <input type="text" name="search" id="search-input" class="form-control" placeholder="Search Task">
+                            </div>
+                        </div>
+                            <div style="display: flex;">
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
+                                    <div class="form-popup" id="myFormin">
+
+                                    <input type="checkbox" id="show">
+                                    <label for="show" class="btn-block" style="text-align: center; padding-top: 8px;">Add Task</label>
+                                    <div class="container">
+                                        <label for="show" class="close-btn fas fa-times" title="close"></label>
+                                        <div class="text" style="margin: 0 0 15% 0;">
+                                            Task Details
+                                        </div>
+                                        <form id="FORM_CCCC" action="http://localhost:3000/todo/submit-task" method="POST">
+                                            <div class="data">
+                                                <input type="text" required placeholder=" Start Date" name="StartDate">
+                                            </div>
+                                            <div class="data">
+                                                <input type="text" required placeholder="End Date" name="EndDate">
+                                            </div>
+                                                <div class="data">
+                                                    <input type="text" required placeholder="Task Name" name="Taskname">
+                                                </div>
+                                                <div class="data">
+                                                    <button type="submit" class="btn-block" style="margin: 0 35%;">Submit</button>
+                                                </div>
+                                                
+                                            </div>
+                                        </form>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 35%;">
+                                    <button class="btn-block">
+                                        <i class="fas fa-download"></i>
+                                        Download
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+        
+        
+                <div class="row">
+                    <div class="table-responsive">
+                        <table id="table" class="table">
+                            <thead>
+                                <tr>
+                                    <th>START DATE</th>
+                                    <th>END DATE</th>
+                                    <th>TASK</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>${task.Start_date}</td>
+                                    <td>${task.End_date}</td>
+                                    <td>${task.Task_name}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <div id="myModal" class="modal">
+            <div class="popup">
+                <img src="assets/img/succs.png">
+                <h2>Task Added</h2>
+                <p>Task Added Successfully!</p>
+                <button onclick="closeModal()">OK</button>
+            </div>
+        </div>
+        <script>
+            function openModal() {
+                const modal = document.getElementById("myModal");
+                modal.style.display = "block";
+            }
+    
+            function closeModal() {
+                const modal = document.getElementById("myModal");
+                modal.style.display = "none";
+            }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+
+                const tasksTableBody = document.querySelector('#table tbody');
+        
+            // Function to fetch and display tasks
+            const fetchAndDisplayTasks = () => {
+                fetch('http://localhost:3000/todo/tasks')
+                    .then(response => response.json())
+                    .then(tasks => {
+                        tasksTableBody.innerHTML = ''; // Clear existing table rows
+        
+                        tasks.forEach(task => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                            <td>${task.Start_date}</td>
+                            <td>${task.End_date}</td>
+                            <td>${task.Task_name}</td>
+                            `;
+                            tasksTableBody.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error('Error retrieving tasks:', error));
+            };
+        
+            // Fetch tasks when the page loads
+            fetchAndDisplayTasks();
+        
+            // Handle form submission
+            const form = document.getElementById('FORM_CCCC');
+        
+            form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const url = form.getAttribute('action');
+        
+                const formData = new FormData(form);
+                const taskData = {
+                    Taskname: formData.get('Taskname'),
+                    StartDate: formData.get('StartDate'),
+                    EndDate: formData.get('EndDate')
+                };
+        
+                fetch('http://localhost:3000/todo/submit-task', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Record inserted successfully.');
+                        form.reset();
+                        openModal();
+                        fetchAndDisplayTasks(); // Update the display with the new task
+                    } else {
+                        console.error('Error inserting record.');
+                    }
+                })
+                .catch(error => console.error('Error inserting record:', error));
+            });
+        });
+
+        const searchTasks = () => {
+            const searchInput = document.getElementById('search-input');
+            const searchValue = searchInput.value;
+
+            fetch('http://localhost:3000/todo/search-tasks', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ Task_name: searchValue })
+            })
+            .then(response => response.json())
+            .then(tasks => {
+                tasksTableBody.innerHTML = '';
+
+                tasks.forEach(task => {
+                    const row = document.createElement('tr');
+
+                    const taskNameCell = document.createElement('td');
+                    taskNameCell.textContent = task.Task_name;
+
+                    const startDateCell = document.createElement('td');
+                    startDateCell.textContent = task.Start_date;
+
+                    const endDateCell = document.createElement('td');
+                    endDateCell.textContent = task.End_date;
+
+                    row.appendChild(taskNameCell);
+                    row.appendChild(startDateCell);
+                    row.appendChild(endDateCell);
+
+                    tasksTableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        };
+        // Event listener for search input
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('keyup', searchTasks);
+
+        </script>
+    </body>
+    </html>

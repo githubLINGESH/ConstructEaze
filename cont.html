@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+            <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sora%3A300%2C400%2C600%2C700"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+            <link rel="stylesheet" href="assets\css\index.css">
+            <script src="assets\js\index.js"></script>
+        </head>
+        <body>
+            <div class="att">
+            <div class="third">
+            <div class="container">
+                <h2>Daily Workers</h2>
+                <!--div class="crt_date">
+                    <p id="today"></p>
+                </div-->
+                <div class="button">
+                    <button class="add">
+                        <i class="fas fa-plus"></i>
+                        Add Worker
+                    </button>
+                </div>
+            </div>
+            <div class="dt_ct">
+                <div class="date-DU2">
+                    <button><img class="ooui-next-ltr-LoY" src="assets\img\ooui-next-ltr.png"/></button>
+                    <div class="item-13-HTt">
+                    <p class="item-13-1en"></p>
+                    <p class="tue-8UW"></p>
+                    </div>
+                    <div class="today-4d4">
+                    <div class="item-14-nJA">
+                        <p class="item-14-Laa"></p>
+                        <p class="wed-TfC"></p>
+                    </div>
+                    </div>
+                    <div class="item-15-BLJ">
+                    <p class="item-15-hpS"></p>
+                    <p class="thu-pu4"></p>
+                    </div>
+                    <button><img class="ooui-next-ltr-Zre" src="assets\img\ooui-next-ltr-FpA.png"/></button>
+                </div>
+                <div class="mon-Lc6">
+                    <button><img class="vector-fPU" src="assets\img\vector-uhg.png"/>
+                    <p class="jun-amL"></p>
+                    <img class="ooui-next-ltr-82A" src="assets\img\ooui-next-ltr-ZPU.png"/>
+                    </button>
+                </div>
+                <div class="count">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Present</th>
+                                <th>Absent</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prs"></td>
+                                <td class="abs"></td>
+                                <td class="tot"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+                <div class="workers">
+                    <form method="POST" action="http://localhost:3000/contract/submit">
+                        <label for="male">MALE: </label>
+                        <input type="text" name="male" required>
+                        <label for="female">FEMALE: </label>
+                        <input type="text" name="female" required>
+                        <label for="contract">CONTRACT: </label>
+                        <input type="text" name="contract" required>
+                    </form>
+                    <div class="work_but"><button>Mark Attendance</button></div>
+                </div>
+            </div>
+            <div class="four">
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>WorkerType</th>
+                            <th>Shift</th>
+                            <th>Present/Absent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${task.w_name}</td>
+                            <td>${task.w_Type}</td>
+                            <td>${task.shift}</td>
+                            <td id="dis">
+                                <div class="p_a">
+                                <button class="prs" id="present" style="margin-right: 10px; background-color: green;">Present</button>
+                                <button class="abs" id="absent" style="margin-left: 10px; background-color: red;">Absent</button>
+                            </div>
+                            <button class="edit-btn" style="background-color: rgb(16, 16, 14);">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup-container">
+                <div class="popup-content">
+                    <div class="popup-header">
+                        <h2>Add Worker</h2>
+                        <button class="cancel">Cancel</button>
+                        <button class="add_wr" id="addButton">Add</button>
+                    </div>
+                    <div class="form">
+                        <h2 style="margin-top: 10px;">WORKER DETAILS</h2>
+                        <form id="workerContractForm" method="POST" action="http://localhost:3000/contract/submit">
+                            <input type="text" placeholder="Name of the Worker" name="w_name" required><br>
+                            <input type="number" placeholder="Phone Number" name="phone" required><br>
+                            <input type="text" placeholder="Worker Type" name="w_type" required><br>
+                            <input type="number" placeholder="Salary Per Shift (Rs.)" name="sal" required><br>
+                            <input type="number" placeholder="Hours Per Shift" name="shift" required><br>
+                        
+                            <h2 style="margin-top: 10px;">CONTRACT DETAILS</h2>
+                            <input type="date" placeholder="Start Date" name="start" required><br>
+                            <input type="date" placeholder="End Date" name="end" required><br>
+                        
+                            <input type="submit" value="Submit">
+                            <div id="successMessage" style="display: none; font: size 30px;">Record inserted successfully!</div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+                <script>
+                    const workerForm = document.getElementById('workerForm');
+                    const contractForm = document.getElementById('contractForm');
+                    const addButton = document.getElementById('addButton');
+                
+                    // Add click event listener to the Add button
+                    addButton.addEventListener('click', function (event) {
+                        // Prevent the default form submission behavior
+                        event.preventDefault();
+                
+                        // Submit both forms programmatically
+                        workerForm.submit();
+                        contractForm.submit();
+                    });
+                </script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const tasksTableBody = document.querySelector('#table tbody');
+                
+                        // Function to fetch and display tasks
+                        const fetchAndDisplayTasks = () => {
+                            fetch('http://localhost:3000/contract/det')
+                                .then(response => response.json())
+                                .then(tasks => {
+                                    tasksTableBody.innerHTML = ''; // Clear existing table rows
+                
+                                    tasks.forEach(task => {
+                                        const row = document.createElement('tr');
+                                        row.innerHTML = `
+                                            <td>${task.w_name}</td>
+                                            <td>${task.w_type}</td>
+                                            <td>${task.shift}</td>
+                                            <td class="attendance">
+                                                <div class="p_a">
+                                                    <button class="prs" style="margin-right: 10px; background-color: green;">Present</button>
+                                                    <button class="abs" style="margin-left: 10px; background-color: red;">Absent</button>
+                                                </div>
+                                                <button class="edit-btn" style="background-color: rgb(194, 194, 187);">Edit</button>
+                                            </td>
+                                        `;
+                                        tasksTableBody.appendChild(row);
+                                    });
+                                    // Add event listeners to the "Present" and "Absent" buttons
+                                    const attendanceCells = document.querySelectorAll('.attendance');
+                                    attendanceCells.forEach(cell => {
+                                        const presentButton = cell.querySelector('.prs');
+                                        const absentButton = cell.querySelector('.abs');
+                                        const editButton = cell.querySelector('.edit-btn');
+
+                                        const markAttendance = (status) => {
+                                            cell.dataset.originalStatus = status;
+                                            presentButton.style.display = status === 'Present' ? 'inline-block' : 'none';
+                                            absentButton.style.display = status === 'Absent' ? 'inline-block' : 'none';
+                                            editButton.style.display = 'inline-block';
+                                        };
+                
+                                        presentButton.addEventListener('click', () => markAttendance(cell, 'Present'));
+                                        absentButton.addEventListener('click', () => markAttendance(cell, 'Absent'));
+
+                                         // Add event listener to the "Edit" button
+                                        editButton.addEventListener('click', () => {
+                                            presentButton.style.display = 'inline-block';
+                                            absentButton.style.display = 'inline-block';
+                                            editButton.style.display = 'none';
+                                        });
+                                    });
+                                })
+                                .catch(error => console.error('Error retrieving tasks:', error));
+                        };
+                
+                        const markAttendance = (cell, status) => {
+                            cell.textContent = status;
+                            toggleButtons(cell, true);
+                        };
+
+                        const editAttendance = (cell) => {
+                        toggleButtons(cell, false); // Show "Present" and "Absent" buttons and hide "Edit" button
+                        // Reset the cell content to the original state (e.g., "Present" or "Absent")
+                        const originalStatus = cell.dataset.originalStatus;
+                        cell.textContent = originalStatus;
+                        };
+
+                        const toggleButtons = (cell, editing) => {
+                        const presentButton = cell.querySelector('.prs');
+                        const absentButton = cell.querySelector('.abs');
+                        const editButton = cell.querySelector('.edit-btn');
+
+                        if (editing) {
+                            presentButton.style.display = 'none';
+                            absentButton.style.display = 'none';
+                            editButton.style.display = 'inline-block';
+                        } else {
+                            presentButton.style.display = 'inline-block';
+                            absentButton.style.display = 'inline-block';
+                            editButton.style.display = 'none';
+                        }
+                    };
+                    
+                        fetchAndDisplayTasks();
+                        const form = document.getElementById('workerContractForm');
+                        const successMessage = document.getElementById('successMessage');
+                            form.addEventListener('submit', event => {
+                                event.preventDefault(); // Prevent the default form submission behavior
+                        
+                                const formData = new FormData(form);
+                                const taskData = {
+                                    w_name: formData.get('w_name'),
+                                    phone: formData.get('phone'),
+                                    w_type: formData.get('w_type'),
+                                    sal: formData.get('sal'),
+                                    shift: formData.get('shift'),
+                                    start: formData.get('start'),
+                                    end: formData.get('end')
+                                };
+                        
+                                fetch('http://localhost:3000/contract/submit', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify(taskData)
+                                })
+                                .then(response => {
+                                    if (response.ok) {
+                                        console.log('Record inserted successfully.');
+                                        form.reset();
+                                        fetchAndDisplayTasks(); // Update the display with the new task
+                        
+                                        // Show the success message
+                                        successMessage.style.display = 'block';
+                        
+                                        // Hide the message after a few seconds
+                                        setTimeout(() => {
+                                            successMessage.style.display = 'none';
+                                        }, 3000); // Hide after 3 seconds (adjust as needed)
+                                    } else {
+                                        console.error('Error inserting record.');
+                                    }
+                                })
+                                .catch(error => console.error('Error inserting record:', error));
+                            });
+                        });
+                </script>
+        </html>

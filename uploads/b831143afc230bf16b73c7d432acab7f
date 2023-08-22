@@ -1,0 +1,6 @@
+﻿Item_code,Item_name,category,description,unit,price
+1000,wood,Day,build,1,100
+1000,wood,Night,build,2,100
+1000,wood,Day,build,2,100
+1000,wood,Night,build,2,100
+1000,wood,Day,build,3,100

@@ -1,0 +1,136 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    }
+  .page{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .text{
+      text-align: center;
+      display: flex;
+      align-items: center;
+      margin-top: 50px;
+      margin-right: 600px;
+  }
+    h1 {
+      font-size:40px;
+      margin-bottom: 10px;
+      color:rgb(15, 12, 12);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+  
+    .search-bar {
+      display: flex;
+        align-items: center;
+        margin-top: -50px;
+        margin-left: 300px;
+    }
+    .search-input-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    
+    .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+    }
+    .search-input {
+      padding: 10px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+    }
+    
+    
+    .download-button {
+      padding: 10px 20px;
+      background-color: rgb(33, 64, 130);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-left: 30px;
+  
+    }
+
+
+    
+    .accordion {
+        border: 2px solid #d1d1de;
+        margin-top: 20px;
+        border-radius: 15px;
+    }
+    
+    .accordion-header {
+        background-color: rgb(33, 64, 130);
+        padding: 10px;
+        cursor: pointer;
+        color:white;
+        border-radius: 5px;
+
+    }
+    
+    .accordion-content {
+        display: none;
+        padding: 1px 40px;
+        margin-bottom: 18px;
+
+    }
+    
+    .accordion.active .accordion-content {
+        display: block;
+    }
+    .rectangle-box1{
+        width: 500px;
+        height: 40px;
+        border: 1px solid #ccc;
+        margin-top: 20px;
+        border-radius: 10px;
+        margin-right: 240px;
+        box-shadow: 0 2px 4px rgba(0, 1, 9, 0.2);
+    
+      }
+.accordion-container{
+  margin-top: 40px;
+}
+
+.text1{
+  text-align: center;
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+  margin-left: 30px;
+}
+
+.checkbox-container {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.checkbox-container .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 16px;
+  width: 16px;
+  background-color: #fff;
+  border: 1px solid #bbb;
+  border-radius: 3px;
+}

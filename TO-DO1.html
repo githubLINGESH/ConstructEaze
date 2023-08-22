@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Sample Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        button {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 200px;
+        }
+
+        #subtasks-container {
+            margin-bottom: 10px;
+        }
+
+        .subtask {
+            margin-bottom: 5px;
+        }
+
+        #tasks-table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #tasks-table th,
+        #tasks-table td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #tasks-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <form id="task-form" action="http://localhost:3000/todo/submit-task" method="POST">
+        <input type="text" id="task-name-input" name="Taskname" placeholder="Enter" required />
+
+        <div id="subtasks-container">
+            <div class="subtask">
+                <input type="text" name="Subtask[]" placeholder="Enter" required />
+            </div>
+        </div>
+
+        <button type="button" id="add-subtask-btn">Add Subtask</button>
+
+        <input type="date" name="StartDate" placeholder="Enter" required />
+        <input type="date" name="EndDate" placeholder="Enter" required />
+        <input type="submit" value="Submit" />
+    </form>
+
+    <h2>Task List</h2>
+
+    <input type="text" id="search-input" placeholder="Search by Task Name" />
+
+    <table id="tasks-table">
+        <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Subtasks</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const addSubtaskButton = document.getElementById('add-subtask-btn');
+            const subtasksContainer = document.getElementById('subtasks-container');
+            const tasksTableBody = document.querySelector('#tasks-table tbody');
+            const searchInput = document.getElementById('search-input');
+            const taskForm = document.getElementById('task-form');
+
+            let subtaskIndex = 1;
+
+            addSubtaskButton.addEventListener('click', () => {
+                const subtaskDiv = document.createElement('div');
+                subtaskDiv.classList.add('subtask');
+
+                const subtaskInput = document.createElement('input');
+                subtaskInput.type = 'text';
+                subtaskInput.name = `Subtask[]`;
+                subtaskInput.placeholder = 'Enter';
+                subtaskInput.required = true;
+
+                subtaskDiv.appendChild(subtaskInput);
+                subtasksContainer.appendChild(subtaskDiv);
+
+                subtaskIndex++;
+            });
+
+            // Function to fetch and display tasks
+            const fetchAndDisplayTasks = () => {
+                fetch('http://localhost:3000/todo/tasks')
+                    .then(response => response.json())
+                    .then(tasks => {
+                        tasksTableBody.innerHTML = ''; // Clear existing table rows
+
+                        tasks.forEach(task => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${task.Task_name}</td>
+                                <td>${task.Sub_Tasks.map(subtask => subtask.Sub_Task_name).join(', ')}</td>
+                                <td>${task.Start_date}</td>
+                                <td>${task.End_date}</td>
+                            `;
+                            tasksTableBody.appendChild(row);
+                        });
+                    })
+                    .catch(error => console.error('Error retrieving tasks:', error));
+            };
+
+            // Fetch tasks when the page loads
+            fetchAndDisplayTasks();
+
+            // Function to search tasks
+            const searchTasks = () => {
+                const searchValue = searchInput.value;
+
+                fetch('http://localhost:3000/todo/search-tasks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ taskName: searchValue })
+                })
+                .then(response => response.json())
+                .then(tasks => {
+                    tasksTableBody.innerHTML = '';
+
+                    tasks.forEach(task => {
+                        const row = document.createElement('tr');
+
+                        const taskNameCell = document.createElement('td');
+                        taskNameCell.textContent = task.Task_name;
+
+                        const subtasksCell = document.createElement('td');
+                        subtasksCell.textContent = task.Sub_Tasks.map(subtask => subtask.Sub_Task_name).join(', ');
+
+                        const startDateCell = document.createElement('td');
+                        startDateCell.textContent = task.Start_date;
+
+                        const endDateCell = document.createElement('td');
+                        endDateCell.textContent = task.End_date;
+
+                        row.appendChild(taskNameCell);
+                        row.appendChild(subtasksCell);
+                        row.appendChild(startDateCell);
+                        row.appendChild(endDateCell);
+
+                        tasksTableBody.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            };
+
+            // Event listener for form submission
+            taskForm.addEventListener('submit', event => {
+                event.preventDefault();
+        
+                const formData = new FormData(taskForm);
+                const taskData = {
+                    Taskname: formData.get('Taskname'),
+                    Subtask: Array.from(formData.getAll('Subtask[]')),
+                    StartDate: formData.get('StartDate'),
+                    EndDate: formData.get('EndDate')
+                };
+
+                fetch('http://localhost:3000/todo/submit-task', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    taskForm.reset();
+                    fetchAndDisplayTasks();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+
+            // Event listener for search input
+            searchInput.addEventListener('keydown', searchTasks);
+
+            // Fetch and display tasks on page load
+            fetchAndDisplayTasks();
+        });
+    </script>
+</body>
+</html>

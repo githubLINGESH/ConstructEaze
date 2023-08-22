@@ -1,0 +1,321 @@
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="assets/css/pent.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Expenses</title></head>
+        <style>
+        .box {
+            margin-top: 20%;
+            height: 65px;
+            width: 450px;
+            border-radius: 22px;
+            background-color: #242e82;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding-left: 30px;
+            padding-top: 12px;
+        }
+
+        p {
+            font-size: 18px;
+            font-family: 'Sora' sans-serif;
+            font-weight: 500;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sora'sans-serif !important;
+        }
+        .popup{
+            width: 650px;
+            background: #fff;
+            border-radius: 6px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+            padding: 0 30px 30px;
+            color: #333;
+        }
+        .popup img{
+            width: 100px;
+            margin-top: -50px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .popup h2{
+            font-size: 26px;
+            font-weight: 500;
+            font-family: 'Sora' sans-serif !important;
+            margin: 30px 0 10px;
+        }
+
+        .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 200px; /* Adjust the container width as needed */
+    margin: 0 auto; /* Centers the container horizontally */
+    }
+
+    .pdf-button {
+    background-color: #212e82; /* Red background for PDF button */
+    color: #ffffff; /* White text color */
+    padding: 10px 20px;
+    margin-top: 5%;
+    margin-right: 20px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    }
+
+    .excel-button {
+    background-color: #212e82; /* Blue background for Excel button */
+    color: #ffffff; /* White text color */
+    padding: 10px 20px;
+    margin-left: 20px;
+    margin-top: 5%;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    }
+        /* CSS for parallel labels and inputs */
+    .form-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    }
+
+    label {
+    margin-right: 90px;
+    width: 70px; /* Adjust the width as needed for your layout */
+    }
+
+
+    .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    }
+    .close-icon {
+    position: absolute;
+    top: 7px;
+    right: 25px;
+    font-size: 35px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    }
+    .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    }
+
+    .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+    color: black;
+    }
+
+    </style>
+    <script>
+        function openModal() {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "block";
+    }
+    function openModal1() {
+    const modal = document.getElementById("myModal1");
+    modal.style.display = "block";
+    }
+    function openModal2() {
+    const modal = document.getElementById("myModal2");
+    modal.style.display = "block";
+    }
+
+
+    function closeModal() {
+    const modal = document.getElementById("myModal");
+    modal.style.display = "none";
+    }
+    function closeModal1() {
+    const modal = document.getElementById("myModal1");
+    modal.style.display = "none";
+    }
+    function closeModal2() {
+    const modal = document.getElementById("myModal2");
+    modal.style.display = "none";
+    }
+
+    </script>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid" style="margin: 10px 20px;">
+            <a class="navbar-brand" href="#">
+                <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="masnode.html">Master</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="conts.html">Labour Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="tofo.html">Site Activity</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="labrep.html">Report Generation</a>
+                </li>
+                </ul>
+                <form class="d-flex">
+                <button class="btn" type="submit"><span class="txt">Logout</span></button>
+                </form>
+            </div>
+            </div>
+        </nav>
+
+        <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+            <div class="col-lg-2">
+            <div class="sidebar" style="height: 100%;">
+                <nav class="nav flex-column" style="padding-top: 100px; ">
+                <a class="nav-link space" href="TO-DO1.html">To Do</a>
+                <a class="nav-link space" href="#">Check List</a>
+                <a class="nav-link space" href="matinf.html">Material Inward</a>
+                <a class="nav-link space" href="matoutf.html">Material Outward</a>
+                <a class="nav-link space" href="wrkdone.html">Work Done</a>
+                <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="totexp.html"href="totexp.html">Total Expense</a>
+                </nav>
+            </div>
+            </div>
+            <div class="col-lg-10">
+            <div class="content" style="height: 100%;margin-top: 5%;">
+                <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <h1>E X P E N S E S</h1></div>
+                </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="box" onclick="openModal1()">
+                    <a href="#" style="color: white; text-decoration: none;"><p>Material Expenses</p></a>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="box" onclick="openModal2()">
+                    <a href="#" style="color: white; text-decoration: none;"><p>Worker's Salary Expenses</p></a>
+                    </div>
+                </div>
+                <div>
+                    <div class="row">
+
+                <div class="col-md-6 mb-4">
+                    <div class="box" onclick="openModal()">
+                    <a href="#" style="color: white; text-decoration: none;"><p>Total Expenses</p></a>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="myModal" class="modal">
+        <div class="popup">
+            <button type="button" class="close-icon" onclick="closeModal()">&times;</button>
+            <img src="assets/img/189249.png">
+            <h2>Total Expenses</h2>
+            <form action="/submit" method="post">
+            <div class="form-group" style="margin-top: 5%;">
+                <label for="sd">Starting_Date</label>
+                <input type="date" id="sd" name="sd" required>
+            </div>
+    
+            <div class="form-group" style="margin-top: 5%;margin-bottom: 5%;">
+                <label for="ed">Ending_Date</label>
+                <input type="date" id="ed" name="ed" required>
+            </div>
+            </form>
+            <div class="button-container">
+            <button type="button" class="pdf-button" onclick="closeModal()">Download as PDF</button>
+            <button type="button" class="excel-button" onclick="closeModal()">Download as Excel</button>
+            </div>
+        </div>
+        </div>
+        <div id="myModal1" class="modal">
+        <div class="popup">
+            <button type="button" class="close-icon" onclick="closeModal1()">&times;</button>
+            <img src="assets/img/189249.png">
+            <h2>Material Expenses</h2>
+            <form action="/submit" method="post">
+            <div class="form-group" style="margin-top: 5%;">
+                <label for="sd">Starting_Date</label>
+                <input type="date" id="sd" name="sd" required>
+            </div>
+    
+            <div class="form-group" style="margin-top: 5%;margin-bottom: 5%;">
+                <label for="ed">Ending_Date</label>
+                <input type="date" id="ed" name="ed" required>
+            </div>
+            </form>
+            <div class="button-container">
+            <button type="button" class="pdf-button" onclick="closeModal1()">Download as PDF</button>
+            <button type="button" class="excel-button" onclick="closeModal1()">Download as Excel</button>
+            </div>
+        </div>
+        </div>
+        <div id="myModal2" class="modal">
+        <div class="popup">
+            <button type="button" class="close-icon" onclick="closeModal2()">&times;</button>
+            <img src="assets/img/189249.png">
+            <h2>Worker's Salary Expenses</h2>
+            <form action="/submit" method="post">
+            <div class="form-group" style="margin-top: 5%;">
+                <label for="sd">Starting_Date</label>
+                <input type="date" id="sd" name="sd" required>
+            </div>
+    
+            <div class="form-group" style="margin-top: 5%;margin-bottom: 5%;">
+                <label for="ed">Ending_Date</label>
+                <input type="date" id="ed" name="ed" required>
+            </div>
+            </form>
+            <div class="button-container">
+            <button type="button" class="pdf-button" onclick="closeModal2()">Download as PDF</button>
+            <button type="button" class="excel-button" onclick="closeModal2()">Download as Excel</button>
+            </div>
+        </div>
+        </div>
+    
+    </body>
+    </html>

@@ -1,0 +1,159 @@
+.navbar {
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    font-family: "Sora", sans-serif;
+    height: 80px;
+  }
+  
+  .navbar-nav .nav-item.active .nav-link {
+    color: white !important;
+    background-color: #293492 !important;
+    border-radius: 30px;
+    font-weight: 500;
+    padding: 12px 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  .navbar .navbar-brand {
+        font-weight: bold;
+      }
+  
+  .navbar-nav {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .navbar-nav .nav-item {
+    padding: 10px 40px;
+  }
+  
+  .navbar-brand img {
+    max-height: 40px;
+    max-width: 100%;
+  }
+  
+  .navbar-nav .nav-item .nav-link {
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+  }
+  
+  .navbar-nav .nav-item .nav-link:hover,
+  .navbar-nav .nav-item .nav-link:focus {
+    color: #808080;
+  }
+  
+  .unselectable {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .img-container {
+    position: fixed;
+    top: 200px;
+    right: 150px;
+    width: 575px;
+    height: 550px;
+  }
+  
+  .img-container img {
+    width: 100%;
+    height: 100%;
+  }
+  .login-container {
+    text-align: left;
+    padding-left: 120px;
+    padding-top: 150px;
+    font-family: "Sora", sans-serif;
+    color: black;
+  }
+  .eng-container {
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 120px;
+    font-family: "Sora", sans-serif;
+    color: black;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 59px;
+    height: 30px;
+    padding: 8px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px; /* Adds round corners */
+    padding-top: 20px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%; /* Makes the dot round */
+  }
+  
+  input:checked + .slider {
+    background-color: #242E82;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+
+  
+  .custom-button {
+    width: 112px;
+    height: 36px;
+    border-radius: 12px;
+    background-color: #242E82;
+    color: white;
+    font-family: "Sora", sans-serif;
+  } 
+  .custom-textbox {
+    width: 500px;
+    height: 40px;
+    padding: 10px;
+    font-family: "Sora", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .pass-textbox {
+    width: 500px;
+    height: 40px;
+    padding: 10px;
+    font-family: "Sora", sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  /* ... Your other CSS rules ... */
+
+.body{
+  display: fixed;
+}
