@@ -1,53 +1,206 @@
-.navbar {
-    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+/* Mobile Styles */
+@media (max-width: 1000px) {
+  body {
     font-family: "Sora", sans-serif;
-    height: 80px;
+    color: black;
+    margin: 0;
+    padding: 0;
   }
-  
-  .navbar-nav .nav-item.active .nav-link {
-    color: white !important;
-    background-color: #293492 !important;
-    border-radius: 30px;
-    font-weight: 500;
-    padding: 12px 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  .navbar .navbar-brand {
-        font-weight: bold;
-      }
-  
-  .navbar-nav {
-    flex-direction: row;
-    justify-content: center;
+
+  .navbar {
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    height: 6vh; /* Converted from 60px */
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    padding: 0 2vw; /* Converted from 20px */
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
   }
-  
-  .navbar-nav .nav-item {
-    padding: 10px 40px;
+
+  .navbar-brand img {
+    max-height: 3.75vh; /* Converted from 40px */
   }
-  
+
+  .navbar-nav {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+    cursor: pointer;
+    font-size: 2.4vh; /* Converted from 24px */
+  }
+
+  .img-container {
+    margin-top: 10vh; /* Adjusted for better alignment */
+    text-align: center;
+  }
+
+  .img-container img {
+    max-width: 100% fit-content;
+    height:80vw;
+  }
+
+  .login-container,
+  .eng-container {
+    margin-top: 1vh;
+    padding: 2vh; /* Converted from 20px */
+    text-align: left;
+
+  }
+
+  .custom-textbox,
+  .pass-textbox {
+    width: 80%;
+    margin: 1vh; /* Converted from 10px */
+    padding: 1.5vh; /* Converted from 15px */
+    border: 0.083vh solid #ccc; /* Converted from 1px */
+    border-radius: 0.5vh; /* Converted from 5px */
+    box-shadow: 0 1.67vh 3.33vh rgba(0, 0, 0, 0.1); /* Converted from 0 2px 4px rgba(0, 0, 0, 0.1) */
+    font-family: "Sora", sans-serif;
+  }
+
+  .pass-textbox {
+    margin-top: 1vh; /* Converted from 10px */
+  }
+
+  .custom-button {
+    display: block;
+    width: 50%; /* Adjusted for better spacing */
+    margin: 2vh; /* Converted from 20px */
+    padding: 0vh; /* Converted from 10px */
+    border-radius: 1.5vh; /* Converted from 12px */
+    background-color: #242E82;
+    color: white;
+    font-family: "Sora", sans-serif;
+    text-align: center;
+    text-decoration: none;
+  }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 59px;
+  height: 30px;
+  padding: 8px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+  padding-top: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #242E82;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+.custom-button {
+  width: 112px;
+  height: 36px;
+  border-radius: 12px;
+  background-color: #242E82;
+  color: white;
+  font-family: "Sora", sans-serif;
+}
+.custom-textbox,
+.pass-textbox {
+  width: 500px;
+  height: 40px;
+  padding: 10px;
+  font-family: "Sora", sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pass-textbox {
+  margin-top: 10px;
+}
+}
+
+/* Desktop Styles */
+@media (min-width: 1001px) {
+  body {
+    font-family: "Sora", sans-serif;
+    color: black;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar {
+    box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.2);
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 40px;
+  }
+
   .navbar-brand img {
     max-height: 40px;
-    max-width: 100%;
   }
-  
+
+  .navbar-nav {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-nav .nav-item {
+    padding: 0 20px;
+  }
+
   .navbar-nav .nav-item .nav-link {
     color: black;
     font-size: 16px;
     font-weight: 400;
+    text-decoration: none;
   }
-  
+
   .navbar-nav .nav-item .nav-link:hover,
   .navbar-nav .nav-item .nav-link:focus {
     color: #808080;
   }
-  
+
   .unselectable {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
   }
+
   .img-container {
     position: fixed;
     top: 200px;
@@ -55,11 +208,12 @@
     width: 575px;
     height: 550px;
   }
-  
+
   .img-container img {
     width: 100%;
     height: 100%;
   }
+
   .login-container {
     text-align: left;
     padding-left: 120px;
@@ -67,6 +221,7 @@
     font-family: "Sora", sans-serif;
     color: black;
   }
+
   .eng-container {
     text-align: left;
     padding-top: 10px;
@@ -74,6 +229,7 @@
     font-family: "Sora", sans-serif;
     color: black;
   }
+
   .switch {
     position: relative;
     display: inline-block;
@@ -81,13 +237,13 @@
     height: 30px;
     padding: 8px;
   }
-  
+
   .switch input {
     opacity: 0;
     width: 0;
     height: 0;
   }
-  
+
   .slider {
     position: absolute;
     cursor: pointer;
@@ -96,12 +252,11 @@
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-    border-radius: 34px; /* Adds round corners */
+    transition: 0.4s;
+    border-radius: 34px;
     padding-top: 20px;
   }
-  
+
   .slider:before {
     position: absolute;
     content: "";
@@ -110,22 +265,18 @@
     left: 4px;
     bottom: 4px;
     background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-    border-radius: 50%; /* Makes the dot round */
+    transition: 0.4s;
+    border-radius: 50%;
   }
-  
+
   input:checked + .slider {
     background-color: #242E82;
   }
-  
+
   input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
     transform: translateX(26px);
   }
 
-  
   .custom-button {
     width: 112px;
     height: 36px;
@@ -133,16 +284,9 @@
     background-color: #242E82;
     color: white;
     font-family: "Sora", sans-serif;
-  } 
-  .custom-textbox {
-    width: 500px;
-    height: 40px;
-    padding: 10px;
-    font-family: "Sora", sans-serif;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+
+  .custom-textbox,
   .pass-textbox {
     width: 500px;
     height: 40px;
@@ -152,8 +296,8 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  /* ... Your other CSS rules ... */
 
-.body{
-  display: fixed;
+  .pass-textbox {
+    margin-top: 10px;
+  }
 }
