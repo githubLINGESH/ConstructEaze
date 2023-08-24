@@ -321,7 +321,7 @@
                                             <div class="text" style="margin: 0 0 15% 0;">
                                                 Material Outward
                                             </div>
-                                            <form id="formm_ccx" action="http://localhost:3000/mato/material-outward" method="POST">
+                                            <form id="formm_ccx" action="/mato/material-outward" method="POST">
                                                 <div class="data">
                                                     <input type="text" required placeholder="Used Date " name="Date_u">
                                                 </div>
@@ -413,7 +413,7 @@
                 
                     // Function to fetch and display tasks
                     const fetchAndDisplayTasks = () => {
-                        fetch('http://localhost:3000/mato/getmato')
+                        fetch('/mato/getmato')
                         .then(response => response.json())
                         .then(Materials => {
                             tasksTableBody.innerHTML = ''; // Clear existing table rows
@@ -448,7 +448,7 @@
                     Used: formData.get('Used'),
                 };
         
-                fetch('http://localhost:3000/mato/material-outward', {
+                fetch('/mato/material-outward', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

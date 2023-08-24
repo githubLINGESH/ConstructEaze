@@ -244,7 +244,7 @@
         </script>
         <script>
             const fetchAndDisplayProjects = () => {
-            fetch('http://localhost:3000/proj/getprojects') // Assuming you have a route to fetch all projects
+            fetch('/proj/getprojects') // Assuming you have a route to fetch all projects
                 .then((response) => response.json())
                 .then((data) => {
                 const projectContainer = document.getElementById('projectContainer');

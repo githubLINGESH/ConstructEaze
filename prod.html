@@ -255,7 +255,7 @@ color: black;
                                         <div class="text" style="margin: 0 0 15% 0;">
                                           Purchase Order
                                         </div>
-                                        <form id="formm" action="http://localhost:3000/prod/submitprod" method="POST">
+                                        <form id="formm" action="/prod/submitprod" method="POST">
                                           <div class="data">
                                             <input type="text" name="Date_o" required placeholder="Order Date">
                                         </div>
@@ -353,7 +353,7 @@ color: black;
       
           // Function to fetch and display tasks
           const fetchAndDisplayTasks = () => {
-              fetch('http://localhost:3000/prod/getprod')
+              fetch('/prod/getprod')
                   .then(response => response.json())
                   .then(tasks => {
                       tasksTableBody.innerHTML = ''; // Clear existing table rows
@@ -394,7 +394,7 @@ color: black;
                   Unit_prize: formData.get('Unit_prize')
               };
       
-              fetch('http://localhost:3000/prod/submitprod', {
+              fetch('/prod/submitprod', {
                   method: 'POST',
                   headers: {
                       'Content-Type': 'application/json'

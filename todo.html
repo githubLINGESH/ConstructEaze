@@ -259,7 +259,7 @@ color: black;
                                         <div class="text" style="margin: 0 0 15% 0;">
                                             Task Details
                                         </div>
-                                        <form id="FORM_CCCC" action="http://localhost:3000/todo/submit-task" method="POST">
+                                        <form id="FORM_CCCC" action="/todo/submit-task" method="POST">
                                             <div class="data">
                                                 <input type="text" required placeholder=" Start Date" name="StartDate">
                                             </div>
@@ -374,7 +374,7 @@ color: black;
                     EndDate: formData.get('EndDate')
                 };
         
-                fetch('http://localhost:3000/todo/submit-task', {
+                fetch('/todo/submit-task', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -399,7 +399,7 @@ color: black;
             const searchInput = document.getElementById('search-input');
             const searchValue = searchInput.value;
 
-            fetch('http://localhost:3000/todo/search-tasks', {
+            fetch('/todo/search-tasks', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

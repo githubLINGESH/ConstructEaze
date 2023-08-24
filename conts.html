@@ -396,7 +396,7 @@
                 </div>
             </div>
             <div class="row ">
-                <form id="attform" action="http://localhost:3000/contract/submit" method="POST">
+                <form id="attform" action="/contract/submit" method="POST">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 form-group">
                             <label for="male">MALE: </label>
@@ -462,7 +462,7 @@
                     </div>
                     <div class="modal-body">
                         <h4 style="margin-top: 10px;">WORKER DETAILS</h4>
-                        <form id="workerContractForm" method="POST" action="http://localhost:3000/contract/submit">
+                        <form id="workerContractForm" method="POST" action="/contract/submit">
                             <input type="text" placeholder="Name of the Worker" name="w_name" required><br>
                             <input type="number" placeholder="Phone Number" name="phone" required><br>
                             <input type="text" placeholder="Worker Type" name="w_type" required><br>
@@ -571,7 +571,7 @@
                 end: formData.get('end')
             };
 
-            fetch('http://localhost:3000/contract/submit', {
+            fetch('/contract/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -640,7 +640,7 @@
             function markAttendance(workerID, status) {
                 const data = { workerID, status };
             
-                fetch('http://localhost:3000/contract/markAttendance', {
+                fetch('/contract/markAttendance', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -660,7 +660,7 @@
             }
         
         const fetchAndDisplayTasks = () => {
-            fetch('http://localhost:3000/contract/det')
+            fetch('/contract/det')
                 .then(response => response.json())
                 .then(tasks => {
                     tasksTableBody.innerHTML = ''; // Clear existing table rows

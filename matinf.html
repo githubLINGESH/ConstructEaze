@@ -266,7 +266,7 @@ color: black;
                                     <div class="text" style="margin: 0 0 15% 0;">
                                         Material Inward
                                     </div>
-                                    <form id="FORM_CCCC" action="http://localhost:3000/mat/submit" method="POST">
+                                    <form id="FORM_CCCC" action="/mat/submit" method="POST">
                                         <div class="data">
                                             <input type="text" required placeholder="Date" name="Date_i">
                                         </div>
@@ -357,7 +357,7 @@ color: black;
     
         // Function to fetch and display tasks
         const fetchAndDisplayTasks = () => {
-            fetch('http://localhost:3000/mat/get')
+            fetch('/mat/get')
                 .then(response => response.json())
                 .then(tasks => {
                     tasksTableBody.innerHTML = ''; // Clear existing table rows
@@ -398,7 +398,7 @@ color: black;
                 
             };
     
-            fetch('http://localhost:3000/mat/submit', {
+            fetch('/mat/submit', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -423,7 +423,7 @@ color: black;
                 const searchTasks = () => {
                     const searchValue = searchInput.value;
     
-                    fetch('http://localhost:3000/mat/search-mat', {
+                    fetch('/mat/search-mat', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
