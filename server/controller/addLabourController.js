@@ -11,7 +11,7 @@
         res.status(200).json(tasks);
     } catch (error) {
         console.error('Error retrieving tasks:', error);
-         res.status(500).send('Error retrieving tasks.');
+        res.status(500).send('Error retrieving tasks.');
     }
     };
 
