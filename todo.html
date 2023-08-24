@@ -339,7 +339,7 @@ color: black;
         
             // Function to fetch and display tasks
             const fetchAndDisplayTasks = () => {
-                fetch('http://localhost:3000/todo/tasks')
+                fetch('/todo/tasks')
                     .then(response => response.json())
                     .then(tasks => {
                         tasksTableBody.innerHTML = ''; // Clear existing table rows
