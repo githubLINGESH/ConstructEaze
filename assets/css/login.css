@@ -38,11 +38,14 @@
   .img-container {
     margin-top: 10vh; /* Adjusted for better alignment */
     text-align: center;
+    -ms-flex-item-align: center;
   }
 
   .img-container img {
-    max-width: 100% fit-content;
-    height:80vw;
+    max-width: 70%;
+    height:80vh;
+    width:120vw;
+
   }
 
   .login-container,

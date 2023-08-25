@@ -25,7 +25,7 @@
                 console.log('Connected to MongoDB');
                 // Start the server only after successful database connection
                 app.listen(port, () => {
-                console.log(`Server started on http://localhost:${port}/login`);
+                console.log(`Server started on http://localhost:${port}`);
                 });
             })
             .catch((error) => {

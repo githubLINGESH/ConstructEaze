@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOGIN</title>
+
+    <link rel="stylesheet" href="assets/css/Carousel.css" />
+    <script src="./script/script.js"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand unselectable" href="#"
+          ><img src="assets/img/logo.png" alt="Construct Eaze"
+        /></a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-center"
+          id="navbarNav"
+        >
+
+        </div>
+        <div class="navbar-nav">
+          <div class="logout-button">
+            <span class="logout-text unselectable"><a  href="login.html">Login</a></span>
+            <i class="fas fa-sign-out-alt"></i>
+          </div>
+        </div>
+      </nav>
+    
+    <div class="carousel">
+        <div class="carousel-item active">
+            <div class="content">
+                <div class="page-container">
+                <h2><strong>CONSTRUCT EAZE</strong></h2>
+                <p>A platform that integrates various tools and functionalities to streamline and automate construction project management processes. It helps in managing labor attendance, wages, vendor transactions, site activities, and generates reports for effective monitoring and control of construction projects.</p>
+            </div></div>
+            <img src="assets/img/Group 3326.png" alt="celogo" class="celogo">
+        </div>
+        
+        <div class="carousel-item">
+            <div class="content">
+                <div class="page-container">
+                <h2><strong>Labour Management System</strong></h2>
+                <p>The Attendance Tracking and Daily Wages/Contract module of the Labour Management System allows for the efficient management of worker attendance and the calculation of their daily wages based on their contracts.</p>
+                <a href="#">Labour Management</a>
+            </div>
+            </div>
+                <img src="assets/img/i1.jpg" alt="celogo" class="celogo">
+        </div>
+        
+        <div class="carousel-item">
+            <div class="page-container">
+                <div class="page-container">
+                <h2><strong>Report Generator</strong></h2>
+                <p>Generate comprehensive construction project reports effortlessly. Access detailed insights on project progress, resource allocation, and finances. Make informed decisions with customizable and intuitive reports.</p>
+                <a href="#">Report Generation</a>
+            </div>
+            </div>
+                <img src="assets/img/i2.jpg" alt="celogo" class="celogo">
+        </div>
+        
+        <div class="carousel-item">
+            <div class="content">
+                <div class="page-container">
+                <h2><strong>Vendor Management System</strong></h2>
+                <p>Efficiently manage vendors with our system. Streamline procurement, track interactions, and maintain a centralized vendor database. Simplify communication, deliveries, and cost-effective operations.</p>
+                <a href="#">Vendor Management</a>
+            </div>
+            </div>
+                <img src="assets/img/i3.jpg" alt="celogo" class="celogo">
+        </div>
+        
+        <div class="carousel-item">
+            <div class="content">
+                <div class="page-container">
+                <h2><strong>Site Activity</strong></h2>
+                <p>Track and manage site activities effectively. Monitor tasks, milestones, and resource allocation in real-time. Streamline communication, enhance productivity, and ensure timely project completion.</p>
+                <a href="#">Manage Site</a>
+            </div>
+            </div>
+                <img src="assets/img/i4.jpg" alt="celogo" class="celogo">
+
+        </div>
+    </div>
+    
+    <div class="carousel-navigation">
+        <span class="active" onclick="navigateTo(0)"></span>
+        <span onclick="navigateTo(1)"></span>
+        <span onclick="navigateTo(2)"></span>
+        <span onclick="navigateTo(3)"></span>
+        <span onclick="navigateTo(4)"></span>
+    </div>
+    
+    <script>
+        var carouselItems = document.querySelectorAll('.carousel-item');
+        var navbarLinks = document.querySelectorAll('.navbar a');
+        var navigationDots = document.querySelectorAll('.carousel-navigation span');
+        var currentIndex = 0;
+        
+        // Function to handle navigation
+        function navigateTo(index) {
+            carouselItems[currentIndex].classList.remove('active');
+            navigationDots[currentIndex].classList.remove('active');
+            
+            carouselItems[index].classList.add('active');
+            navigationDots[index].classList.add('active');
+            
+            currentIndex = index;
+        }
+        
+        // Auto-slide every 3 seconds
+        setInterval(function() {
+            var nextIndex = (currentIndex + 1) % carouselItems.length;
+            navigateTo(nextIndex);
+        }, 3000);
+    </script>
+</body>
+</html>
