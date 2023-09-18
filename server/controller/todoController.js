@@ -7,13 +7,16 @@
 
     exports.submitTask = async (req, res) => {
     const { Taskname, StartDate, EndDate } = req.body;
+    const userId = req.session.auth;
+    const role = req.session.role;
 
     try {
         const record = new s_todo({
+        userId:userId,
+        role:role,
         Task_name: Taskname,
         Start_date: StartDate,
         End_date: EndDate,
-        Work_done: null,
         });
 
         await record.save();
@@ -27,8 +30,10 @@
     };
 
     exports.getTasks = async (req, res) => {
+        const userId = req.session.auth;
+        const role = req.session.role;
     try {
-        const tasks = await s_todo.find();
+        const tasks = await s_todo.find({userId:userId, role:role});
 
         res.status(200).json(tasks);
     } catch (error) {
@@ -37,15 +42,19 @@
     }
     };
 
-    exports.searchTasks = async (req, res) => {
-    const { Task_Name } = req.body;
-
-    try {
-        const tasks = await s_todo.find({ Task_name: Task_Name });
-
-        res.status(200).json(tasks);
-    } catch (error) {
-        console.error('Error searching tasks:', error);
-        res.status(500).send('Error searching tasks.');
-    }
+    exports.autosearch = async (req, res) => {
+        const query = req.query.term.toLowerCase();
+        
+        try {
+            const suggestions = await s_todo.find({ Task_name: { $regex: query, $options: 'i' } })
+                .select('Task_name') // Select only the Task_name field
+                .limit(10); // Limit the number of suggestions to 10
+            
+            const suggestionList = suggestions.map(task => task.Task_name);
+            res.json(suggestionList);
+        } catch (error) {
+            console.error('Error fetching autocomplete suggestions:', error);
+            res.status(500).send('Error fetching autocomplete suggestions.');
+        }
     };
+

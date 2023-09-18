@@ -10,9 +10,13 @@ exports.getpage = async(req,res) => {
 
 exports.submitTask = async (req, res) => {
   const { name, phone, address } = req.body;
+  const userId = req.session.auth;
+  const role = req.session.role;
 
   try {
       const record = new E_client({
+          userId:userId,
+          role:role,
           name: name,
           phone: phone,
           address: address,
@@ -30,6 +34,8 @@ exports.submitTask = async (req, res) => {
 
 exports.handleFileUpload = (req, res) => {
   const file = req.file;
+  const userId = req.session.auth;
+  const role = req.session.role;
 
   if (!file) {
     return res.status(400).send('No file uploaded');
@@ -47,6 +53,8 @@ exports.handleFileUpload = (req, res) => {
 
       // Map data to MongoDB worker documents
       const workers = results.map((result) => ({
+        userId:userId,
+        role:role,
         name: result.name,
         phone: parseInt(result.phone),
         address: result.address,

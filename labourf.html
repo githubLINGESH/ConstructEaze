@@ -22,8 +22,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <style>
             .active{
-                color: white !important; 
-                background-color: rgba(0, 0, 0, 0.2); 
+                color: white !important;
+                background-color: rgba(0, 0, 0, 0.2);
                 border-left: 3px solid #F2D200;
             }
             *{
@@ -254,7 +254,10 @@ color: black;
                 <li class="nav-item">
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="pord.html">Vendor Management</a>
+                    <a class="nav-link" aria-current="page" href="conts.html">Labour Management</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="matinf.html">Site Activity</a>
@@ -296,9 +299,9 @@ color: black;
                             
                             <form id="form_cc" action="/labour/submitlab" method="POST">
                                 <input type="text" name="name" id="name" placeholder="Name" required><br>
-                                <input type="text" name="phone" id="phno"  placeholder="Phone No" required><br>
-                                <input type="text" name="Category" id="categ"  placeholder="Category" required><br>
-                                <input type="text" name="wages_per_shift" id="wages"  placeholder="Wages per Shift" required><br>
+                                <input type="text" name="phone" id="phone"  placeholder="Phone No" required><br>
+                                <input type="text" name="w_type" id="w_type"  placeholder="Category" required><br>
+                                <input type="text" name="salary" id="sal"  placeholder="Wages per Shift" required><br>
                                 <div class="row">
                                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
                                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12"><button id="openButton" onclick="openModal()" type="submit" class="btn-block save" style="background-color: white !important; color: black !important;">Save</button></div>
@@ -389,8 +392,8 @@ color: black;
                 const taskDataa = {
                     name: formData.get('name'),
                     phone: formData.get('phone'),
-                    Category: formData.get('Category'),
-                    wages_per_shift: formData.get('wages_per_shift'),
+                    w_type: formData.get('w_type'),
+                    salary: formData.get('salary'),
                 };
         
                 fetch('/labour/submitlab', {

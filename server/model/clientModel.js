@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const clientSchema = new mongoose.Schema({
+    userId:{
+      type:Number
+    },
+    role:{
+      type:String
+    },
     name: {
         type: String,
         required: true,

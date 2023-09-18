@@ -1,4 +1,5 @@
         const express = require('express');
+        const session = require('express-session');
         const loginRouter = require('./login.js');
         const clientRouter = require('./server/routes/clientRoutes.js');
         const prodfRouter = require('./server/routes/prodfRoutes.js');
@@ -12,7 +13,7 @@
         const productRouter = require('./server/routes/prodRoute.js');
         const matoutRouter = require('./server/routes/materialoutRoutes.js');
         const projectRouter = require('./server/routes/projectRoutes.js');
-        
+        const accountRouter= require('./server/routes/accountsRoutes');
 
         const mongoose = require('mongoose')
         const bodyParser = require('body-parser');
@@ -34,6 +35,13 @@
             
             app.use(bodyParser.json());
 
+
+            app.use(session({
+                secret: 'aR7$Kp#9@2L&jF5*!mDqZtVwYzBxNvP4',
+                resave: false,
+                saveUninitialized: true
+            }));
+
             // Parse incoming URL-encoded form data
             app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -53,6 +61,7 @@
         app.use('/prod', productRouter);
         app.use('/mato', matoutRouter);
         app.use('/proj', projectRouter);
+        app.use('/acc',accountRouter);
 
 
 

@@ -8,7 +8,7 @@ router.get('/download-excel', controller.downloadExcel);
 router.get('/', materialController.getProductPage);
 router.get('/getprod', materialController.getTasks);
 router.post('/submitprod', materialController.submitMaterial);
-router.post('/search-mat', materialController.searchMaterial);
+router.get('/autosearchprod', materialController.autosearchforprod);
 
 
 module.exports = router;

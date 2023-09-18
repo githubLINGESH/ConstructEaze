@@ -1,4 +1,4 @@
-    const E_labour = require('../model/labourfModel');
+    const contracts = require('../model/contractModel');
     const path = require('path');
     const fs = require('fs');
     const csv = require('csv-parser');
@@ -8,14 +8,19 @@
     };
 
     exports.submitlabour = async (req, res) => {
-    const { name, phone, Category, wages_per_shift} = req.body;
+    const { name, phone, w_type, salary} = req.body;
+    const userId = req.session.auth;
+    const role = req.session.role;
 
     try {
-        const record = new E_labour({
-        name: name,
+        const record = new contracts({
+        userId:userId,
+        role:role,
+        w_name: name,
         phone: phone,
-        Category: Category,
-        wages_per_shift: wages_per_shift
+        w_type: w_type,
+        sal: salary,
+        shift:0,
         });
 
         await record.save();
@@ -30,6 +35,8 @@
 
         exports.handleFileUploadlab = (req, res) => {
             const file = req.file;
+            const userId = req.session.auth;
+            const role = req.session.role;
         
             if (!file) {
             return res.status(400).send('No file uploaded');
@@ -47,6 +54,8 @@
         
                 // Map data to MongoDB worker documents
                 const workers = results.map((result) => ({
+                userId:userId,
+                role:role,
                 name: result.name,
                 phone: parseInt(result.phone),
                 Category: result.Category,
@@ -54,7 +63,7 @@
                 }));
         
                 // Save worker documents to MongoDB
-                E_labour.insertMany(workers)
+                contracts.insertMany(workers)
                 .then(() => {
                     res.send('Data imported successfully');
                 })

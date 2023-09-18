@@ -18,6 +18,9 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
 
     <style>
         *{
@@ -90,7 +93,8 @@
             }
             
         }
-        .att .modal-content {
+
+        /*.att .modal-content {
             border-radius: 15px;
             border-top-left-radius: 20px !important;
             border-top-right-radius: 20px !important;
@@ -108,10 +112,10 @@
             font-size: 24px;
             font-weight: bold;
             opacity: 1;
-            background-color: transparent; /* Add this line to make the background transparent */
-            border: none; /* Add this line to remove the border */
-            outline: none; /* Add this line to remove the outline on focus */
-            padding: 0; /* Add this line to remove extra padding */
+            background-color: transparent; /* Add this line to make the background transparent
+            border: none; /* Add this line to remove the border
+            outline: none; /* Add this line to remove the outline on focus
+            padding: 0; /* Add this line to remove extra padding
         }
         .att .modal-body input{
             width: 300px !important;
@@ -278,7 +282,7 @@
             object-fit: contain;
             vertical-align: top;
             flex-shrink: 0;
-        }
+        }*/
         .btn {
             background-color: white !;
             color: black !important;
@@ -286,6 +290,213 @@
             border-radius: 25px;
             font-weight: 400 !important;
         }
+        .att .input-group input{
+            height: 50px;
+            width: 50%;
+            padding-left: 10px;
+            font-size: 14px;
+            border: 1px solid silver;
+            border-radius: 5px;
+        }
+        .att .input-group input:focus{
+            border-color: #242E82;
+            border-bottom-width: 2px;
+        }
+        #check{
+            margin-right: 6px;
+            pointer-events: none;
+        }
+        #check:checked{
+            accent-color: green;
+        }
+
+        td .cbx {
+        position: relative;
+        top: 1px;
+        width: 25px;
+        height: 25px;
+        border: 2px solid #c8ccd4;
+        border-radius: 3px;
+        align-items: center;
+        transition: background 0.1s ease;
+        cursor: pointer;
+        display: block;
+        }
+
+        td .cbx:after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 7px;
+        width: 7px;
+        height: 13px;
+        opacity: 0;
+        transform: rotate(45deg) scale(0);
+        border-right: 2px solid #fff;
+        border-bottom: 2px solid #fff;
+        transition: all 0.3s ease;
+        transition-delay: 0.15s;
+        }
+
+        td .lbl {
+        margin-left: 10px;
+        vertical-align: middle;
+        cursor: pointer;
+        }
+
+        td #cbx:checked ~ .cbx {
+        border-color: transparent;
+        background: #6871f1;
+        animation: jelly 0.6s ease;
+        }
+
+        td #cbx:checked ~ .cbx:after {
+        opacity: 1;
+        transform: rotate(45deg) scale(1);
+        }
+
+        td .cntr {
+        position: relative;
+        }
+
+        @keyframes jelly {
+        from {
+        transform: scale(1, 1);
+        }
+
+        30% {
+        transform: scale(1.25, 0.75);
+        }
+
+        40% {
+        transform: scale(0.75, 1.25);
+        }
+
+        50% {
+        transform: scale(1.15, 0.85);
+        }
+
+        65% {
+        transform: scale(0.95, 1.05);
+        }
+
+        75% {
+        transform: scale(1.05, 0.95);
+        }
+
+        to {
+        transform: scale(1, 1);
+        }
+        }
+
+        .hidden-xs-up {
+        display: none !important;
+        }
+        /* CSS for hiding the attendance column */
+        .hidden {
+            display: none;
+        }
+        .popup{
+            width: 400px;
+            background: #fff;
+            border-radius: 6px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+            padding: 0 30px 30px;
+            color: #333;
+        }
+        .popup img{
+            width: 100px;
+            margin-top: -50px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .popup h2{
+            font-size: 38px;
+            font-weight: 500;
+            font-family: 'Sora' sans-serif !important;
+            margin: 30px 0 10px;
+        }
+        .popup button{
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px 0;
+            background: #242e82;
+            color: #fff;
+            border: 0;
+            outline: none;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+        }
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            }
+            
+            .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            }
+            
+            .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            }
+            
+            .close:hover,
+            .close:focus {
+            color: black;
+            }
+                
+                .custom-checkbox {
+                width: 30px;
+                height: 30px;
+                background-color: transparent;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                cursor: pointer;
+                position: relative;
+                transition: background-color 0.3s, color 0.3s;
+                }
+                
+                .custom-checkbox::after {
+                content: '';
+                font-size: 20px;
+                color: transparent;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                }
+                
+                .custom-checkbox:active {
+                background-color: rgb(200, 255, 0);
+                }
+                
+                .custom-checkbox.clicked {
+                background-color: #ff5733; /* New background color */
+                color: #000; /* New text color */
+                }
+
+        
     </style>
 </head>
 <body>
@@ -294,9 +505,9 @@
         <a class="navbar-brand" href="#">
             <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <!--<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button>-->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
             
@@ -329,6 +540,7 @@
             <nav class="nav flex-column" style="padding-top: 100px; ">
                 <a class="nav-link space"  style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#">Attendance</a>
             </nav>
+                <button id="loginButton" class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200; font-size:15px; display: flex; width: 100%; text-align:left;">SUPERVISOR ATTENDANCE</button>
         </div>
         </div>
         <div class="col-lg-10">
@@ -338,16 +550,16 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <h1>daily workers</h1></div>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; justify-content: flex-end; ">
-                        <button type="button" class="btn-block" data-toggle="modal" data-target="#add_wr">
+                        <!--<button type="button" class="btn-block" data-toggle="modal" data-target="#add_wr">
                             <i class="fas fa-plus"></i>
                             Add Worker
                         </button>
-                    </div>
+                    </div>-->
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
+                    <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
                         <div class="date-DU2">
                             <button><i class="fas fa-chevron-left"></i></button>
                             <div class="item-13-HTt">
@@ -372,6 +584,16 @@
                             <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
+                    </div>-->
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
+                        <div class="input-group">
+                            <div class="input-group-addon" style="background-color: rgb(177, 177, 177);">
+                                <button id="search-button" type="button" style="margin: 10px 10px; border: none; background: none;">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                            <input type="text" name="search" id="search-input" class="form-control" placeholder="Search Labour">
+                        </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; justify-content: flex-end; ">
                         <div class="table-responsive">
@@ -385,9 +607,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="prs"></td>
-                                        <td class="abs"></td>
-                                        <td class="tot"></td>
+                                        <td id="present-count" class="prs"></td>
+                                        <td id="absent-count" class="abs"> </td>
+                                        <td id="total-count" class="tot"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -395,7 +617,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row ">
+            <!--<div class="row ">
                 <form id="attform" action="/contract/submit" method="POST">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 form-group">
@@ -416,38 +638,28 @@
                     </div>
                 </form>
                 
-            </div>
+            </div>-->
 
             <div id="successMessage" style="display: none; font: size 30px;">Record inserted successfully!</div>
+            <div class="row" >
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
+                    <button class="btn-block" id="markAttendanceButton" style="margin-left: 20px;">Mark Attendance</button>
+                </div>
+            </div>
             <div class="four">
-                <table id="table">
+                <table id="table" class="table">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>WorkerType</th>
                             <th>Shift</th>
                             <th>Present/Absent</th>
+                            <th id="attendanceColumn" class="hidden">Location</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>${task.w_name}</td>
-                            <td>${task.w_type}</td>
-                            <td>${task.shift}</td>
-                            <td class="attendance">
-                                ${
-                                    task.pa === 'Present' ? `<div class="p_a">Present</div>` :
-                                    task.pa === 'Absent' ? `<div class="p_a">Absent</div>` :
-                                    `<div class="p_a">
-                                        <button class="prs" style="margin-right: 10px; background-color: green;">Present</button>
-                                        <button class="abs" style="margin-left: 10px; background-color: red;">Absent</button>
-                                    </div>`
-                                }
-                                <button class="edit-btn" style="background-color: rgb(136, 136, 30); display: none;">Edit</button>
-                            </td>
-                        <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
-                    </tr>
-                    </tbody>
+                    <tbody id="tasks-table-body">
+                    <!-- labor records are inserted dynamically-->
+                        </tbody>
                 </table>
             </div>
             <div id="add_wr" class="modal fade" role="form">
@@ -485,65 +697,37 @@
 
 
     </div>
+    <div id="myModal" class="modal">
+        <div class="popup">
+            <img src="assets/img/succs.png">
+            <h2>Attendance</h2>
+            <p>Attendance Marked successfully!</p>
+            <button onclick="closeModal()">OK</button>
+        </div>
+    </div>
+    <script>
+        function openModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    </script>
+        
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-
-        let date_n = document.querySelector(".item-14-Laa");
-        let day_n = document.querySelector(".wed-TfC");
-        let date_p = document.querySelector(".item-13-1en");
-        let day_p = document.querySelector(".tue-8UW");
-        let date_a = document.querySelector(".item-15-hpS");
-        let day_a = document.querySelector(".thu-pu4");
-        let mon_n = document.querySelector(".jun-amL");
-        let crtdte = new Date();
-        let date = crtdte.getDate();
-        let day = crtdte.getDay();
-        let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        let day_f = days[day];
-        let dayp = days[day - 1];
-        let daya = days[day + 1];
-        let mon = crtdte.getMonth();
-        let mons = ['Jan', 'Feb', 'Mar', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        let mon_f = mons[mon];
-        let yr = crtdte.getFullYear();
-        console.log(mon);
-        date_n.textContent = `${date}`;
-        day_n.textContent = `${day_f}`;
-        date_p.textContent = `${date - 1}`;
-        day_p.textContent = `${dayp}`;
-        date_a.textContent = `${date + 1}`;
-        day_a.textContent = `${daya}`;
-        mon_n.textContent = `${mon_f}`
-
-
-        const mark = document.getElementById('wrkbtn');
-
-        mark.addEventListener('click', function () {
-            let male = parseInt(document.getElementById('male').value);
-            let fmale = parseInt(document.getElementById('female').value);
-            let cont = parseInt(document.getElementById('contract').value);
-
-            if (isNaN(male)) {
-                male = 0;
-            }
-            if (isNaN(fmale)) {
-                fmale = 0;
-            }
-            if (isNaN(cont)) {
-                cont = 0;
-            }
-            const ct_t = male + fmale + cont;
-            const ct_p = male + fmale + cont;
-            const tot = document.getElementById('tot');
-            tot.textContent = ct_t;
-            const prs = document.getElementById('prs');
-            prs.textContent = ct_p;
-            const abs = document.getElementById('abs');
-            abs.textContent = "0";
-
-            document.getElementById('attform').reset();
+            const loginButton = document.getElementById('loginButton');
+            const attendanceColumn = document.getElementById('attendanceColumn');
+        
+            loginButton.addEventListener('click', function () {
+                // Toggle the visibility of the attendance column
+                attendanceColumn.classList.toggle('hidden');
+            });
         });
-        });
+        
     </script>
     <script>
         const contractForm = document.getElementById('contractForm');
@@ -551,183 +735,308 @@
         const addButton = document.getElementById('addButton');
         const successMessage = document.getElementById('successMessage');
 
-        addButton.addEventListener('click', function (event) {
-
-            // Submit the workerContractForm programmatically
-            workerContractForm.submit();
-        });
-
-        workerContractForm.addEventListener('submit', function (event) {
-            
-
-            const formData = new FormData(workerContractForm);
-            const taskData = {
-                w_name: formData.get('w_name'),
-                phone: formData.get('phone'),
-                w_type: formData.get('w_type'),
-                sal: formData.get('sal'),
-                shift: formData.get('shift'),
-                start: formData.get('start'),
-                end: formData.get('end')
-            };
-
-            fetch('/contract/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(taskData)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Record inserted successfully.');
-                        workerContractForm.reset();
-                        // Show the success message
-                        successMessage.style.display = 'block';
-                        // Hide the message after a few seconds
-                        setTimeout(() => {
-                            successMessage.style.display = 'none';
-                        }, 3000);
-                    } else {
-                        console.error('Error inserting record.');
-                    }
-                })
-                .catch(error => console.error('Error inserting record:', error));
-        });
         const tasksTableBody = document.querySelector('#table tbody');
-
-        const handleButtonClick = (event) => {
+        const handleCheckboxClick = (event) => {
             const target = event.target;
-            if (target.classList.contains('prs')) {
-                // Handle Present button click
-                const row = target.closest('tr');
-                const workerId = row.querySelector('.w_id').dataset.workerId;
-                markAttendance(workerId, 'Present');
-            } else if (target.classList.contains('abs')) {
-                // Handle Absent button click
-                const row = target.closest('tr');
-                const workerId = row.querySelector('.w_id').dataset.workerId;
-                markAttendance(workerId, 'Absent');
-            }
-        };
-    
-        const editAttendance = (cell) => {
-            toggleButtons(cell, false); // Show "Present" and "Absent" buttons and hide "Edit" button
-            // Add event listeners to the "Present" and "Absent" buttons in the editing state
-            const presentButton = cell.querySelector('.prs');
-            const absentButton = cell.querySelector('.abs');
-    
-            presentButton.addEventListener('click', () => markWorkerAttendance(cell, 'Present'));
-            absentButton.addEventListener('click', () => markWorkerAttendance(cell, 'Absent'));
-        };
-    
-        const toggleButtons = (cell, editing) => {
-            const presentButton = cell.querySelector('.prs');
-            const absentButton = cell.querySelector('.abs');
-            const editButton = cell.querySelector('.edit-btn');
-    
-            if (editing) {
-                presentButton.style.display = 'none';
-                absentButton.style.display = 'none';
-                editButton.style.display = 'inline-block';
-            } else {
-                presentButton.style.display = 'inline-block';
-                absentButton.style.display = 'inline-block';
-                editButton.style.display = 'none';
-            }
-        };
-    
-            function markAttendance(workerID, status) {
-                const data = { workerID, status };
             
-                fetch('/contract/markAttendance', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-                })
-                .then((response) => response.json())
-                .then((result) => {
-                    // Handle the response if needed
-                    console.log(result);
-
-                })
-                .catch((error) => {
-                    // Handle any errors that occurred during the fetch or processing
-                    console.error('Error marking attendance:', error);
-                });
+            if (target.type === 'checkbox') {
+                // Handle checkbox click
+                const row = target.closest('tr');
+                const workerId = row.querySelector('.w_id').dataset.workerId;
+                const status = target.checked ? 'Present' : 'Absent';
+                markAttendance(workerId, status);
             }
+        };
         
-        const fetchAndDisplayTasks = () => {
-            fetch('/contract/det')
+            // Assuming you have an empty table with an ID "tasksTable"
+            //geolocation getting fns
+            function createGoogleMapsLink(latitude, longitude) {
+                const mapUrl = `https://maps.google.com/maps?q=${latitude},${longitude}`;
+                const link = document.createElement('a');
+                link.href = mapUrl;
+                link.target = '_blank';
+                link.textContent = 'View on Google Maps';
+                return link;
+                }
+            
+            // Function to fetch and display worker records
+            const fetchAndDisplayTasks = (searchQuery) => {
+                // Create an object to hold query parameters
+                const queryParams = {};
+            
+                if (searchQuery) {
+                    // If there is a search query, add it to the query parameters
+                    queryParams.search = searchQuery;
+                }
+            
+                // Construct the query string with the query parameters
+                const queryString = new URLSearchParams(queryParams).toString();
+                fetch(`/contract/det?${queryString}`)
                 .then(response => response.json())
-                .then(tasks => {
-                    tasksTableBody.innerHTML = ''; // Clear existing table rows
-    
-                    tasks.forEach(task => {
-                        const row = document.createElement('tr');
-                        // Modify the row.innerHTML as follows:
-                        row.innerHTML = `
-                        <td>${task.w_name}</td>
-                        <td>${task.w_type}</td>
-                        <td>${task.shift}</td>
-                        <td class="attendance">
-                            ${
-                                task.pa === 'Present' ? `<div class="p_a">Present</div>` :
-                                task.pa === 'Absent' ? `<div class="p_a">Absent</div>` :
-                                `<div class="p_a">
-                                    <button class="prs" style="margin-right: 10px; background-color: green;">Present</button>
-                                    <button class="abs" style="margin-left: 10px; background-color: red;">Absent</button>
-                                </div>`
-                            }
-                            <button class="edit-btn" style="background-color: rgb(194, 194, 187); display: none;">Edit</button>
-                        </td>
-                        <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
-                        `;
-                        tasksTableBody.appendChild(row);
-                    });
-    
-                   // Add event listeners to the "Present" and "Absent" buttons
-                    const attendanceCells = document.querySelectorAll('.attendance');
-                    attendanceCells.forEach((cell) => {
-                    const presentButton = cell.querySelector('.prs');
-                    const absentButton = cell.querySelector('.abs');
-                    const editButton = cell.querySelector('.edit-btn');
+                .then(data => {
+                    
+                    const tasks = data.tasks;
+                    const userRole = data.role; // Get the user's role from the response
+            
+                    const loginButton = document.getElementById('loginButton');
 
-                    const markAttendanceHandler = () => {
-                        const status = presentButton.style.display === 'none' ? 'Absent' : 'Present';
-                        markAttendance(cell.dataset.workerId, status);
+                        // Check the user's role and hide the login button if it's not "engineer"
+                        if (userRole !== 'engineer') {
+                        loginButton.style.display = 'none';
+                        }
+
+                    tasks.forEach(task => {
+                        // Check if a row with the same w_name already exists
+                        const existingRow = tasksTableBody.querySelector(`[data-worker-id="${task.w_name}"]`);
+
+                        if (!existingRow) {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${task.w_name}</td>
+                                <td>${task.w_type}</td>
+                                <td>${task.shift}</td>
+                                <td class="cntr" style="display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    margin-right: 30px;">
+                                    <input style="box-shadow:none; width: 20px;
+                                        height: 20px;
+                                        background-color: #007bff;
+                                        border: 1px solid #007bff;"
+                                        type="checkbox"
+                                        checked
+                                        ${task.pa !== 'Present' ? 'disabled' : 'checked'}> <!-- Initially checked if task.pa is 'Present', disabled if not -->
+                                </td>
+                                <td class="google-maps-link"></td>
+                                <td>${task.role}</td>
+                                <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
+                            `;
+        
+                            // Append the new row to the end of the table
+                            tasksTableBody.appendChild(row);
+
+
+                            const googleMapsLinkContainer = row.querySelector('.google-maps-link');
+        
+                            // Create and add the Google Maps link to the container
+                            const googleMapsLink = createGoogleMapsLink(task.latitude, task.longitude);
+                            googleMapsLinkContainer.appendChild(googleMapsLink);
+                            if (userRole !== 'engineer') {
+                                googleMapsLinkContainer.style.display = 'none';
+                            }
+                        } else {
+                            // Display a message indicating that the worker is already in the table
+                            console.log(`Worker ${task.w_name} is already in the table.`);
+                        }
+                        });
+
+                    const currentDate = new Date();
+                    const year = currentDate.getFullYear();
+                    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based, so add 1 and format with leading zero
+                    const day = currentDate.getDate().toString().padStart(2, '0');
+                    
+                    // Format the date as 'YYYY-MM-DD' (e.g., '2023-09-01')
+                    const formattedDate = `${year}-${month}-${day}`;
+
+                    // Define the markAttendance function at the global scope
+                    const markAttendance = (workerID, status, latitude, longitude) => {
+                        const attendanceData = { date: formattedDate, workerID, status, latitude, longitude };
+                        fetch('/contract/markAttendance', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(attendanceData), // Pass the array of attendance data
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                            // Handle the response if needed
+                            openModal();
+                            console.log(result);
+                            fetchAndDisplayTasks();
+                        })
+                        .catch(error => {
+                            // Handle any errors that occurred during the fetch or processing
+                            console.error('Error marking attendance:', error);
+                        });
                     };
 
-                    presentButton.addEventListener('click', markAttendanceHandler);
-                    absentButton.addEventListener('click', markAttendanceHandler);
+                    // Add an event listener to the "Mark Attendance" button
+                    const markAttendanceButton = document.getElementById('markAttendanceButton');
+                    markAttendanceButton.addEventListener('click', async () => {
+                        const position = await getPreciseLocation(); // Wait for location data
+                        // Find all checkboxes
+                        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                        
+                        // Create an array to store the attendance data for each worker
+                        const attendanceData = [];
+                        
+                        checkboxes.forEach(checkbox => {
+                            // Get the worker ID from the data attribute
+                            const workerID = checkbox.closest('tr').querySelector('.w_id').getAttribute('data-worker-id');
+                            
+                            // Determine the status based on checkbox checked state
+                            const status = checkbox.checked ? 'Present' : 'Absent';
+                            
+                            // Call the markAttendance function with location data to send the data to the server
+                            markAttendance(workerID, status, position.coords.latitude, position.coords.longitude);
+                        });
+                    });
 
-                    // Show edit button for workers with a status other than 'Present' or 'Absent'
-                    if (presentButton.style.display === 'none' && absentButton.style.display === 'none') {
-                        editButton.style.display = 'inline-block';
-                        editButton.addEventListener('click', () => {
-                        editAttendance(cell);
+                    // Modify the getPreciseLocation function to return a Promise
+                    function getPreciseLocation() {
+                        return new Promise((resolve, reject) => {
+                            if (navigator.geolocation) {
+                                navigator.geolocation.getCurrentPosition(resolve, reject);
+                            } else {
+                                reject(new Error('Geolocation is not available.'));
+                            }
                         });
                     }
                     });
-                })
-                .catch((error) => console.error('Error retrieving tasks:', error));
             };
-    
-        document.addEventListener('DOMContentLoaded', () => {
-            tasksTableBody.addEventListener('click', handleButtonClick);
             fetchAndDisplayTasks();
-    
-            const editButtons = document.querySelectorAll('.edit-btn');
-            editButtons.forEach(editButton => {
-                const attendanceCell = editButton.closest('.attendance');
-                editButton.addEventListener('click', () => {
-                    editAttendance(attendanceCell);
-                });
+
+            // Function to handle the search input and trigger fetching and displaying tasks
+            const handleSearch = () => {
+                const searchInput = document.getElementById('search-input');
+                const searchQuery = searchInput.value.trim();
+
+                if (searchQuery !== '') {
+                    fetchAndDisplayTasks(searchQuery);
+                }
+            };
+
+            // Event listener for the Enter key in the search input
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('keyup', (event) => {
+                if (event.key === 'Enter') {
+                    handleSearch();
+                }
             });
-        });
+
+
 
     </script>
+    <script>
+        /*document.addEventListener('DOMContentLoaded', () => {
+
+            const tasksTableBody = document.querySelector('#table tbody');
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const allRows = document.getElementById('tasks-table-body').getElementsByTagName('tr');
+            
+            function performClientSearch(query) {
+                const searchValue = query.trim().toLowerCase();
+        
+                for (const row of allRows) {
+                    const taskNameCell = row.querySelector('td:nth-child(1)'); // Assuming task name is in the first column
+        
+                    if (taskNameCell) {
+                        const taskName = taskNameCell.textContent.toLowerCase();
+        
+                        if (taskName.includes(searchValue)) {
+                            row.style.display = ''; // Show the row
+                        } else {
+                            row.style.display = 'none'; // Hide the row
+                        }
+                    }
+                }
+            }
+        
+            searchInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent form submission if needed
+                    const searchValue = searchInput.value.trim();
+                    performClientSearch(searchValue); // Perform client-side search
+                }
+            });
+
+            searchButton.addEventListener('click', function() {
+                const searchValue = searchInput.value.trim();
+                performClientSearch(searchValue); // Perform client-side search
+            });
+    });*/
+</script>
+    <script>
+        $(function() {
+            $("#search-input").autocomplete({
+                source: function(request, response) {
+                    // Make an AJAX request to fetch autocomplete suggestions
+                    $.ajax({
+                        url: '/contract/autocomple', // URL to fetch autocomplete suggestions
+                        method: 'GET', // Use GET request
+                        dataType: 'json', // Expect JSON response
+                        data: {
+                            term: request.term // Pass the user input as 'term'
+                        },
+                        success: function(data) {
+                            response(data); // Provide the response to the autocomplete widget
+                        },
+                        error: function(error) {
+                            console.error('Error fetching autocomplete suggestions:', error);
+                        }
+                    });
+                },
+                minLength: 0, // Minimum number of characters before showing suggestions
+                select: function(event, ui) {
+                    // Handle selected item
+                    $("#search-input").val(ui.item.value);
+                    // Perform search based on the selected value
+                    searchTasks(ui.item.value);
+                }
+            });
+        });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+    // Attach a click event listener to the table element
+    document.querySelector('#table tbody').addEventListener('click', (event) => {
+        if (event.target.type === 'checkbox') {
+            const checkbox = event.target;
+            const isChecked = checkbox.checked;
+            
+            // Find the associated worker's name
+            const row = checkbox.closest('tr');
+            const workerName = row.querySelector('.w_id').textContent;
+            
+            // Now you can use the workerName and isChecked as needed
+            if (isChecked) {
+                // Handle when the checkbox is checked
+                console.log(`Checkbox for ${workerName} is checked.`);
+                // Add your logic here for when the checkbox is checked
+            } else {
+                // Handle when the checkbox is unchecked
+                console.log(`Checkbox for ${workerName} is unchecked.`);
+                // Add your logic here for when the checkbox is unchecked
+            }
+        }
+    });
+});
+
+    </script>
+    <script>
+        function fetchAndUpdateAttendanceCounts() {
+            fetch('/contract/attendance-count')
+                .then(response => response.json())
+                .then(counts => {
+                    // Update the counts in your frontend UI
+                    document.getElementById('present-count').textContent = counts.presentCount;
+                    document.getElementById('absent-count').textContent = counts.absentCount;
+                    
+                    // Calculate and update the total count
+                    const total = counts.presentCount + counts.absentCount;
+                    document.getElementById('total-count').textContent = total;
+                })
+                .catch(error => {
+                    console.error('Error fetching attendance counts:', error);
+                });
+        }
+    
+        // Call the function when needed, e.g., when the page loads or after marking attendance
+        fetchAndUpdateAttendanceCounts();
+    </script>
+    
+        
 </body>
 </html>

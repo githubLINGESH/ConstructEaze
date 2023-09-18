@@ -1,6 +1,17 @@
 const mongoose = require('mongoose');
 
 const contractSchema = new mongoose.Schema({
+  userId:{
+    type:Number
+  },
+  role:{
+    type:String,
+    required:true,
+  },
+  date:{
+    type:Date,
+    default:null,
+  },
   w_name: {
     type: String, // Name of the Worker should be a string
     required: true,
@@ -19,19 +30,19 @@ const contractSchema = new mongoose.Schema({
   },
   shift: {
     type: Number, // Hours Per Shift should be a number
-    required: true,
-  },
-  start: {
-    type: Date, // Start Date should be a date
-    required: true,
-  },
-  end: {
-    type: Date, // End Date should be a date
-    required: true,
+    required: false,
   },
   pa: {
     type: String,
     default:null
+  },
+  latitude:{
+    type:Number,
+    default:null,
+  },
+  longitude:{
+    type:Number,
+    default:null,
   }
 });
 

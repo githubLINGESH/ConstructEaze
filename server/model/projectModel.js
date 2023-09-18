@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
-Project_name: String,
-Address: String,
-City: String,
+    userId:Number,
+    role:String,
+    Project_name: String,
+    Address: String,
+    City: String,
 
 });
 

@@ -1,25 +1,46 @@
 const path = require('path');
-const e_prods = require('../model/prodfModel');
+//const e_prods = require('../model/prodfModel');
 const fs = require('fs');
 const csv = require('csv-parser');
+const { name } = require('ejs');
+const e_products = require('../model/prodModel');
 
 exports.getpage = async(req,res) => {
 res.sendFile(path.join(__dirname, '..', '..','prodf.html'));
 };
 
 exports.submitprod = async (req, res) => {
-const { Item_code ,Item_name , category , description, unit , price} = req.body;
+const { name, firm_name,address,Gst, phone,Item_code ,Item_name , category , unit } = req.body;
+
+const userId = req.session.auth;
+const role = req.session.role;
 
 try {
-    const record = new e_prods({
+    const record = new e_products({
+        userId:userId,
+        role:role,
+        //id: Number,
+        Date_o: null ,
+        Date_i:null ,
+        Date_u: null,
+        flag: true,
+        order: false,
+        Vendor_name: name,
+        Firmname: firm_name,
+        Address: address,
+        Gst: Gst,
+        Phone: phone,
         Item_code : Item_code,
-        Item_name : Item_name,
-        category  : category,
-        description: description,
-        unit :unit,
-        price : price,
+        Name_of_Material: Item_name,
+        Category: category,
+        Unit: unit,
+        Unit_prize:null,
+        Required_quantity: 0,
+        Supplied_quantity: 0,
+        Used: 0,
+        Current_stock: 0,
+        Price: null
     });
-
     await record.save();
     console.log('Record inserted successfully.');
 
@@ -32,6 +53,9 @@ try {
     
     exports.handleFileUploads = (req, res) => {
     const file = req.file;
+
+    const userId = req.session.auth;
+    const role = req.session.role;
     
     if (!file) {
         return res.status(400).send('No file uploaded');
@@ -49,16 +73,23 @@ try {
     
         // Map data to MongoDB worker documents
         const workerss = resultss.map((resul) => ({
+            userId:userId,
+            role:role,
+            flag: true,
+            Vendor_name: resul.name,
+            Firmname: resul.firm_name,
+            Address: resul.address,
+            Gst: parseInt(resul.Gst),
+            Phone: parseInt(resul.phone),
             Item_code: parseInt(resul.Item_code),
-            Item_name: resul.Item_name,
-            category: resul.category,
-            description : resul.description,
-            unit: parseInt(resul.unit),
-            price: parseInt(resul.price),
-        }));
+            Name_of_Material: resul.Item_name,
+            Category: resul.category,
+            Unit: resul.unit,
+
+            }));
     
         // Save worker documents to MongoDB
-        e_prods.insertMany(workerss)
+        e_products.insertMany(workerss)
             .then(() => {
             res.send('Data imported successfully');
             })
@@ -67,4 +98,3 @@ try {
             });
         });
     };
-

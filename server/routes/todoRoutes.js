@@ -5,6 +5,6 @@ const todoController = require('../controller/todoController');
 router.get('/', todoController.getTodoPage);
 router.post('/submit-task', todoController.submitTask);
 router.get('/tasks', todoController.getTasks);
-router.post('/search-tasks', todoController.searchTasks);
+router.get('/autocomplete',todoController.autosearch);
 
 module.exports = router;

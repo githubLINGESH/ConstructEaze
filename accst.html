@@ -57,124 +57,251 @@
         </div>
         <div class="col-lg-10" style="padding: 5% 5% !important;">
           
-
           <div class="account-statement">
             <h1>A C C O U N T &nbsp; &nbsp; S T A T E M E N T</h1>
-            <table style="margin-top: 3% !important; justify-content:center; align-items:center;" class="table">
+            
+            <!-- Filter button and options -->
+            <div class="filter">
+              <div id="filterOptions" class="filter-options">
+                  <label for="filterType">Select Filter:</label>
+                  <select id="filterType" class="form-select">
+                      <option value="vendor">Vendor</option>
+                      <option value="product">Product</option>
+                  </select>
+                  <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                  <select id="vendorDropdown" class="form-select">
+                      <!-- Vendor names will be dynamically populated here -->
+                  </select>
+                  <select id="productDropdown" class="form-select">
+                      <!-- Product names will be dynamically populated here -->
+                  </select>
+              </div>
+          </div>
+          
+
+          <div id="detailsTableContainer">
+            <h2 id="detailsHeading"></h2>
+            <table id="detailsTable" class="table">
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Description</th>
+                        <th id="filterColumnHeader"></th>
                         <th>Transaction Type</th>
-                        <th>Amount</th>
+                        <th>Price</th>
                     </tr>
                 </thead>
-                <tbody id="statement-table-body">
-                    <!-- The transaction data will be dynamically populated here -->
+                <tbody id="tableBody">
+                    <!-- Table data will be populated here -->
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3">Total Balance:</td>
-                        <td id="total-balance">0.00</td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
-    
-
-
-        </div>
-
-
       </div>
+          
+        </div>
+        </div>
+      </div>
+      <body>
+        <script>
+          // Function to populate the vendor names in the dropdown.
+          function populateDropdown(filterType) {
+              const dropdown = filterType === 'vendor' ? document.getElementById("vendorDropdown") : document.getElementById("productDropdown");
+      
+              // Fetch names from the API based on user selection (vendor or product).
+              fetch(`/acc/get-${filterType}-names`) // Update the route as needed
+                  .then(response => response.json())
+                  .then(names => {
+                      dropdown.innerHTML = ""; // Clear existing options.
+                      names.forEach((name) => {
+                          const option = document.createElement("option");
+                          option.textContent = name;
+                          dropdown.appendChild(option);
+                      });
+                      // Call filterDropdown initially to filter based on the search input.
+                      filterDropdown(filterType);
+                  })
+                  .catch(error => {
+                      console.error(`Error fetching ${filterType} names:`, error);
+                  });
+          }
+      
+          // Function to filter the dropdown options based on the search input.
+          function filterDropdown(filterType) {
+              const dropdown = filterType === 'vendor' ? document.getElementById("vendorDropdown") : document.getElementById("productDropdown");
+              const searchInput = document.getElementById("searchInput");
+              const filter = searchInput.value.toLowerCase();
+              const options = dropdown.getElementsByTagName("option");
+      
+              for (let i = 0; i < options.length; i++) {
+                  const option = options[i];
+                  const text = option.textContent.toLowerCase();
+                  if (text.includes(filter)) {
+                      option.style.display = "block";
+                  } else {
+                      option.style.display = "none";
+                  }
+              }
+          }
+      
+          // Event listener for filter type change.
+          const filterType = document.getElementById("filterType");
+          filterType.addEventListener("change", function () {
+              const vendorDropdown = document.getElementById("vendorDropdown");
+              const productDropdown = document.getElementById("productDropdown");
+      
+              if (filterType.value === "vendor") {
+                  vendorDropdown.style.display = "block";
+                  productDropdown.style.display = "none";
+                  populateDropdown("vendor"); // Populate the vendor dropdown.
+              } else if (filterType.value === "product") {
+                  vendorDropdown.style.display = "none";
+                  productDropdown.style.display = "block";
+                  populateDropdown("product"); // Populate the product dropdown.
+              } else {
+                  vendorDropdown.style.display = "none";
+                  productDropdown.style.display = "none";
+              }
+          });
+      
+          // Event listener for search input changes.
+          const searchInput = document.getElementById("searchInput");
+          searchInput.addEventListener("input", function () {
+              const filterType = document.getElementById("filterType").value;
+              filterDropdown(filterType);
+          });
+      
+          // Populate the dropdown initially based on the default filter type.
+          populateDropdown(filterType.value);
+
+          // Function to update the table heading and column header based on the filter.
+// Function to populate the vendor names in the dropdown.
+function populateDropdown(filterType) {
+  const dropdown = filterType === 'vendor' ? document.getElementById("vendorDropdown") : document.getElementById("productDropdown");
+
+  // Fetch names from the API based on user selection (vendor or product).
+  fetch(`/acc/get-${filterType}-names`) // Update the route as needed
+    .then(response => response.json())
+    .then(names => {
+      dropdown.innerHTML = ""; // Clear existing options.
+      names.forEach((name) => {
+        const option = document.createElement("option");
+        option.textContent = name;
+        dropdown.appendChild(option);
+      });
+
+      // Call filterDropdown initially to filter based on the search input.
+      filterDropdown(filterType);
+    })
+    .catch(error => {
+      console.error(`Error fetching ${filterType} names:`, error);
+    });
+}
+
+// Add event listener for vendorDropdown
+const vendorDropdown = document.getElementById("vendorDropdown");
+vendorDropdown.addEventListener("change", function () {
+  const selectedVendor = this.value; // Get the selected vendor name
+  const filterType = filterType.value; // Get the selected filter type
+  updateTable(filterType, selectedVendor); // Update the table based on selected vendor
+});
+
+// Add event listener for productDropdown
+const productDropdown = document.getElementById("productDropdown");
+productDropdown.addEventListener("change", function () {
+  const selectedProduct = this.value; // Get the selected product name
+  const filterType = filterType.value; // Get the selected filter type
+  updateTable(filterType, selectedProduct); // Update the table based on selected product
+});
+
+// Function to update the table header and populate table data.
+function updateTable(filterType, selectedValue) {
+  const tableBody = document.getElementById("tableBody");
+  const vendorProductHeader = document.getElementById("vendorProductHeader");
+  const detailsHeading = document.getElementById("detailsHeading");
+  const filterColumnHeader = document.getElementById("filterColumnHeader");
+
+  // Clear existing table data.
+  tableBody.innerHTML = "";
+
+  // Send a request to your server to retrieve data based on the filter and search term.
+  fetch(`/acc/get-${filterType}-details/${selectedValue}`)
+    .then(response => response.json())
+    .then(data => {
+      // Handle the data and populate the table.
+      data.forEach(item => {
+        const row = document.createElement("tr");
+        const dateCell = document.createElement("td");
+        const vendorProductCell = document.createElement("td");
+        const transactionTypeCell = document.createElement("td");
+        const priceCell = document.createElement("td");
+
+        dateCell.textContent = item.Date_i;
+        vendorProductCell.textContent = filterType === "vendor" ? item.Vendor_name : item.Name_of_Material;
+        transactionTypeCell.textContent = item.transaction_type;
+        priceCell.textContent = item.Price;
+
+        row.appendChild(dateCell);
+        row.appendChild(vendorProductCell);
+        row.appendChild(transactionTypeCell);
+        row.appendChild(priceCell);
+
+        tableBody.appendChild(row);
+      });
+
+      // Set the table headers based on the selected filter.
+      if (filterType === "vendor") {
+        detailsHeading.textContent = "Vendor Account Statement";
+        filterColumnHeader.textContent = "Product Name";
+        vendorProductHeader.textContent = "Vendor";
+      } else if (filterType === "product") {
+        detailsHeading.textContent = "Product Account Statement";
+        filterColumnHeader.textContent = "Vendor Name";
+        vendorProductHeader.textContent = "Product";
+      }
+    })
+    .catch(error => {
+      console.error("Error fetching data:", error);
+    });
+}
+
+// Event listener for filter type change.
+filterType.addEventListener("change", function () {
+  const selectedFilterType = filterType.value;
+  const searchTerm = searchInput.value.trim();
+
+  // Populate the table based on the selected filter and search term.
+  updateTable(selectedFilterType, searchTerm);
+
+  const vendorDropdown = document.getElementById("vendorDropdown");
+  const productDropdown = document.getElementById("productDropdown");
+
+  if (selectedFilterType === "vendor") {
+    vendorDropdown.style.display = "block";
+    productDropdown.style.display = "none";
+    populateDropdown("vendor"); // Populate the vendor dropdown.
+  } else if (selectedFilterType === "product") {
+    vendorDropdown.style.display = "none";
+    productDropdown.style.display = "block";
+    populateDropdown("product"); // Populate the product dropdown.
+  } else {
+    vendorDropdown.style.display = "none";
+    productDropdown.style.display = "none";
+  }
+});
+
+// Event listener for search input changes.
+searchInput.addEventListener("input", function () {
+  const selectedFilterType = filterType.value;
+  const searchTerm = this.value.trim();
+
+  // Populate the table based on the selected filter and search term.
+  updateTable(selectedFilterType, searchTerm);
+});
+
+// Populate the dropdown initially based on the default filter type.
+populateDropdown(filterType.value);
 
 
-
-      <script>
-        // Example data to simulate API response. Replace this with your actual API call.
-        const apiData = [
-            { date: "2023-07-01", description: "Opening Balance", transactionType: "inward", amount: 1000.00 },
-            { date: "2023-07-05", description: "Deposit", transactionType: "inward", amount: 500.00 },
-            { date: "2023-07-10", description: "Withdrawal", transactionType: "outward", amount: -200.00 },
-        ];
-        
-        // Function to dynamically populate the account statement table with data.
-        function populateAccountStatement(data) {
-            const tableBody = document.getElementById("statement-table-body");
-            let totalBalance = 0.00;
-        
-            // Clear any existing rows in the table body.
-            tableBody.innerHTML = "";
-        
-            // Loop through the data and create rows for each transaction.
-            data.forEach((transaction) => {
-                const { date, description, transactionType, amount } = transaction;
-                totalBalance += amount;
-        
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${date}</td>
-                    <td>${description}</td>
-                    <td>${transactionType === "inward" ? "Material Inward" : "Material Outward"}</td>
-                    <td>${amount.toFixed(2)}</td>
-                `;
-                tableBody.appendChild(row);
-            });
-        
-            // Update the total balance in the footer.
-            const totalBalanceCell = document.getElementById("total-balance");
-            totalBalanceCell.textContent = totalBalance.toFixed(2);
-        }
-        
-        // Call the function with the API data when the page loads.
-        window.onload = function () {
-            populateAccountStatement(apiData); // Replace 'apiData' with your actual API response.
-        };
-    </script>
-
+</script>
       
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

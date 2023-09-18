@@ -68,16 +68,15 @@
                 <div class="report-section" id="labour-report">
                   <h3>LABOUR WISE REPORT</h3>
 
-                  <form action="/generate-report" method="post">
-                      <input type="hidden" name="report_type" value="labour">
-                      <button type="submit" name="format" value="pdf" style="background-color: #242E82 !important;">Download as PDF</button>
-                      <button type="submit" name="format" value="excel" style="background-color: #242E82 !important;">Download as Excel</button>
-                  </form>
+                  <form >
+                    <input type="hidden" name="report_type" value="labour">
+                    <a href="/contract/downloadforlab-pdf"><div><button type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div></a>
+                    <a href="/contract/downloadforlab-excel"><div><button type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div></a>
+                </form>
                   <div class = img >
                   <img src="assets/img/report1.png" alt="Labour Image" width="100">
                   </div>
               </div>
-              
               </div>
 
 

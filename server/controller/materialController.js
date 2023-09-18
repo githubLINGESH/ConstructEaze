@@ -45,7 +45,7 @@ try {
 // Controller to render the material outward page
 exports.getMaterialOutPage = async (req, res) => {
     try {
-        const Materials = await e_products.find();
+        const Materials = await e_products.find({order:true});
         res.status(200).json(Materials);
     } catch (error) {
         console.error('Error retrieving tasks:', error);
@@ -64,15 +64,29 @@ try {
 }
 };
 
-exports.searchMaterial = async (req, res) => {
-    const { Name_of_Material } = req.body;
 
-    try {
-        const tasks = await e_products.find({ Name_of_Material: Name_of_Material });
-
-        res.status(200).json(tasks);
-    } catch (error) {
-        console.error('Error searching tasks:', error);
-        res.status(500).send('Error searching tasks.');
-    }
+    exports.autosearchformat = async (req, res) => {
+        const query = req.query.term.toLowerCase();
+        
+        try {
+            const productSuggestions = await e_products.find({ Name_of_Material: { $regex: query, $options: 'i' } })
+                .select('Name_of_Material')
+                .limit(10);
+    
+            const vendorSuggestions = await e_products.find({ Vendor_name: { $regex: query, $options: 'i' } })
+                .select('Vendor_name')
+                .limit(10);
+    
+            const productNames = productSuggestions.map(task => task.Name_of_Material);
+            const vendorNames = vendorSuggestions.map(task => task.Vendor_name);
+    
+            // Concatenate product and vendor names
+            const suggestions = [...productNames, ...vendorNames];
+    
+            res.json(suggestions);
+        } catch (error) {
+            console.error('Error fetching autocomplete suggestions:', error);
+            res.status(500).send('Error fetching autocomplete suggestions.');
+        }
     };
+
