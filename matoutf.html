@@ -337,23 +337,19 @@ color: #000; /* New text color */
                     <div  style="display: flex;">
                         <div  style="display: flex;">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
-                                <div class="input-group">
+                                <div class="input-group d-flex">
                                     <div class="input-group-addon" style="background-color: rgb(177, 177, 177);">
                                         <button id="search-button" type="button" style="margin: 10px 10px; border: none; background: none;">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
-                                    <input type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
+                                    <input  style="width: 250px !important;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
                                 </div>
                               </div>
                         <div style="display: flex;">
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
-                                <div class="form-popup" id="myFormin">
-
-                                <input type="checkbox" id="show">
-                                <!--label for="show" class="btn-block" style="text-align: center; padding-top: 8px;">Used</label-->
-                                <div class="container">
-                                    <label for="show" class="close-btn fas fa-times" title="close"></label>
+                                <div class="container" id="myFormin">
+                                    <button onclick="closeFormin()" style="border: 0; background-color: white;" class="close-btn fas fa-times" title="close"></button>
                                     <div class="text" style="margin: 0 0 15% 0;">
                                         Material Outward
                                     </div>
@@ -378,13 +374,13 @@ color: #000; /* New text color */
                                         </div>
                                     </form>
                                 </div>
-                            </div>
-                            </div>
+                                </div>
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 35%;">
-                                <button class="btn-block">
-                                    <i class="fas fa-download"></i>
-                                    Download
-                                </button>
+                                <form >
+                                    <input type="hidden" name="report_type" value="labour">
+                                    <a href="/mato/matdownload"><div><button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px; margin-left: 80px;">Download</button></div></a>
+                                    
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -409,12 +405,8 @@ color: #000; /* New text color */
                                 
                                 <td>${Material.Vendor_name}</td>
                                 <td>${Material.Name_of_Material}</td>
-                                
                                 <td>${Material.Current_stock}</td>
                                 <td>
-                                <div class="p_a">
-
-                                </div>
                             </td>
                             </tr>
                         </tbody>
@@ -431,7 +423,7 @@ color: #000; /* New text color */
     </div>
     <div id="myModal" class="modal">
         <div class="popup">
-                <img src="assets/img/404-tick.png">
+                <img src="assets\img\404-tick.jpg">
                 <h2>Material Outward</h2>
                 <p>Material Outward Submitted!</p>
         <button onclick="closeModal()">OK</button>
@@ -451,6 +443,9 @@ color: #000; /* New text color */
         <script>
             document.addEventListener('DOMContentLoaded', () => {
 const tasksTableBody = document.querySelector('#tabla tbody');
+const formPopup = document.getElementById("myFormin");
+    const vendorNameInput = document.getElementById("vendorNameInput");
+    const materialNameInput = document.getElementById("materialNameInput");
 
 // Function to fetch and display tasks
 const fetchAndDisplayTasks = () => {
@@ -467,8 +462,7 @@ fetch('/mato/getmato')
                 <td>${Material.Required_quantity}</td>
                 <td>${Material.Current_stock}</td>
                 <td>
-                    <button class="custom-checkbox"></button>
-                    <label for="show" class="btn-block" style="text-align: center; padding-top: 8px;">Material</label>
+                    <button style="text-align: center; padding: 8px;" class="btn-block">Add </button>
                 </td>
             `;
             tasksTableBody.appendChild(row);
@@ -485,7 +479,7 @@ fetch('/mato/getmato')
 
                 // Display the form
                 formPopup.style.display = "block";
-                formPopup.style.backgroundColor = "transparent";
+                
             });
         });
     })

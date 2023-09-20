@@ -5,6 +5,7 @@ const controller = require('../controller/vendorreportController');
 
 router.get('/download-pdf', controller.downloadPDF);
 router.get('/download-excel', controller.downloadExcel);
+router.get('/download', materialController.downloadPDF);
 router.get('/', materialController.getProductPage);
 router.get('/getprod', materialController.getTasks);
 router.post('/submitprod', materialController.submitMaterial);

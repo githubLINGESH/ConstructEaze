@@ -10,6 +10,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+      select{
+        margin-left: 20px;
+        font-size: 14px;
+        font-weight: 500;
+        text-transform: uppercase;
+        height: 45px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 10px;
+        padding: 5px;
+        border-radius: 10px;
+        border: 2px solid #ccc;
+    }
+#disable{
+    background-image: url('ConstructEaze\assets\img\icons8-filter-24.png');
+}
+li{
+    padding-bottom: 10px;
+}
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -61,21 +82,23 @@
             <h1>A C C O U N T &nbsp; &nbsp; S T A T E M E N T</h1>
             
             <!-- Filter button and options -->
-            <div class="filter">
-              <div id="filterOptions" class="filter-options">
+            <div class="filter" style="display: flex; align-items: center;">
+              <div id="filterOptions" class="filter-options" style="margin: 20px;">
                   <label for="filterType">Select Filter:</label>
-                  <select id="filterType" class="form-select">
-                      <option value="vendor">Vendor</option>
-                      <option value="product">Product</option>
-                  </select>
-                  <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-                  <select id="vendorDropdown" class="form-select">
-                      <!-- Vendor names will be dynamically populated here -->
-                  </select>
-                  <select id="productDropdown" class="form-select">
-                      <!-- Product names will be dynamically populated here -->
-                  </select>
+                  <select id="filterType" onchange="updateButton()">
+                    <option value="" disabled selected>Select</option>
+                    <option value="vendor">Vendor</option>
+                    <option value="product">Product</option>
+                </select>
               </div>
+                <div>
+                  <button style="width: 110%; margin:40px;" class="btn-block dropdown-toggle" id="optdrop" role="button"
+                  data-bs-toggle="dropdown" aria-expanded="false">Select a Type</button>
+                  
+                  <ul style="padding: 5px; border-radius: 10px;" id="myDropdown" class="dropdown-menu" aria-labelledby="optdrop">
+                  <input style="margin-left: 10px; width: 90%; margin-bottom:10px ;" id="items" type="text" placeholder="Search" onkeyup="filterFunction()">
+                </ul>
+            </div>
           </div>
           
 
@@ -102,203 +125,122 @@
       </div>
       <body>
         <script>
-          // Function to populate the vendor names in the dropdown.
-          function populateDropdown(filterType) {
-              const dropdown = filterType === 'vendor' ? document.getElementById("vendorDropdown") : document.getElementById("productDropdown");
-      
-              // Fetch names from the API based on user selection (vendor or product).
-              fetch(`/acc/get-${filterType}-names`) // Update the route as needed
-                  .then(response => response.json())
-                  .then(names => {
-                      dropdown.innerHTML = ""; // Clear existing options.
-                      names.forEach((name) => {
-                          const option = document.createElement("option");
-                          option.textContent = name;
-                          dropdown.appendChild(option);
-                      });
-                      // Call filterDropdown initially to filter based on the search input.
-                      filterDropdown(filterType);
-                  })
-                  .catch(error => {
-                      console.error(`Error fetching ${filterType} names:`, error);
-                  });
-          }
-      
-          // Function to filter the dropdown options based on the search input.
-          function filterDropdown(filterType) {
-              const dropdown = filterType === 'vendor' ? document.getElementById("vendorDropdown") : document.getElementById("productDropdown");
-              const searchInput = document.getElementById("searchInput");
-              const filter = searchInput.value.toLowerCase();
-              const options = dropdown.getElementsByTagName("option");
-      
-              for (let i = 0; i < options.length; i++) {
-                  const option = options[i];
-                  const text = option.textContent.toLowerCase();
-                  if (text.includes(filter)) {
-                      option.style.display = "block";
-                  } else {
-                      option.style.display = "none";
-                  }
-              }
-          }
-      
-          // Event listener for filter type change.
-          const filterType = document.getElementById("filterType");
-          filterType.addEventListener("change", function () {
-              const vendorDropdown = document.getElementById("vendorDropdown");
-              const productDropdown = document.getElementById("productDropdown");
-      
-              if (filterType.value === "vendor") {
-                  vendorDropdown.style.display = "block";
-                  productDropdown.style.display = "none";
-                  populateDropdown("vendor"); // Populate the vendor dropdown.
-              } else if (filterType.value === "product") {
-                  vendorDropdown.style.display = "none";
-                  productDropdown.style.display = "block";
-                  populateDropdown("product"); // Populate the product dropdown.
-              } else {
-                  vendorDropdown.style.display = "none";
-                  productDropdown.style.display = "none";
-              }
-          });
-      
-          // Event listener for search input changes.
-          const searchInput = document.getElementById("searchInput");
-          searchInput.addEventListener("input", function () {
-              const filterType = document.getElementById("filterType").value;
-              filterDropdown(filterType);
-          });
-      
-          // Populate the dropdown initially based on the default filter type.
-          populateDropdown(filterType.value);
 
-          // Function to update the table heading and column header based on the filter.
-// Function to populate the vendor names in the dropdown.
-function populateDropdown(filterType) {
-  const dropdown = filterType === 'vendor' ? document.getElementById("vendorDropdown") : document.getElementById("productDropdown");
+          function updateButton() {
+            var selectedValue = document.getElementById("filterType").value.toUpperCase();
+            document.getElementById("optdrop").textContent = selectedValue;
+            if(selectedValue=="PRODUCT"){
+            document.getElementById("filterColumnHeader").textContent = "Vendor Name";
+            document.getElementById("detailsHeading").textContent = "Product Account Statement";
+            }
+            else{
+            document.getElementById("filterColumnHeader").textContent = "Product Name";
+            document.getElementById("detailsHeading").textContent = "Vendor Account Statement";
+            }
+        }
 
-  // Fetch names from the API based on user selection (vendor or product).
+          function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("items");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("li");
+            for (i = 0; i < a.length; i++) {
+                txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "block";
+                } else {
+                a[i].style.display = "none";
+                }
+            }
+            }
+
+// Function to fetch and populate the names based on the user's selection
+// Function to fetch and populate the names based on the user's selection
+function populateDropdown() {
+  const dropdown = document.getElementById("myDropdown");
+  const filterType = document.getElementById("filterType").value; // Get the selected filter type
+
+  // Preserve the search input element
+  const searchInput = document.getElementById("items");
+  dropdown.innerHTML = ""; // Clear existing list items only, not the search input.
+  dropdown.appendChild(searchInput);
+
+  // Fetch names from the server based on the selected filter type (vendor or product).
   fetch(`/acc/get-${filterType}-names`) // Update the route as needed
     .then(response => response.json())
     .then(names => {
-      dropdown.innerHTML = ""; // Clear existing options.
       names.forEach((name) => {
-        const option = document.createElement("option");
-        option.textContent = name;
-        dropdown.appendChild(option);
+        const listItem = document.createElement("li");
+        listItem.textContent = name;
+        listItem.onclick = () => updateDropdown(name);
+        dropdown.appendChild(listItem);
       });
-
-      // Call filterDropdown initially to filter based on the search input.
-      filterDropdown(filterType);
     })
     .catch(error => {
       console.error(`Error fetching ${filterType} names:`, error);
     });
 }
 
-// Add event listener for vendorDropdown
-const vendorDropdown = document.getElementById("vendorDropdown");
-vendorDropdown.addEventListener("change", function () {
-  const selectedVendor = this.value; // Get the selected vendor name
-  const filterType = filterType.value; // Get the selected filter type
-  updateTable(filterType, selectedVendor); // Update the table based on selected vendor
-});
 
-// Add event listener for productDropdown
-const productDropdown = document.getElementById("productDropdown");
-productDropdown.addEventListener("change", function () {
-  const selectedProduct = this.value; // Get the selected product name
-  const filterType = filterType.value; // Get the selected filter type
-  updateTable(filterType, selectedProduct); // Update the table based on selected product
-});
-
-// Function to update the table header and populate table data.
-function updateTable(filterType, selectedValue) {
-  const tableBody = document.getElementById("tableBody");
-  const vendorProductHeader = document.getElementById("vendorProductHeader");
-  const detailsHeading = document.getElementById("detailsHeading");
-  const filterColumnHeader = document.getElementById("filterColumnHeader");
-
-  // Clear existing table data.
-  tableBody.innerHTML = "";
-
-  // Send a request to your server to retrieve data based on the filter and search term.
-  fetch(`/acc/get-${filterType}-details/${selectedValue}`)
-    .then(response => response.json())
-    .then(data => {
-      // Handle the data and populate the table.
-      data.forEach(item => {
-        const row = document.createElement("tr");
-        const dateCell = document.createElement("td");
-        const vendorProductCell = document.createElement("td");
-        const transactionTypeCell = document.createElement("td");
-        const priceCell = document.createElement("td");
-
-        dateCell.textContent = item.Date_i;
-        vendorProductCell.textContent = filterType === "vendor" ? item.Vendor_name : item.Name_of_Material;
-        transactionTypeCell.textContent = item.transaction_type;
-        priceCell.textContent = item.Price;
-
-        row.appendChild(dateCell);
-        row.appendChild(vendorProductCell);
-        row.appendChild(transactionTypeCell);
-        row.appendChild(priceCell);
-
-        tableBody.appendChild(row);
-      });
-
-      // Set the table headers based on the selected filter.
-      if (filterType === "vendor") {
-        detailsHeading.textContent = "Vendor Account Statement";
-        filterColumnHeader.textContent = "Product Name";
-        vendorProductHeader.textContent = "Vendor";
-      } else if (filterType === "product") {
-        detailsHeading.textContent = "Product Account Statement";
-        filterColumnHeader.textContent = "Vendor Name";
-        vendorProductHeader.textContent = "Product";
-      }
-    })
-    .catch(error => {
-      console.error("Error fetching data:", error);
-    });
-}
-
-// Event listener for filter type change.
-filterType.addEventListener("change", function () {
-  const selectedFilterType = filterType.value;
-  const searchTerm = searchInput.value.trim();
-
-  // Populate the table based on the selected filter and search term.
-  updateTable(selectedFilterType, searchTerm);
-
-  const vendorDropdown = document.getElementById("vendorDropdown");
-  const productDropdown = document.getElementById("productDropdown");
-
-  if (selectedFilterType === "vendor") {
-    vendorDropdown.style.display = "block";
-    productDropdown.style.display = "none";
-    populateDropdown("vendor"); // Populate the vendor dropdown.
-  } else if (selectedFilterType === "product") {
-    vendorDropdown.style.display = "none";
-    productDropdown.style.display = "block";
-    populateDropdown("product"); // Populate the product dropdown.
-  } else {
-    vendorDropdown.style.display = "none";
-    productDropdown.style.display = "none";
+  // Function to update the dropdown based on the selected name
+  function updateDropdown(selectedName) {
+    const optdrop = document.getElementById("optdrop");
+    optdrop.textContent = selectedName; // Update the dropdown text with the selected name
+    const filterType = document.getElementById("filterType").value;
+    // Call updateTable with the selected filter type and name
+    updateTable(filterType, selectedName);
   }
-});
 
-// Event listener for search input changes.
-searchInput.addEventListener("input", function () {
-  const selectedFilterType = filterType.value;
-  const searchTerm = this.value.trim();
+  // Function to update the table based on the selected filter and name
+  function updateTable(filterType, selectedValue) {
+    const tableBody = document.getElementById("tableBody");
+    const vendorProductHeader = document.getElementById("vendorProductHeader");
+    const detailsHeading = document.getElementById("detailsHeading");
+    const filterColumnHeader = document.getElementById("filterColumnHeader");
 
-  // Populate the table based on the selected filter and search term.
-  updateTable(selectedFilterType, searchTerm);
-});
+    // Clear existing table data.
+    tableBody.innerHTML = "";
 
-// Populate the dropdown initially based on the default filter type.
-populateDropdown(filterType.value);
+    // Send a request to your server to retrieve data based on the filter and selected value.
+    fetch(`/acc/get-${filterType}-details/${selectedValue}`)
+      .then(response => response.json())
+      .then(data => {
+        // Handle the data and populate the table.
+        data.forEach(item => {
+          const row = document.createElement("tr");
+          const dateCell = document.createElement("td");
+          const vendorProductCell = document.createElement("td");
+          const transactionTypeCell = document.createElement("td");
+          const priceCell = document.createElement("td");
+
+          dateCell.textContent = item.Date_i;
+          vendorProductCell.textContent = filterType === "vendor" ? item.Vendor_name : item.Name_of_Material;
+          transactionTypeCell.textContent = item.transaction_type;
+          priceCell.textContent = item.Price;
+
+          row.appendChild(dateCell);
+          row.appendChild(vendorProductCell);
+          row.appendChild(transactionTypeCell);
+          row.appendChild(priceCell);
+
+          tableBody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }
+
+  // Event listener for filter type change.
+  const filterType = document.getElementById("filterType");
+  filterType.addEventListener("change", function () {
+    // Populate the dropdown with names based on the selected filter type.
+    populateDropdown();
+  });
+
+  // Initial population of the dropdown.
+  populateDropdown();
 
 
 </script>

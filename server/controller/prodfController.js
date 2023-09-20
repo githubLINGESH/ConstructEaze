@@ -18,7 +18,6 @@ const role = req.session.role;
 try {
     const record = new e_products({
         userId:userId,
-        role:role,
         //id: Number,
         Date_o: null ,
         Date_i:null ,

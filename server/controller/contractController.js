@@ -77,6 +77,7 @@ exports.markAttendance = async (req, res) => {
 
     if (contract) {
       // If a document exists for today, update the "pa" field with the given status
+      contract.role= role;
       contract.pa = status; // status should be 'Present' or 'Absent'
 
       // Only update latitude and longitude if the role is 'supervisor'

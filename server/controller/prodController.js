@@ -7,7 +7,10 @@ res.sendFile(path.join(__dirname, '..', '..', 'prod.html'));
 };
 
 exports.submitMaterial = async (req, res) => {
-   
+
+  const userId = req.session.auth;
+  const role = req.session.role;
+
       const {
         Date_o,
         Vendor_name,
@@ -36,6 +39,7 @@ exports.submitMaterial = async (req, res) => {
       try {
         const record = new e_products({
           //id: Number,
+          userId:userId,
           Date_o: Date_o ,
           Date_i:null ,
           Date_u: null,
@@ -58,7 +62,7 @@ exports.submitMaterial = async (req, res) => {
           Price: null
       });
       await record.save();
-      res.status(200).send("Record Updated successfully");
+      return res.status(200).json({ message: 'material submitted successfully'});
     } catch (error) {
       console.error('Error updating record:', error);
       res.status(500).send('Error updating record.');
@@ -67,8 +71,10 @@ exports.submitMaterial = async (req, res) => {
 
 
 exports.getTasks = async (req, res) => {
+  const userId = req.session.auth;
+
 try {
-    const tasks = await e_products.find({flag : true});
+    const tasks = await e_products.find({userId : userId, flag : true});
     res.status(200).json(tasks);
 } catch (error) {
     console.error('Error retrieving tasks:', error);
@@ -130,3 +136,105 @@ exports.gettableTasks = async (req, res) => {
             res.status(500).send('Error fetching autocomplete suggestions.');
         }
     };
+
+    
+const PDFDocument = require('pdfkit');
+const ExcelJS = require('exceljs');
+
+// Assuming you have a function to fetch the product order details from the database
+
+
+exports.downloadPDF = async (req, res) => {
+  const userId = req.session.auth;
+  try {
+    const productOrders = await e_products.find({userId:userId, order:true});
+
+    const doc = new PDFDocument();
+    doc.pipe(res);
+
+    doc.fontSize(18).text('PRODUCT ORDER DETAILS', { align: 'center' });
+    doc.moveDown();
+
+    const tableHeaders = ['DATE', 'VENDOR', 'MATERIAL', 'REQUIRED'];
+
+    const table = {
+      rows: [tableHeaders],
+    };
+
+    productOrders.forEach((order) => {
+      table.rows.push([
+        order.Date_o,
+        order.Vendor_name,
+        order.Name_of_Material,
+        order.Required_quantity,
+        
+      ]);
+    });
+
+    const tableTop = doc.y + 15;
+    const initialX = 110;
+    const rowHeight = 25;
+    const columnWidth = 100;
+
+    for (let i = 0; i < table.rows.length; i++) {
+      const currentRow = table.rows[i];
+      for (let j = 0; j < currentRow.length; j++) {
+        doc
+          .fontSize(10)
+          .text(currentRow[j], initialX + j * columnWidth, tableTop + i * rowHeight+8, {
+            width: columnWidth,
+            align: 'center', // Center-align the text horizontally
+            valign: 'center', // Center-align the text vertically
+          });
+      }
+    }
+
+    // Add table lines
+    const tableBottom = tableTop + table.rows.length * rowHeight;
+    const tableRight = initialX + tableHeaders.length * columnWidth;
+
+    doc.moveTo(initialX, tableTop).lineTo(initialX, tableBottom).stroke(); // Vertical line on the left
+    doc.moveTo(tableRight, tableTop).lineTo(tableRight, tableBottom).stroke(); // Vertical line on the right
+
+    for (let i = 0; i <= table.rows.length; i++) {
+      const y = tableTop + i * rowHeight;
+      doc.moveTo(initialX, y).lineTo(tableRight, y).stroke(); // Horizontal lines
+    }
+
+    doc.end();
+  } catch (error) {
+    console.error('Error generating PDF:', error);
+    res.status(500).send('Error generating PDF');
+  }
+};
+
+// Route to generate and download the Excel file
+/*exports.downloadExcel= async (req, res) => {
+  try {
+    const productOrders = await getProductOrders(); // Fetch the product orders from the database
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Product Orders');
+
+    worksheet.columns = [
+      { header: 'Date', key: 'Date_o' },
+      { header: 'Vendor', key: 'Vendor_name' },
+      { header: 'Material', key: 'Name_of_Material' },
+      { header: 'Required Quantity', key: 'Required_quantity' },
+      { header: 'Unit Price', key: 'Unit_prize' },
+    ];
+
+    productOrders.forEach((order) => {
+      worksheet.addRow(order);
+    });
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=product_orders.xlsx');
+    res.send(buffer);
+  } catch (error) {
+    console.error('Error generating Excel:', error);
+    res.status(500).send('Error generating Excel');
+  }
+};
+*/

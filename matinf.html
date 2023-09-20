@@ -282,23 +282,19 @@ color: black;
                     <div  style="display: flex;">
                         <div  style="display: flex;">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
-                                <div class="input-group">
+                                <div class="input-group" type="display: flex;">
                                     <div class="input-group-addon" style="background-color: rgb(177, 177, 177);">
                                         <button id="search-button" type="button" style="margin: 10px 10px; border: none; background: none;">
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
-                                    <input type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
+                                    <input style="width: 500px ;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
                                 </div>
                               </div>
                         <div style="display: flex;">
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
-                                <div class="form-popup" id="myFormin">
-
-                                <input type="checkbox" id="show">
-                                <!--label for="show" class="btn-block" style="text-align: center; padding-top: 8px;">Add material</label-->
-                                <div class="container">
-                                    <label for="show" class="close-btn fas fa-times" title="close"></label>
+                                <div class="container" id="myFormin">
+                                    <button onclick="closeFormin()" style="border: 0; background-color: white;" class="close-btn fas fa-times" title="close"></button>
                                     <div class="text" style="margin: 0 0 15% 0;">
                                         Material Inward
                                     </div>
@@ -326,12 +322,13 @@ color: black;
                                 </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 35%;">
-                                <button class="btn-block">
-                                    <i class="fas fa-download"></i>
-                                    Download
-                                </button>
-                            </div>
+                            <div>
+                            <form >
+                                <input style="display: inline-block;" type="hidden" name="report_type" value="labour">
+                                <a href="/mat/matindownload"><div><button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;margin-left:400px;">Download</button></div></a>
+                                
+                            </form>
+                        </div>
                         </div>
                     </div>
             </div>
@@ -410,8 +407,8 @@ color: black;
                             <td>${task.Name_of_Material}</td>
                             <td>${task.Required_quantity}</td>
                             <td>
-                            <button class="custom-checkbox"  ></button>
-                                <label for="show" class="btn-block" style="text-align: center; padding-top: 8px;">Material</label >
+                                <button style="text-align: center; padding: 8px;" class="btn-block">Add</button>
+   
                             </td>
                             
                         `;
@@ -429,8 +426,7 @@ color: black;
 
                         // Display the form
                         formPopup.style.display = "block";
-                        formPopup.style.backgroundColor = "transparent";
-                    });
+                     });
                     });
                 })
                 .catch(error => console.error('Error retrieving tasks:', error));
@@ -452,6 +448,7 @@ color: black;
                 Name_of_Material: formData.get('Name_of_Material'),
                 Supplied_quantity: formData.get('Supplied_quantity'),
                 Date_i: formData.get('Date_i'),
+                Unit_prize: formData.get('Unit_prize'),
                 
             };
     
