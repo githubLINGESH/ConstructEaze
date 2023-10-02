@@ -77,6 +77,7 @@ exports.markAttendance = async (req, res) => {
 
     if (contract) {
       // If a document exists for today, update the "pa" field with the given status
+      contract.shift=0.5;
       contract.role= role;
       contract.pa = status; // status should be 'Present' or 'Absent'
 
@@ -97,12 +98,85 @@ exports.markAttendance = async (req, res) => {
         return res.status(404).json({ message: 'Contract not found' });
       }
 
+      
       const contractData = {
         userId:userId,
         role:role,
         w_name: workerID,
         w_type: originalContract.w_type,
-        shift: originalContract.shift,
+        shift: 1,
+        sal: originalContract.sal,
+        phone: originalContract.phone,
+        date: today,
+        pa: status,
+        latitude : latitude,
+        longitude : longitude,
+
+      };
+
+      // Only add latitude and longitude to the contract data if the role is 'supervisor'
+      if (role === 'supervisor') {
+        contractData.latitude = latitude;
+        contractData.longitude = longitude;
+      }
+
+      const contractt = new contracts(contractData);
+
+      // Save the new attendance record
+      await contractt.save();
+
+      return res.status(200).json({ message: 'Attendance marked successfully', contractt });
+    }
+  } catch (error) {
+    console.error('Error marking attendance:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+exports.attforrec = async (req,res) => {
+  try {
+    const { date, workerID, status, latitude, longitude } = req.body;
+    const userId = req.session.auth;
+    const role  = req.session.role; // Assuming the user's role is stored in the session
+
+    // Get today's date in UTC
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    // Find the contract in the database by worker name
+    const contract = await contracts.findOne({ w_name: workerID, date: today });
+
+    if (contract) {
+      // If a document exists for today, update the "pa" field with the given status
+      contract.shift=0.5;
+      contract.role= role;
+      contract.pa = status; // status should be 'Present' or 'Absent'
+
+      // Only update latitude and longitude if the role is 'supervisor'
+      if (role === 'supervisor') {
+        contract.latitude = latitude;
+        contract.longitude = longitude;
+      }
+
+      await contract.save();
+
+      return res.status(200).json({ message: 'Attendance updated successfully', contract});
+    } else {
+      // Create a new attendance record since it doesn't exist for today
+      const originalContract = await contracts.findOne({ w_name: workerID , date:null});
+
+      if (!originalContract) {
+        return res.status(404).json({ message: 'Contract not found' });
+      }
+
+      
+      const contractData = {
+        userId:userId,
+        role:role,
+        w_name: workerID,
+        w_type: originalContract.w_type,
+        shift: 1,
         sal: originalContract.sal,
         phone: originalContract.phone,
         date: today,

@@ -54,7 +54,7 @@
         const userId = req.session.auth;
 
         try {
-            const Materials = await e_products.find({userId:userId , order:true});
+            const Materials = await e_products.find({order:true});
             res.status(200).json(Materials);
         } catch (error) {
             console.error('Error retrieving tasks:', error);

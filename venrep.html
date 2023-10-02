@@ -39,10 +39,11 @@
                 <a class="nav-link active" href="labrep.html">Report Generation</a>
               </li>
             </ul>
+          </div>
             <form class="d-flex">
               <button class="btn" type="submit"><span class="txt">Logout</span></button>
             </form>
-          </div>
+          
         </div>
       </nav>
 
@@ -56,6 +57,8 @@
               <a class="nav-link space" href="totrep.html">Total Expenses Report</a>
               <a class="nav-link space" href="matrep.html">Material Wise Report</a>
               <a class="nav-link space" href="daterep.html">Date Wise Report</a>
+              <a class="nav-link space" href="accst.html" >Account Statement</a>
+              <a class="nav-link space" href="poreturn.html">Return Report</a>
             </nav>
           </div>
         </div>
@@ -68,15 +71,40 @@
                 <div class="report-section" id="labour-report">
                   <h3>VENDOR WISE REPORT</h3>
 
-                  <form >
-                      <input type="hidden" name="report_type" value="labour">
-                      <a href="/prod/download-pdf"><div><button type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div></a>
-                      <a href="/prod/download-excel"><div><button type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div></a>
 
-                  </form>
-                  <div class = img >
-                  <img src="assets/img/report1.png" alt="Labour Image" width="100">
+                  <div class="filter" style="display: flex; align-items: center;">
+                    <div id="filterOptions" class="filter-options" style="margin: 20px;">
+                        <label for="filterType">Select Filter:</label>
+                        <select id="filterType" onchange="updateButton()">
+                          <option value="" disabled selected>Select</option>
+                          <option value="vendor">Vendor</option>
+                          
+                      </select>
+                    </div>
+                      <div>
+                        <button style="width: 110%; margin:40px;" class="btn-block dropdown-toggle" id="optdrop" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Select a Type</button>
+                        
+                        <ul style="padding: 5px; border-radius: 10px;" id="myDropdown" class="dropdown-menu" aria-labelledby="optdrop">
+                        <input style="margin-left: 10px; width: 90%; margin-bottom:10px ;" id="items" type="text" placeholder="Search" onkeyup="filterFunction()">
+                      </ul>
                   </div>
+                </div>
+
+
+                  <div style="margin-top: 3.2%;">Start Date:</div>
+                  <input type="date" id="startdate">
+                  <br><br>
+                  <div>End Date:</div>
+                  <input type="date" id="enddate">
+                  <br><br>
+
+                  <form>
+                    <input type="hidden" name="report_type" value="labour">
+                    <div><button onclick="storeDates()" type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div>
+                    <div><button onclick="downloadExcel()" type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div>
+                    <!--<button onclick="generatePDF()">Confirm</button>-->
+                </form>
               </div>
               
               </div>
@@ -97,7 +125,161 @@
           window.location.href = 'http://localhost:3000/prod/download-excel';
         }
       </script-->
-      
+      <script>
+
+        function filterFunction() {
+          var input, filter, ul, li, a, i;
+          input = document.getElementById("items");
+          filter = input.value.toUpperCase();
+          div = document.getElementById("myDropdown");
+          a = div.getElementsByTagName("li");
+          for (i = 0; i < a.length; i++) {
+              txtValue = a[i].textContent || a[i].innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+              a[i].style.display = "block";
+              } else {
+              a[i].style.display = "none";
+              }
+          }
+          }
+
+// Function to fetch and populate the names based on the user's selection
+// Modify the populateDropdown function to pass selectedName to storeDates
+function populateDropdown() {
+  const dropdown = document.getElementById("myDropdown");
+  const filterType = document.getElementById("filterType").value; // Get the selected filter type
+
+  // Preserve the search input element
+  const searchInput = document.getElementById("items");
+  dropdown.innerHTML = ""; // Clear existing list items only, not the search input.
+  dropdown.appendChild(searchInput);
+
+  // Fetch names from the server based on the selected filter type (vendor or product).
+  fetch(`/acc/get-${filterType}-names`) // Update the route as needed
+    .then(response => response.json())
+    .then(names => {
+      names.forEach((name) => {
+        const listItem = document.createElement("li");
+        listItem.textContent = name;
+        listItem.onclick = () => {
+          updateDropdown(name);
+        };
+        dropdown.appendChild(listItem);
+      });
+    })
+    .catch(error => {
+      console.error(`Error fetching ${filterType} names:`, error);
+    });
+}
+
+function updateDropdown(name) {
+  const optdrop = document.getElementById("optdrop");
+  optdrop.textContent = selectedName;
+  selectedName = name;
+
+  updateDropdown(name);
+
+}
+
+const filterType = document.getElementById("filterType");
+filterType.addEventListener("change", function () {
+  // Populate the dropdown with names based on the selected filter type.
+  populateDropdown();
+});
+
+// Initial population of the dropdown.
+populateDropdown();
+
+
+        let selectedName = "";
+
+        function storeDates() {
+            // Get the values of the "Start Date" and "End Date" inputs by their id names
+            const startDateValue = document.getElementById('startdate').value;
+            const endDateValue = document.getElementById('enddate').value;
+    
+            // Parse the start and end date strings to Date objects
+            const startDate = new Date(startDateValue);
+            const endDate = new Date(endDateValue);
+    
+            // Create an array to store the dates between the start and end dates
+            const dateArray = [];
+            
+
+            // Loop through the dates and add them to the array
+            let currentDate = new Date(startDate);
+            currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+            while (currentDate < endDate) {
+                dateArray.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            console.log(selectedName);
+
+            // Create a form element dynamically to trigger the download
+            const form = document.createElement('form');
+            form.action = `/prod/download-pdf/${selectedName}`; // Set the URL for PDF download
+            form.method = 'POST';
+    
+            // Create an input field for dateArray
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'dateArray';
+            input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+    
+            // Add the input field to the form
+            form.appendChild(input);
+    
+            // Add the form to the document and submit it to trigger the download
+            document.body.appendChild(form);
+            form.submit();
+            }
+            console.log('Dates Between Start and End Date:', dateArray);
+
+            storeDates(name);
+
+
+      function downloadExcel() {
+      // Get the values of the "Start Date" and "End Date" inputs by their id names
+      const startDateValue = document.getElementById('startdate').value;
+      const endDateValue = document.getElementById('enddate').value;
+
+      // Parse the start and end date strings to Date objects
+      const startDate = new Date(startDateValue);
+      const endDate = new Date(endDateValue);
+
+      // Create an array to store the dates between the start and end dates
+      const dateArray = [];
+
+      // Loop through the dates and add them to the array
+      let currentDate = new Date(startDate);
+      currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+      while (currentDate < endDate) {
+      dateArray.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      // Create a form element dynamically to trigger the download
+      const form = document.createElement('form');
+      form.action = `/prod/download-excel/${selectedName}`; // Set the URL for PDF download
+      form.method = 'POST';
+
+      // Create an input field for dateArray
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'dateArray';
+      input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+
+      // Add the input field to the form
+      form.appendChild(input);
+
+      // Add the form to the document and submit it to trigger the download
+      document.body.appendChild(form);
+      form.submit();
+
+      console.log('Dates Between Start and End Date:', dateArray);
+      }
+</script>
 </body>
 </html>
 

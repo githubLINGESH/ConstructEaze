@@ -9,3 +9,5 @@ router.post('/submitvend', submitvendor);
 router.post('/uploadvendor', upload.single('file'), handleFileUpl);
 
 module.exports = router;
+
+

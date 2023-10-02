@@ -56,6 +56,8 @@
               <a class="nav-link space" href="totrep.html">Total Expenses Report</a>
               <a class="nav-link space" href="matrep.html">Material Wise Report</a>
               <a class="nav-link space" href="daterep.html">Date Wise Report</a>
+              <a class="nav-link space" href="accst.html" >Account Statement</a>
+              <a class="nav-link space" href="poreturn.html">Return Report</a>
             </nav>
           </div>
         </div>
@@ -68,14 +70,28 @@
                 <div class="report-section" id="labour-report">
                   <h3>LABOUR WISE REPORT</h3>
 
-                  <form >
+                  <div style="margin-top: 3.2%;">Start Date:</div>
+                  <input type="date" id="startdate">
+                  <br><br>
+                  <div>End Date:</div>
+                  <input type="date" id="enddate">
+                  <br><br>
+
+                  <form>
+                    <input type="hidden" name="report_type" value="labour">
+                    <div><button onclick="storeDates()" type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div>
+                    <div><button onclick="downloadExcel()" type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div>
+                    <!--<button onclick="generatePDF()">Confirm</button>-->
+                </form>
+
+                  <!--<form >
                     <input type="hidden" name="report_type" value="labour">
                     <a href="/contract/downloadforlab-pdf"><div><button type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div></a>
                     <a href="/contract/downloadforlab-excel"><div><button type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div></a>
                 </form>
                   <div class = img >
                   <img src="assets/img/report1.png" alt="Labour Image" width="100">
-                  </div>
+                  </div>-->
               </div>
               </div>
 
@@ -86,7 +102,90 @@
 
 
       </div>
-      
+      <script>
+        function storeDates() {
+            // Get the values of the "Start Date" and "End Date" inputs by their id names
+            const startDateValue = document.getElementById('startdate').value;
+            const endDateValue = document.getElementById('enddate').value;
+    
+            // Parse the start and end date strings to Date objects
+            const startDate = new Date(startDateValue);
+            const endDate = new Date(endDateValue);
+    
+            // Create an array to store the dates between the start and end dates
+            const dateArray = [];
+    
+            // Loop through the dates and add them to the array
+            let currentDate = new Date(startDate);
+            currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+            while (currentDate < endDate) {
+                dateArray.push(currentDate.toISOString().split('T')[0]);
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+    
+            // Create a form element dynamically to trigger the download
+            const form = document.createElement('form');
+            form.action = '/contract/downloadforlab-pdf'; // Set the URL for PDF download
+            form.method = 'POST';
+    
+            // Create an input field for dateArray
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'dateArray';
+            input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+    
+            // Add the input field to the form
+            form.appendChild(input);
+    
+            // Add the form to the document and submit it to trigger the download
+            document.body.appendChild(form);
+            form.submit();
+    
+            console.log('Dates Between Start and End Date:', dateArray);
+        }
+    </script>
+    <script>
+    function downloadExcel() {
+    // Get the values of the "Start Date" and "End Date" inputs by their id names
+    const startDateValue = document.getElementById('startdate').value;
+    const endDateValue = document.getElementById('enddate').value;
+
+    // Parse the start and end date strings to Date objects
+    const startDate = new Date(startDateValue);
+    const endDate = new Date(endDateValue);
+
+    // Create an array to store the dates between the start and end dates
+    const dateArray = [];
+
+    // Loop through the dates and add them to the array
+    let currentDate = new Date(startDate);
+    currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+    while (currentDate < endDate) {
+    dateArray.push(currentDate.toISOString().split('T')[0]);
+    currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Create a form element dynamically to trigger the download
+    const form = document.createElement('form');
+    form.action = '/contract/downloadforlab-excel'; // Set the URL for PDF download
+    form.method = 'POST';
+
+    // Create an input field for dateArray
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'dateArray';
+    input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+
+    // Add the input field to the form
+    form.appendChild(input);
+
+    // Add the form to the document and submit it to trigger the download
+    document.body.appendChild(form);
+    form.submit();
+
+    console.log('Dates Between Start and End Date:', dateArray);
+    }
+    </script>
 </body>
 </html>
 

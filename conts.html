@@ -654,7 +654,7 @@
                             <th>WorkerType</th>
                             <th>Shift</th>
                             <th>Present/Absent</th>
-                            <th id="attendanceColumn" class="hidden">Location</th>
+                            <th class="hidden">Marked Locations</th>
                         </tr>
                     </thead>
                     <tbody id="tasks-table-body">
@@ -727,7 +727,6 @@
                 attendanceColumn.classList.toggle('hidden');
             });
         });
-        
     </script>
     <script>
         const contractForm = document.getElementById('contractForm');
@@ -745,6 +744,7 @@
                 const workerId = row.querySelector('.w_id').dataset.workerId;
                 const status = target.checked ? 'Present' : 'Absent';
                 markAttendance(workerId, status);
+                submitRecord(workerId,status);
             }
         };
         
@@ -808,7 +808,8 @@
                                         ${task.pa !== 'Present' ? 'disabled' : 'checked'}> <!-- Initially checked if task.pa is 'Present', disabled if not -->
                                 </td>
                                 <td class="google-maps-link"></td>
-                                <td>${task.role}</td>
+                                <td class="joker">${task.role}</td>
+                                <td><button onclick="submitRecord('${task.w_name}','Present')" type="button" style="display: flex; background-color: #007bff; border: 8px solid #007bff;">submit</button></td>
                                 <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
                             `;
         
@@ -817,6 +818,7 @@
 
 
                             const googleMapsLinkContainer = row.querySelector('.google-maps-link');
+                            const jokerid = row.querySelector('.joker');
         
                             // Create and add the Google Maps link to the container
                             const googleMapsLink = createGoogleMapsLink(task.latitude, task.longitude);
@@ -824,10 +826,15 @@
                             if (userRole !== 'engineer') {
                                 googleMapsLinkContainer.style.display = 'none';
                             }
+
+                            if (userRole !== 'engineer') {
+                                jokerid.style.display = 'none';
+                            }
                         } else {
                             // Display a message indicating that the worker is already in the table
                             console.log(`Worker ${task.w_name} is already in the table.`);
                         }
+
                         });
 
                     const currentDate = new Date();
@@ -897,6 +904,64 @@
             };
             fetchAndDisplayTasks();
 
+
+            async function submitRecord(workerID, status) {
+                // Prompt the user to confirm before submitting for a specific record
+                const confirmation = confirm(`Submit record for Worker ID: ${workerID} as ${status}?`);
+                if (!confirmation) {
+                    return; // User canceled the submission
+                }
+            
+                // Send a request to mark attendance for the specific record
+                const currentDate = new Date();
+                const year = currentDate.getFullYear();
+                const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                const day = currentDate.getDate().toString().padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+
+                function getPreciseLocation() {
+                    return new Promise((resolve, reject) => {
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(resolve, reject);
+                        } else {
+                            reject(new Error('Geolocation is not available.'));
+                        }
+                    });
+                }
+            
+                const position = await getPreciseLocation(); // Wait for location data
+            
+                const attendanceDataa = {
+                    date: formattedDate,
+                    workerID,
+                    status,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                };
+            
+                fetch('/contract/markAttendanceForRecord', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(attendanceDataa),
+                })
+                .then(response => response.json())
+                .then(result => {
+                    // Handle the response if needed
+                    openModal();
+                    console.log(result);
+                    fetchAndDisplayTasks(); // Refresh the table after marking attendance
+                })
+                .catch(error => {
+                    // Handle any errors that occurred during the fetch or processing
+                    console.error('Error marking attendance for record:', error);
+                });
+            }
+            
+    
+        
+
             // Function to handle the search input and trigger fetching and displaying tasks
             const handleSearch = () => {
                 const searchInput = document.getElementById('search-input');
@@ -914,6 +979,7 @@
                     handleSearch();
                 }
             });
+            
 
 
 

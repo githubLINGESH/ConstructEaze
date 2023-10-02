@@ -2,10 +2,15 @@ const express = require('express');
 const router = express.Router();
 const materialController = require('../controller/prodController');
 const controller = require('../controller/vendorreportController');
+const controlller = require('../controller/accountController');
+const controllller = require('../controller/totalexpreportController');
 
-router.get('/download-pdf', controller.downloadPDF);
-router.get('/download-excel', controller.downloadExcel);
-router.get('/download', materialController.downloadPDF);
+router.get('/get-vendor-names',controlller.getVendorNames);
+router.post('/download-pdf/:vendorName', controller.downloadPDF);
+router.post('/download-excel/:vendorName', controller.downloadExcel);
+router.post('/totdownload-pdf', controllller.downloadPDF);
+router.post('/totdownload-excel', controllller.downloadExcel);
+router.post('/download/:vendorName', materialController.downloadPDF);
 router.get('/', materialController.getProductPage);
 router.get('/getprod', materialController.getTasks);
 router.post('/submitprod', materialController.submitMaterial);

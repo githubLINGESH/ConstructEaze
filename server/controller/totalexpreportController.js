@@ -8,6 +8,12 @@ const { getProductOrders } = require('../controller/prodController');
 
 exports.downloadPDF = async (req, res) => {
   try {
+    const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+    const l = dateArray.length;
+
+    console.log(dateArray);
+    console.log(l);
+
     const productOrders = await getProductOrders();
 
     const doc = new PDFDocument();
@@ -23,12 +29,34 @@ exports.downloadPDF = async (req, res) => {
     };
 
     productOrders.forEach((order) => {
-      table.rows.push([
-        order.Date_o,
-        order.Vendor_name,
-        order.Name_of_Material,
-        order.Price
-      ]);
+      for (let i = 0; i < l; i++) {
+        const selectedDate = dateArray[i];
+    
+        // Parse the date strings to Date objects
+        const selectedDateObj = new Date(selectedDate);
+        const orderDateObj = new Date(order.Date_o);
+    
+        // Compare the date parts (year, month, and day)
+        if (
+          selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+          selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+          selectedDateObj.getDate() === orderDateObj.getDate()
+        ) {
+          // Format the date without the time portion
+          const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+    
+          table.rows.push([
+            formattedDate, // Use the formatted date
+            order.Vendor_name,
+            order.Name_of_Material,
+            order.Price
+          ]);
+        }
+      }
     });
 
     const tableTop = doc.y + 15;
@@ -67,6 +95,12 @@ exports.downloadPDF = async (req, res) => {
 // Route to generate and download the Excel file
 exports.downloadExcel= async (req, res) => {
   try {
+    const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+    const l = dateArray.length;
+
+    console.log(dateArray);
+    console.log(l);
+
     const productOrders = await getProductOrders(); // Fetch the product orders from the database
 
     const workbook = new ExcelJS.Workbook();
@@ -80,7 +114,34 @@ exports.downloadExcel= async (req, res) => {
     ];
 
     productOrders.forEach((order) => {
-      worksheet.addRow(order);
+            for (let i = 0; i < l; i++) {
+        const selectedDate = dateArray[i];
+
+        // Parse the date strings to Date objects
+        const selectedDateObj = new Date(selectedDate);
+        const orderDateObj = new Date(order.Date_o);
+
+        // Compare the date parts (year, month, and day)
+        if (
+          selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+          selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+          selectedDateObj.getDate() === orderDateObj.getDate()
+        ) {
+          // Format the date without the time portion
+          const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
+
+          worksheet.addRow({
+            Date_o: formattedDate, // Use the formatted date
+            Vendor_name: order.Vendor_name,
+            Name_of_Material: order.Name_of_Material,
+            Price: order.Price
+          });
+        }
+      }
     });
 
     const buffer = await workbook.xlsx.writeBuffer();

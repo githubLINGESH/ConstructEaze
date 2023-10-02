@@ -255,7 +255,6 @@ color: #000; /* New text color */
           <div class="sidebar" style="height: 100%;">
             <nav class="nav flex-column" style="padding-top: 100px; ">
               <a class="nav-link active space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#"href="prod.html" >Purchase Order</a>
-              <a class="nav-link space" href="accst.html" >Account Statement</a>
             </nav>
           </div>
         </div>
@@ -279,7 +278,7 @@ color: #000; /* New text color */
                               </div>
                               <input style="width: 200px !important;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
                           </div>
-                      </div>
+                  </div>
                           <div style="display: flex;">
                               <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
                                 
@@ -290,7 +289,7 @@ color: #000; /* New text color */
                                       </div>
                                         <form id="formm" action="/prod/submitprod" method="POST">
                                           <div class="data">
-                                            <input type="text" name="Date_o" required placeholder="Order Date">
+                                            <input type="text" id="dateInput" name="Date_o" required placeholder="Order Date">
                                         </div>
                                           <div class="data">
                                               <input type="text" id="vendorNameInput" name="Vendor_name" value="" required placeholder="Vendor Name">
@@ -317,17 +316,36 @@ color: #000; /* New text color */
                                   </div>
                                       
                               </div>
+                              
                               <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 35%;">
-                                <form >
-                                  <input type="hidden" name="report_type" value="labour">
-                                  <a href="/prod/download"><div><button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;">Download</button></div></a>
-                                  
+                                <form>
+                                <div><button onclick="Downloadpdf()" type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;">Download</button></div>
+    
                               </form>
                               </div>
+                              
                           </div>
                       </div>
                 
               </div>
+              <div class="filter" style="display: flex; align-items: center;">
+                <div id="filterOptions" class="filter-options" style="margin: 20px;">
+                    <label for="filterType">Select Filter:</label>
+                    <select id="filterType" onchange="updateButton()">
+                      <option value="" disabled selected>Select</option>
+                      <option value="vendor">Vendor</option>
+                      
+                  </select>
+                </div>
+                  <div>
+                    <button style="width: 110%; margin:40px;" class="btn-block dropdown-toggle" id="optdrop" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">Select a Type</button>
+                    
+                    <ul style="padding: 5px; border-radius: 10px;" id="myDropdown" class="dropdown-menu" aria-labelledby="optdrop">
+                    <input style="margin-left: 10px; width: 90%; margin-bottom:10px ;" id="items" type="text" placeholder="Search" onkeyup="filterFunction()">
+                  </ul>
+              </div>
+            </div>
       
       
               <div class="row">
@@ -379,105 +397,90 @@ color: #000; /* New text color */
           modal.style.display = "none";
       }
   </script>
-      <!--script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const tasksTableBody = document.querySelector('#table tbody');
-      
-          // Function to fetch and display tasks
-          const fetchAndDisplayTasks = () => {
-              fetch('/prod/getprod')
-                  .then(response => response.json())
-                  .then(tasks => {
-                      tasksTableBody.innerHTML = ''; // Clear existing table rows
-      
-                      tasks.forEach(task => {
-                          const row = document.createElement('tr');
-                          row.innerHTML = `
-                              <td>${task.Vendor_name}</td>
-                              <td>${task.Name_of_Material}</td>
-                              <td>
-                                    <div class="p_a">
-                                      <label for="show" class="btn-block" style="text-align: center; padding-top: 8px;">Add Material</label>
-                                    </div>
-                                </td>
-                          `;
-                          tasksTableBody.appendChild(row);
-                          
-          
-                        });
-                    }
-                  )};
-                        
-          
-
-// Fetch tasks when the page loads
-fetchAndDisplayTasks();
-          // Add event listeners for each form
-          const forms = document.querySelectorAll('form[data-task-id]');
-          forms.forEach(form => {
-              form.addEventListener('submit', async (event) => {
-                  event.preventDefault(); // Prevent the default form submission behavior
-                  const taskId = form.getAttribute('data-task-id');
-      
-                  const formData = new FormData(form);
-                  const taskData = {
-                      Vendor_name: formData.get('Vendor_name'),
-                      Name_of_Material: formData.get('Name_of_Material'),
-                      Required_quantity: formData.get('Required_quantity'),
-                  };
-      
-                  fetch('/prod/submitprod', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify(taskData)
-                    })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Record inserted successfully.');
-                    form.reset();
-                    fetchAndDisplayTasks();
-                    openModal(); // Update the display with the new task
-                } else {
-                    console.error('Error inserting record.');
-                }
-            })
-            .catch(error => console.error('Error inserting record:', error));
-        });
-    });
-  });
-  function openFormin(vendorName, materialName) {
-                      console.log("openFormin function is called");
-                // Fetch the data for the specific vendor and material from the database
-                // This part depends on how you're fetching data from your backend, typically an AJAX request
-                const vendorNameInput = vendorName;
-                const materialNameInput = materialName;
-
-                if (!vendorNameInput || !materialNameInput) {
-                    console.error("One or both input elements not found.");
-                    return;
-                }
-                // For demonstration purposes, let's assume you have retrieved the data in an object called "dataFromDatabase"
-              
-
-                // Populate the form with the fetched data
-                const formPopup = document.getElementById("myformin");
-                formPopup.style.display = "block";
-                formPopup.style.backgroundColor = "transparent";
-                if (!formPopup) {
-      console.error("Element with ID 'formm' not found.");
-      return;
-  }
-
-
-                // Populate the text boxes with the fetched data
-                document.getElementById("vendorNameInput").value = vendorName;
-                document.getElementById("materialNameInput").value = materialName;
-            }
-</script-->
 
 <script>
+
+          function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("items");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("li");
+            for (i = 0; i < a.length; i++) {
+                txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "block";
+                } else {
+                a[i].style.display = "none";
+                }
+            }
+            }
+
+      // Function to fetch and populate the names based on the user's selection
+      // Modify the populateDropdown function to pass selectedName to storeDates
+      function populateDropdown() {
+      const dropdown = document.getElementById("myDropdown");
+      const filterType = document.getElementById("filterType").value; // Get the selected filter type
+
+      // Preserve the search input element
+      const searchInput = document.getElementById("items");
+      dropdown.innerHTML = ""; // Clear existing list items only, not the search input.
+      dropdown.appendChild(searchInput);
+
+      // Fetch names from the server based on the selected filter type (vendor or product).
+      fetch(`/acc/get-${filterType}-names`) // Update the route as needed
+      .then(response => response.json())
+      .then(names => {
+        names.forEach((name) => {
+          const listItem = document.createElement("li");
+          listItem.textContent = name;
+          listItem.onclick = () => {
+            updateDropdown(name);
+          };
+          dropdown.appendChild(listItem);
+        });
+      })
+      .catch(error => {
+        console.error(`Error fetching ${filterType} names:`, error);
+      });
+      }
+
+      function updateDropdown(name) {
+        const optdrop = document.getElementById("optdrop");
+        optdrop.textContent = selectedName;
+        selectedName = name;
+      
+        updateDropdown(name);
+      
+      }
+
+      const filterType = document.getElementById("filterType");
+      filterType.addEventListener("change", function () {
+      // Populate the dropdown with names based on the selected filter type.
+      populateDropdown();
+      });
+
+      // Initial population of the dropdown.
+      populateDropdown();
+
+      let selectedName = "";
+
+        function Downloadpdf() {
+            // Get the values of the "Start Date" and "End Date" inputs by their id names
+            
+            console.log(selectedName);
+
+            // Create a form element dynamically to trigger the download
+            const form = document.createElement('form');
+            form.action = `/prod/download/${selectedName}`; // Set the URL for PDF download
+            form.method = 'POST';
+    
+    
+            // Add the form to the document and submit it to trigger the download
+            document.body.appendChild(form);
+            form.submit();
+            }
+
   
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -485,6 +488,11 @@ fetchAndDisplayTasks();
   const formPopup = document.getElementById("myFormin");
   const vendorNameInput = document.getElementById("vendorNameInput");
   const materialNameInput = document.getElementById("materialNameInput");
+
+  const dateInput = document.getElementById("dateInput");
+  var year=null;
+  var day=null;
+  var month=null;
 
   // Function to fetch and display tasks
   const fetchAndDisplayTasks = () => {
@@ -508,6 +516,25 @@ fetchAndDisplayTasks();
                   // Add event listener to each "Add Material" button
                   const addButton = row.querySelector('button');
                   addButton.addEventListener('click', () => {
+                    function updateDate() {
+                      // Create a new Date object
+                      currentDate = new Date();
+
+                      // Get the day, month, and year
+                      day = currentDate.getDate();
+                      month = currentDate.getMonth() + 1; // Months are zero-based
+                      year = currentDate.getFullYear();
+
+                      // Display the date in the "date" element
+                      var dateElement = document.getElementById("date");
+                              dateInput.value = "Today's Date: " + month + "/" + day + "/" + year;
+                          }
+
+                      // Call the updateDate function to initially set the date
+                      updateDate();
+
+                      // Set an interval to update the date every 24 hours (86400000 milliseconds)
+                      setInterval(updateDate, 86400000);
                       // When the button is clicked, extract the vendor name and material name
                       const vendorName = task.Vendor_name;
                       const materialName = task.Name_of_Material;
@@ -515,16 +542,53 @@ fetchAndDisplayTasks();
                       // Populate the form fields with the vendor name and material name
                       vendorNameInput.value = vendorName;
                       materialNameInput.value = materialName;
+                      dateInput.value = year + "/" + month + "/" + day;
 
                       // Display the form
                       formPopup.style.display = "block";
-           
+
                   });
               });
           });
   };
   // Fetch tasks when the page loads
   fetchAndDisplayTasks();
+  // Handle form submission
+  const form = document.getElementById('formm');
+        
+        form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const url = form.getAttribute('action');
+    
+            const formData = new FormData(form);
+            const taskData = {
+                Vendor_name: formData.get('Vendor_name'),
+                Name_of_Material: formData.get('Name_of_Material'),
+                Required_quantity: formData.get('Required_quantity'),
+                Date_o: formData.get('Date_o'),
+
+            };
+    
+            fetch('/prod/submitprod', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(taskData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    openModal();
+                    console.log('Record inserted successfully.');
+                    form.reset();
+                    
+                    fetchAndDisplayTasks();
+                } else {
+                    console.error('Error inserting record.');
+                }
+            })
+            .catch(error => console.error('Error inserting record:', error));
+        });
 });
 </script>
 <script>
@@ -604,4 +668,3 @@ $(function() {
 </script>
 </body>
 </html>
-

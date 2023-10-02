@@ -7,6 +7,12 @@
 
     exports.downloadPDFforlab = async (req, res) => {
     try {
+        const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+        const l = dateArray.length;
+    
+        console.log(dateArray);
+        console.log(l);
+
         const labourattendance = await getlabouratt();
 
         const doc = new PDFDocument();
@@ -15,20 +21,43 @@
         doc.fontSize(18).text('Labour Attendance Details', { align: 'center' });
         doc.moveDown();
 
-        const tableHeaders = ['w_name','w_type','shift','present/absent'];
+        const tableHeaders = ['date','w_name','w_type','shift','present/absent'];
 
         const table = {
         rows: [tableHeaders],
         };
 
         labourattendance.forEach((order) => {
+            for (let i = 0; i < l; i++) {
+            const selectedDate = dateArray[i];
+
+        // Parse the date strings to Date objects
+        const selectedDateObj = new Date(selectedDate);
+        const orderDateObj = new Date(order.date);
+
+        // Compare the date parts (year, month, and day)
+        if (
+        selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+        selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+        selectedDateObj.getDate() === orderDateObj.getDate()
+        ) {
+        // Format the date without the time portion
+        const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+        });
+
         table.rows.push([
+            order.date,
             order.w_name,
             order.w_type,
             order.shift,
             order.pa,
         ]);
-        });
+    }
+}
+});
 
         const tableTop = doc.y + 15;
         const initialX = 50;
@@ -66,6 +95,13 @@
     // Route to generate and download the Excel file
     exports.downloadExcelforlab= async (req, res) => {
     try {
+
+        const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+        const l = dateArray.length;
+    
+        console.log(dateArray);
+        console.log(l);
+
         const labourattendance = await getlabouratt(); // Fetch the product orders from the database
 
         const workbook = new ExcelJS.Workbook();
@@ -79,8 +115,38 @@
         ];
 
         labourattendance.forEach((order) => {
-        worksheet.addRow(order);
-        });
+            for (let i = 0; i < l; i++) {
+                const selectedDate = dateArray[i];
+        
+                // Parse the date strings to Date objects
+                const selectedDateObj = new Date(selectedDate);
+                    const orderDateObj = new Date(order.Date_o);
+            
+                    // Compare the date parts (year, month, and day)
+                    if (
+                    selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                    selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                    selectedDateObj.getDate() === orderDateObj.getDate()
+                    ) {
+                    // Format the date without the time portion
+                    const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                    });
+        worksheet.addRow({
+            date: formattedDate,
+            w_name:order.w_name,
+            type:order.w_type,
+            shift:order.shift,
+            pa:order.pa,
+
+        })
+    }
+}
+});
+    
+
 
         const buffer = await workbook.xlsx.writeBuffer();
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
