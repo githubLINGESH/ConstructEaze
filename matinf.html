@@ -437,7 +437,7 @@ color: black;
                         updateDate();
 
                         // Set an interval to update the date every 24 hours (86400000 milliseconds)
-                        setInterval(updateDate, 86400000); 
+                        setInterval(updateDate, 86400000);
                         // When the button is clicked, extract the vendor name and material name
                         const vendorName = task.Vendor_name;
                         const materialName = task.Name_of_Material;
@@ -449,7 +449,7 @@ color: black;
 
                         // Display the form
                         formPopup.style.display = "block";
-                     });
+                        });
                     });
                 })
                 .catch(error => console.error('Error retrieving tasks:', error));

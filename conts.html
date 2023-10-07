@@ -599,18 +599,12 @@
                         <div class="table-responsive">
                             <table class="table2">
                                 <thead>
-                                    <tr>
-                                    <th>Present</th>
-                                    <th>Absent</th>
-                                    <th>Total</th>
+                                    <tr id="workerTypeTableHeader">
+                                        <!-- Worker type column headers will be added here dynamically -->
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td id="present-count" class="prs"></td>
-                                        <td id="absent-count" class="abs"> </td>
-                                        <td id="total-count" class="tot"></td>
-                                    </tr>
+                                <tbody id="workerTypeTableBody">
+                                    <!-- Worker type rows will be added here dynamically -->
                                 </tbody>
                             </table>
                         </div>
@@ -653,7 +647,8 @@
                             <th>Name</th>
                             <th>WorkerType</th>
                             <th>Shift</th>
-                            <th>Present/Absent</th>
+                            <th>Wages Per Shift</th>
+                            <th>total</th>
                             <th class="hidden">Marked Locations</th>
                         </tr>
                     </thead>
@@ -807,6 +802,8 @@
                                         checked
                                         ${task.pa !== 'Present' ? 'disabled' : 'checked'}> <!-- Initially checked if task.pa is 'Present', disabled if not -->
                                 </td>
+                                <td>${task.sal}</td>
+                                <td>${task.total}</td>
                                 <td class="google-maps-link"></td>
                                 <td class="joker">${task.role}</td>
                                 <td><button onclick="submitRecord('${task.w_name}','Present')" type="button" style="display: flex; background-color: #007bff; border: 8px solid #007bff;">submit</button></td>
@@ -816,7 +813,10 @@
                             // Append the new row to the end of the table
                             tasksTableBody.appendChild(row);
 
+                            const cntr=row.querySelector('.cntr');
 
+                                
+                            cntr.style.display = 'none';
                             const googleMapsLinkContainer = row.querySelector('.google-maps-link');
                             const jokerid = row.querySelector('.joker');
         
@@ -836,59 +836,62 @@
                         }
 
                         });
-
-                    const currentDate = new Date();
-                    const year = currentDate.getFullYear();
-                    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Month is zero-based, so add 1 and format with leading zero
-                    const day = currentDate.getDate().toString().padStart(2, '0');
-                    
-                    // Format the date as 'YYYY-MM-DD' (e.g., '2023-09-01')
-                    const formattedDate = `${year}-${month}-${day}`;
-
-                    // Define the markAttendance function at the global scope
-                    const markAttendance = (workerID, status, latitude, longitude) => {
-                        const attendanceData = { date: formattedDate, workerID, status, latitude, longitude };
-                        fetch('/contract/markAttendance', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(attendanceData), // Pass the array of attendance data
-                        })
-                        .then(response => response.json())
-                        .then(result => {
-                            // Handle the response if needed
-                            openModal();
-                            console.log(result);
-                            fetchAndDisplayTasks();
-                        })
-                        .catch(error => {
-                            // Handle any errors that occurred during the fetch or processing
-                            console.error('Error marking attendance:', error);
-                        });
-                    };
-
-                    // Add an event listener to the "Mark Attendance" button
-                    const markAttendanceButton = document.getElementById('markAttendanceButton');
-                    markAttendanceButton.addEventListener('click', async () => {
-                        const position = await getPreciseLocation(); // Wait for location data
-                        // Find all checkboxes
-                        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
                         
-                        // Create an array to store the attendance data for each worker
-                        const attendanceData = [];
-                        
-                        checkboxes.forEach(checkbox => {
-                            // Get the worker ID from the data attribute
-                            const workerID = checkbox.closest('tr').querySelector('.w_id').getAttribute('data-worker-id');
+                        // Define the markAttendance function at the global scope
+                        const markAttendance = async (workerID, status, latitude, longitude) => {
+                            const currentDate = new Date();
+                            const year = currentDate.getFullYear();
+                            const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+                            const day = currentDate.getDate().toString().padStart(2, '0');
+                            const formattedDate = `${year}-${month}-${day}`;
+
+                            const attendanceData = { date: formattedDate, workerID, status, latitude, longitude };
+                            try {
+                                const response = await fetch('/contract/markAttendance', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(attendanceData),
+                                });
+
+                                if (response.ok) {
+                                    const result = await response.json();
+                                    // Handle the response if needed
+                                    openModal();
+                                    console.log(result);
+                                    fetchAndDisplayTasks();
+                                } else {
+                                    // Handle the case where the POST request was not successful
+                                    console.error('Error marking attendance:', response.statusText);
+                                }
+                            } catch (error) {
+                                // Handle any errors that occurred during the fetch or processing
+                                console.error('Error marking attendance:', error);
+                            }
+                        };
+
+                        // Add an event listener to the "Mark Attendance" button
+                        const markAttendanceButton = document.getElementById('markAttendanceButton');
+                        markAttendanceButton.addEventListener('click', async () => {
+                            const position = await getPreciseLocation(); // Wait for location data
+                            // Find all checkboxes
+                            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
                             
-                            // Determine the status based on checkbox checked state
-                            const status = checkbox.checked ? 'Present' : 'Absent';
+                            // Create an array to store the attendance data for each worker
+                            const attendanceData = [];
                             
-                            // Call the markAttendance function with location data to send the data to the server
-                            markAttendance(workerID, status, position.coords.latitude, position.coords.longitude);
+                            checkboxes.forEach(checkbox => {
+                                // Get the worker ID from the data attribute
+                                const workerID = checkbox.closest('tr').querySelector('.w_id').getAttribute('data-worker-id');
+                                
+                                // Determine the status based on checkbox checked state
+                                const status = checkbox.checked ? 'Present' : 'Absent';
+                                
+                                // Call the markAttendance function with location data to send the data to the server
+                                markAttendance(workerID, status, position.coords.latitude, position.coords.longitude);
+                            });
                         });
-                    });
 
                     // Modify the getPreciseLocation function to return a Promise
                     function getPreciseLocation() {
@@ -965,6 +968,18 @@
             // Function to handle the search input and trigger fetching and displaying tasks
             const handleSearch = () => {
                 const searchInput = document.getElementById('search-input');
+                
+                const searchQuery = searchInput.value.trim();
+
+                if (searchQuery !== '') {
+                    fetchAndDisplayTasks(searchQuery);
+                }
+            };
+
+
+            const handleSearchh = () => {
+                const searchButton = document.getElementById('search-button');
+                
                 const searchQuery = searchInput.value.trim();
 
                 if (searchQuery !== '') {
@@ -981,49 +996,17 @@
             });
             
 
-
-
-    </script>
-    <script>
-        /*document.addEventListener('DOMContentLoaded', () => {
-
-            const tasksTableBody = document.querySelector('#table tbody');
-            const searchInput = document.getElementById('search-input');
             const searchButton = document.getElementById('search-button');
-            const allRows = document.getElementById('tasks-table-body').getElementsByTagName('tr');
-            
-            function performClientSearch(query) {
-                const searchValue = query.trim().toLowerCase();
-        
-                for (const row of allRows) {
-                    const taskNameCell = row.querySelector('td:nth-child(1)'); // Assuming task name is in the first column
-        
-                    if (taskNameCell) {
-                        const taskName = taskNameCell.textContent.toLowerCase();
-        
-                        if (taskName.includes(searchValue)) {
-                            row.style.display = ''; // Show the row
-                        } else {
-                            row.style.display = 'none'; // Hide the row
-                        }
-                    }
-                }
-            }
-        
-            searchInput.addEventListener('keydown', function(event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent form submission if needed
-                    const searchValue = searchInput.value.trim();
-                    performClientSearch(searchValue); // Perform client-side search
-                }
-            });
 
             searchButton.addEventListener('click', function() {
                 const searchValue = searchInput.value.trim();
-                performClientSearch(searchValue); // Perform client-side search
+                handleSearchh();
             });
-    });*/
-</script>
+            
+
+
+
+    </script>
     <script>
         $(function() {
             $("#search-input").autocomplete({
@@ -1082,27 +1065,60 @@
 
     </script>
     <script>
-        function fetchAndUpdateAttendanceCounts() {
-            fetch('/contract/attendance-count')
-                .then(response => response.json())
-                .then(counts => {
-                    // Update the counts in your frontend UI
-                    document.getElementById('present-count').textContent = counts.presentCount;
-                    document.getElementById('absent-count').textContent = counts.absentCount;
-                    
-                    // Calculate and update the total count
-                    const total = counts.presentCount + counts.absentCount;
-                    document.getElementById('total-count').textContent = total;
-                })
-                .catch(error => {
-                    console.error('Error fetching attendance counts:', error);
-                });
-        }
-    
-        // Call the function when needed, e.g., when the page loads or after marking attendance
-        fetchAndUpdateAttendanceCounts();
-    </script>
-    
+        function fetchAndUpdateworkertypeCounts() {
+            fetch('/contract/getworkertype-count')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(workerTypeCounts => {
+                const workerTypeTableHeader = document.getElementById('workerTypeTableHeader');
+                const workerTypeTableBody = document.getElementById('workerTypeTableBody');
         
+                // Clear existing table content
+                workerTypeTableHeader.innerHTML = '';
+                workerTypeTableBody.innerHTML = '';
+        
+                // Check if data is empty
+                if (Object.keys(workerTypeCounts).length === 0) {
+                    const noDataMessage = document.createElement('p');
+                    noDataMessage.textContent = 'No data available.';
+                    workerTypeTableBody.appendChild(noDataMessage);
+                    return;
+                }
+        
+                // Create column headers
+                const headerRow = document.createElement('tr');
+                for (const workerType in workerTypeCounts) {
+                    const headerCell = document.createElement('th');
+                    headerCell.textContent = workerType;
+                    headerRow.appendChild(headerCell);
+                }
+                workerTypeTableHeader.appendChild(headerRow);
+        
+                // Create count rows
+                const countRow = document.createElement('tr');
+                for (const workerType in workerTypeCounts) {
+                    const count = workerTypeCounts[workerType];
+                    const countCell = document.createElement('td');
+                    countCell.textContent = count;
+                    countRow.appendChild(countCell);
+                }
+                workerTypeTableBody.appendChild(countRow);
+            })
+            .catch(error => {
+                console.error('Error fetching counts:', error);
+                const errorContainer = document.getElementById('errorContainer');
+                errorContainer.textContent = 'Error fetching data. Please try again later.';
+            });
+        }
+        
+        // Call the function when needed, e.g., when the page loads or after marking attendance
+        fetchAndUpdateworkertypeCounts();
+    
+    </script>
 </body>
 </html>
+

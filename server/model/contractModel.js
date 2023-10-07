@@ -43,6 +43,10 @@ const contractSchema = new mongoose.Schema({
   longitude:{
     type:Number,
     default:null,
+  },
+  total:{
+    type:Number,
+    default:null,
   }
 });
 

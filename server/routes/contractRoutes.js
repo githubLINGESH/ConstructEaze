@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { submitTask, getTasks, getpage ,markAttendance ,autosearch,attcount,attforrec} = require('../controller/contractController');
+const { submitTask, getTasks, getpage ,markAttendance ,autosearch,attcount,attforrec,getworkertypecount} = require('../controller/contractController');
 const controllerr = require('../controller/labourrep');
 
 router.get('/',getpage);
@@ -12,5 +12,7 @@ router.post('/downloadforlab-excel', controllerr.downloadExcelforlab);
 router.get('/autocomple',autosearch);
 router.get('/attendance-count',attcount);
 router.post('/markAttendanceForRecord',attforrec);
+router.get('/getworkertype-count',getworkertypecount);
 
 module.exports = router;
+

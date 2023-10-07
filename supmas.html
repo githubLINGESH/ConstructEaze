@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: Sora, 'Source Sans Pro';
+            text-transform: uppercase;
+        }
+        .sidebar{
+            color: #fff;
+            font-size: small;
+            margin-top: 10px;
+        }
+        ul{
+            list-style: none;
+        }
+        .custom-input{
+            width: 300px; /* Set your desired width */
+            border: 2px solid #ccc;
+            
+        }
+        h1{
+            font-size: x-large;
+            font-weight: 700;
+        }
+        .btn-block{
+            border: none;
+            width: 100px;
+            height: 30px;
+            border-radius: 10px;
+            color: #fff;
+            background-color: #242e82;
+        }
+        .custom-button {
+            background-color: white;
+            color: black;
+            border: 2px solid black;
+        }
+        .items .list {
+            border: 1px solid #ccc; /* Add a border to each li */
+            padding: 10px; /* Add padding for spacing */
+            background-color: #f9f9f9; /* Add a background color */
+            margin-bottom: 5px; /* Add margin for spacing between li items */
+        }
+        .custom-card{
+            height: 110px;
+        }
+        .btn{
+            border: 2px solid yellow;
+            border-radius: 20px;
+        }
+        .btn:hover{
+            border: 2px solid #242e82;
+        }
+        .popup {
+            width: 80%;
+            background: #fff;
+            border-radius: 6px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 0 20px 20px;
+            color: #333;
+            }
+        
+            .popup img {
+            width: 100px;
+            margin-top: -50px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            }
+        
+            .popup h2 {
+            font-size: 24px;
+            font-weight: 500;
+            font-family: 'Sora', sans-serif !important;
+            margin: 30px 0 10px;
+            }
+        
+            .popup button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px 0;
+            background: #242e82;
+            color: #fff;
+            border: 0;
+            outline: none;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+            }
+        
+            .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            }
+        
+            .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            }
+        
+            .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            }
+        
+            .close:hover,
+            .close:focus {
+            color: black;
+            }
+    </style>
+</head>
+
+<body>
+    
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid" style="margin: 10px 20px;">
+        <a class="navbar-brand" href="home.html">
+            <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+            
+            <li class="nav-item">
+                <a class="nav-link active" href="masnode.html">Master</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="conts.html">Labour Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="matinf.html">Site Activity</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="labrep.html">Report Generation</a>
+            </li>
+            </ul>
+            <form class="d-flex" style="padding-left: 190px; padding-top: 5px;">
+            <button class="btn" type="submit"><span class="txt">Logout</span></button>
+            </form>
+        </div>
+        </div>
+    </nav>
+
+
+    <!-- Sidebar -->
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block sidebar min-vh-100" style="background-color: #242e82 !important;">
+                <div class="position-relative" style="margin-top: 100px;">
+                    <ul class="nav flex-column"  style="margin-top: 150px;">
+                        <li class="nav-item">
+                            <a class="nav-link sidebar" href="clientf.html">
+                                client form
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar" href="prodf.html">
+                                product form
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar" href="labourf.html">
+                                labour form
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar" href="vendorf.html">
+                                vendor form
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active sidebar" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#">
+                                SUPERVISOR
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px;">
+                <div class="sup">
+            
+                    <div class="container-fluid">
+                        <div class="row">
+                            <h1>SUPERVISOR</h1>
+                        </div>
+            
+            
+                        <div class="row" >
+                            
+                            <form action="/sup/submitSup" method="POST">
+                                <input class="form-control" type="text" name="name" id="name" placeholder="Name" required><br>
+                                <input class="form-control" type="text" name="userid" id="userid"  placeholder="User ID" required><br>
+                                <input class="form-control" type="password" name="pass" id="pass"  placeholder="Password" required><br>
+                                <input class="form-control" type="password" name="repass" id="repass"  placeholder="Re-Enter Password" required><br>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <button id="save" type="submit" class="btn-block custom-button" style="background-color: white !important; color: black !important;">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="row mt-5" id="cardContainer">
+                            <h1>SUPERVISOR ENTERED</h1>
+                        </div>
+
+                        
+
+                        <div class="col-xxl-5 items" style="display: none;">
+                            <div class="card list custom-card">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div class="text-left">
+                                        <p></p>
+                                        <p></p>
+                                    </div>
+                                    <div style="cursor: pointer;" onclick="deleteSupervisor(this)"><i class="fas fa-trash-alt"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    
+                </div>
+                <div id="myModal" class="modal">
+                    <div class="popup">
+                        <img src="assets/img/succs.png">
+                        <p>Success!</p>
+                        <button onclick="closeModal()">OK</button>
+                    </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        // Function to show the "myModal1" modal
+        function openModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "block";
+        }
+    
+        // Function to close the "myModal1" modal
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
+</script>
+
+    <script>
+
+        function deleteSupervisor(element) {
+            const supervisorName = element.closest('.col-xxl-5.items').getAttribute('data-id');
+        
+            // Send a DELETE request to the server to delete the supervisor
+            fetch('/sup/deleteSup/', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name: supervisorName })
+            })
+            .then((response) => {
+                if (response.ok) {
+                    // Delete was successful, you can remove the card from the DOM
+                    const card = element.closest('.col-xxl-5.items');
+                    card.remove();
+                } else {
+                    // Handle error, e.g., display an error message to the user
+                    console.error('Delete request failed');
+                }
+            })
+            .catch((error) => {
+                console.error('Error deleting supervisor:', error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelector('form').addEventListener('submit', (event) => {
+                event.preventDefault();
+                const formData = new FormData(event.target);
+                const data = {};
+                formData.forEach((value, key) => {
+                data[key] = value;
+                });
+            
+                fetch('/sup/submitSup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        console.log('Record inserted successfully.');
+                        form.reset();
+                        openModal();
+                        fetchAndDisplaySupervisor();
+                    } else {
+                        console.error('Error');
+                    }
+                })
+                .catch((error) => console.error('Error:', error));
+            });
+
+
+            function validateForm() {
+                const password = document.getElementById("pass").value;
+                const confirmPassword = document.getElementById("repass").value;
+    
+                if (password !== confirmPassword) {
+                    alert("Password and Re-Enter Password do not match.");
+                    document.getElementById("repass").value="";
+                    return false; // Prevent form submission
+                }
+    
+                // Passwords match, allow form submission and call addCard()
+                addCard();
+                return false; // Prevent actual form submission, as we're handling it in addCard()
+            }
+
+
+            const fetchAndDisplaySupervisor = () => {
+                fetch('/sup/getSuper')
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log(data);
+                        const cardContainer = document.getElementById('cardContainer');
+                        cardContainer.innerHTML = ''; // Clear the existing content before adding new elements
+            
+                        // Loop through the data and create elements for each supervisor
+                        data.forEach((supervisor) => {
+                            // Clone the template
+                            const template = document.querySelector('.col-xxl-5.items').cloneNode(true);
+            
+                            // Fill in the data from the supervisor
+                            const nameElement = template.querySelector('.text-left > p:nth-child(1)');
+                            const superIdElement = template.querySelector('.text-left > p:nth-child(2)');
+                            nameElement.textContent = supervisor.name;
+                            superIdElement.textContent = supervisor.superId;
+            
+
+                            template.setAttribute('data-id', supervisor.name);
+                            
+                            // Show the element by removing 'display: none'
+                            template.style.display = '';
+            
+                            // Append the populated template to the card container
+                            cardContainer.appendChild(template);
+
+                            if(nameElement==null)
+                            {
+                                nameElement.style.display= 'none';
+                            }
+
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error fetching supervisors:', error);
+                        // Handle error if needed
+                    });
+            };
+            
+            // Call the function to fetch and display supervisors on page load
+            fetchAndDisplaySupervisor();
+        
+    });
+    </script>
+</body>
+</html>

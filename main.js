@@ -1,6 +1,6 @@
         const express = require('express');
         const session = require('express-session');
-        const loginRouter = require('./login.js');
+        const cors = require('cors');
         const clientRouter = require('./server/routes/clientRoutes.js');
         const prodfRouter = require('./server/routes/prodfRoutes.js');
         const vendorRouter = require('./server/routes/vendorRoutes.js');
@@ -14,6 +14,8 @@
         const matoutRouter = require('./server/routes/materialoutRoutes.js');
         const projectRouter = require('./server/routes/projectRoutes.js');
         const accountRouter= require('./server/routes/accountsRoutes');
+        const supervisorRouter = require('./server/routes/SupervisorRoutes.js');
+        const loginRouter = require('./server/routes/loginRoutes.js');
 
         const mongoose = require('mongoose')
         const bodyParser = require('body-parser');
@@ -33,17 +35,15 @@
                 console.error('Error connecting to MongoDB', error);
             });
             
-            app.use(bodyParser.json());
+            app.use(cors());
 
-
-            app.use(session({
-                secret: 'aR7$Kp#9@2L&jF5*!mDqZtVwYzBxNvP4',
-                resave: false,
-                saveUninitialized: true
-            }));
-
-            // Parse incoming URL-encoded form data
             app.use(bodyParser.urlencoded({ extended: true }));
+            app.use(bodyParser.json());
+            app.use(session({
+            secret: 'aR7$Kp#9@2L&jF5*!mDqZtVwYzBxNvP4',
+            resave: false,
+            saveUninitialized: true
+            }));
 
         app.use(express.static(__dirname));
 
@@ -62,6 +62,7 @@
         app.use('/mato', matoutRouter);
         app.use('/proj', projectRouter);
         app.use('/acc',accountRouter);
+        app.use('/sup',supervisorRouter);
 
 
 
