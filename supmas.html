@@ -61,49 +61,46 @@
         .btn:hover{
             border: 2px solid #242e82;
         }
-        .popup {
-            width: 80%;
+        .popup{
+            width: 400px;
             background: #fff;
             border-radius: 6px;
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%,-50%);
             text-align: center;
-            padding: 0 20px 20px;
+            padding: 0 30px 30px;
             color: #333;
             }
-        
-            .popup img {
-            width: 100px;
-            margin-top: -50px;
-            border-radius: 50px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            .popup img{
+                width: 100px;
+                margin-top: -50px;
+                border-radius: 50px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             }
-        
-            .popup h2 {
-            font-size: 24px;
-            font-weight: 500;
-            font-family: 'Sora', sans-serif !important;
-            margin: 30px 0 10px;
+            .popup h2{
+                font-size: 38px;
+                font-weight: 500;
+                font-family: 'Sora' sans-serif !important;
+                margin: 30px 0 10px;
             }
-        
-            .popup button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 10px 0;
-            background: #242e82;
-            color: #fff;
-            border: 0;
-            outline: none;
-            font-size: 18px;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+            .popup button{
+                width: 100%;
+                margin-top: 20px;
+                padding: 10px 0;
+                background: #242e82;
+                color: #fff;
+                border: 0;
+                outline: none;
+                font-size: 18px;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0 5px 5px rgba(0,0,0,0.2);
             }
-        
+            
             .modal {
-            display: none;
+            display: none; /* Hidden by default */
             position: fixed;
             z-index: 1;
             left: 0;
@@ -111,9 +108,9 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
             }
-        
+            
             .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
@@ -121,7 +118,7 @@
             border: 1px solid #888;
             width: 80%;
             }
-        
+            
             .close {
             color: #aaa;
             float: right;
@@ -129,10 +126,40 @@
             font-weight: bold;
             cursor: pointer;
             }
-        
+            
             .close:hover,
             .close:focus {
             color: black;
+            }
+            
+            .custom-checkbox {
+            width: 30px;
+            height: 30px;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+            }
+            
+            .custom-checkbox::after {
+            content: '';
+            font-size: 20px;
+            color: transparent;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            }
+            
+            .custom-checkbox:active {
+            background-color: rgb(200, 255, 0);
+            }
+            
+            .custom-checkbox.clicked {
+            background-color: #ff5733; /* New background color */
+            color: #000; /* New text color */
             }
     </style>
 </head>
@@ -254,29 +281,29 @@
                     </div>
                     
                 </div>
-                <div id="myModal" class="modal">
-                    <div class="popup">
-                        <img src="assets/img/succs.png">
-                        <p>Success!</p>
-                        <button onclick="closeModal()">OK</button>
-                    </div>
             </main>
         </div>
     </div>
+
+    <div id="myModal" class="modal">
+        <div class="popup">
+            <img src="assets/img/succs.png">
+            <h2>Material Inward</h2>
+            <p>Material Inward Submitted!</p>
+            <button onclick="closeModal()">OK</button>
+        </div>
+    </div>
     <script>
-        // Function to show the "myModal1" modal
         function openModal() {
             const modal = document.getElementById("myModal");
             modal.style.display = "block";
         }
-    
-        // Function to close the "myModal1" modal
+
         function closeModal() {
             const modal = document.getElementById("myModal");
             modal.style.display = "none";
         }
-
-</script>
+    </script>
 
     <script>
 
@@ -310,6 +337,7 @@
 
             document.querySelector('form').addEventListener('submit', (event) => {
                 event.preventDefault();
+                console.log('Form submitted.');
                 const formData = new FormData(event.target);
                 const data = {};
                 formData.forEach((value, key) => {
@@ -325,9 +353,9 @@
                 })
                 .then((response) => {
                     if (response.ok) {
-                        console.log('Record inserted successfully.');
-                        form.reset();
                         openModal();
+                        form.reset();
+
                         fetchAndDisplaySupervisor();
                     } else {
                         console.error('Error');
@@ -380,11 +408,6 @@
             
                             // Append the populated template to the card container
                             cardContainer.appendChild(template);
-
-                            if(nameElement==null)
-                            {
-                                nameElement.style.display= 'none';
-                            }
 
                         });
                     })

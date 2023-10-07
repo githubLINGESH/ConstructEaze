@@ -20,27 +20,32 @@ const path = require('path');
             password: pass,
         });
 
-        await record.save();
-    console.log('Record inserted successfully.');
-
-    res.status(200).send("success");
+    await record.save();
+    res.status(200).send("Record inserted successfully.");
+    
     } catch (error) {
         console.error('Error inserting record:', error);
         res.status(500).send('Error inserting record.');
     }
     };
 
-    exports.getSuber =  async (req, res) => {
+    exports.getSuber = async (req, res) => {
         const userId = req.session.auth;
         const role = req.session.role;
+        
         try {
-            const projects = await Login.find();
+            // Query to find documents where both 'name' and 'superId' fields exist
+            const projects = await Login.find({
+                name: { $exists: true },
+                superId: { $exists: true }
+            });
+    
             res.status(200).json(projects);
-            } catch (error) {
+        } catch (error) {
             console.error('Error fetching projects:', error);
             res.status(500).send('Error fetching projects.');
-            }
-        };
+        }
+    };
 
         exports.deleteSuper = async(req,res) => {
 
