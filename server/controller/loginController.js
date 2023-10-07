@@ -16,8 +16,10 @@
     };
 
     exports.postLogin = (req, res) => {
-    const { email, password, auth } = req.body;
+    const { email, password, auth ,toggle} = req.body;
     const role = auth ? 'engineer' : 'supervisor';
+
+    console.log(toggle);
 
     validateLogin(email, password, auth)
         .then((user) => {

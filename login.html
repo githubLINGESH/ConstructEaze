@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/login.css" />
+  
 
 </head>
 <body>
@@ -34,10 +35,10 @@
   <div class="eng-container">
     <br><br>
     <strong>
-      <h3 style="display: inline-block; margin-right: 10px;">ENGINEER</h3>
+      <h3 id="name" style="display: inline-block; margin-right: 10px;">SUPERVISOR</h3>
     </strong>
     <label class="switch" style="display: inline-block;">
-      <input type="checkbox" id="myToggle" onclick="showHideInput()">
+      <input type="checkbox" id="myToggle" onclick="showHideInput()" value="0">
       <span class="slider"></span>
     </label>
   </div>
@@ -60,21 +61,27 @@
   
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
+    var toggleInput = document.getElementById("myToggle");
     function showHideInput() {
       var authCodeInput = document.getElementById("authCode");
       var toggle = document.getElementById("myToggle");
       var input = document.getElementById("auth");
-
+      var name = document.getElementById("name");
+      name.textContent="SUPERVISOR"
       if (toggle.checked) {
+        toggleInput.value =1;
         input.style.display = "block";
+        name.textContent="ENGINEER";
         authCodeInput.setAttribute("required", "required");
       } else {
+        toggleInput.value =0
         input.style.display = "none";
+        name.textContent="SUPERVISOR"
         authCodeInput.removeAttribute("required");
       }
     }
 
-    function togglePasswordVisibility() {
+    /*function togglePasswordVisibility() {
       var passwordInput = document.getElementById("password");
       var toggleButton = document.getElementById("toggleButton");
 
@@ -97,22 +104,20 @@
     password.setAttribute('type', type);
     // toggle the eye slash icon
     this.classList.toggle('fa-eye-slash');
-});
-  </script>
-  <script>
+});*/
 
     // Add an event listener to the form submission
     document.getElementById("loginForm").addEventListener("submit", function (event) {
       event.preventDefault(); // Prevent the default form submission behavior
-  
+
       // Get the form data
       const formData = new FormData(event.target);
-  
       // Make an AJAX request to submit the form data
       fetch("/login", {
         method: "POST",
         body: formData,
       })
+
         .then((response) => response.text())
         .then((data) => {
           // Display the response message on the page
