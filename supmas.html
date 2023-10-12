@@ -248,8 +248,9 @@
             
                         <div class="row" >
                             
-                            <form action="/sup/submitSup" method="POST">
+                            <form id='form' action="/sup/submitSup" method="POST">
                                 <input class="form-control" type="text" name="name" id="name" placeholder="Name" required><br>
+                                <input class="form-control" type="text" name="email" id="email" placeholder="Email" required><br>
                                 <input class="form-control" type="text" name="userid" id="userid"  placeholder="User ID" required><br>
                                 <input class="form-control" type="password" name="pass" id="pass"  placeholder="Password" required><br>
                                 <input class="form-control" type="password" name="repass" id="repass"  placeholder="Re-Enter Password" required><br>
@@ -294,18 +295,6 @@
         </div>
     </div>
     <script>
-        function openModal() {
-            const modal = document.getElementById("myModal");
-            modal.style.display = "block";
-        }
-
-        function closeModal() {
-            const modal = document.getElementById("myModal");
-            modal.style.display = "none";
-        }
-    </script>
-
-    <script>
 
         function deleteSupervisor(element) {
             const supervisorName = element.closest('.col-xxl-5.items').getAttribute('data-id');
@@ -335,34 +324,53 @@
 
         document.addEventListener('DOMContentLoaded', () => {
 
-            document.querySelector('form').addEventListener('submit', (event) => {
-                event.preventDefault();
-                console.log('Form submitted.');
-                const formData = new FormData(event.target);
+
+            function openModal() {
+                const modal = document.getElementById("myModal");
+                modal.style.display = "block";
+            }
+    
+            function closeModal() {
+                const modal = document.getElementById("myModal");
+                modal.style.display = "none";
+            }
+
+            //from submission
+            const form = document.querySelector('form');
+        
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent the default form submission behavior
+        
+                // Get the form data
+                const formData = new FormData(form);
                 const data = {};
                 formData.forEach((value, key) => {
-                data[key] = value;
+                    data[key] = value;
                 });
-            
-                fetch('/sup/submitSup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-                })
-                .then((response) => {
+        
+                try {
+                    const response = await fetch('/sup/submitSup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data),
+                    });
+        
                     if (response.ok) {
+                        event.preventDefault();
+                        // Handle successful response
                         openModal();
                         form.reset();
-
                         fetchAndDisplaySupervisor();
                     } else {
-                        console.error('Error');
+                        console.error('Error:');
                     }
-                })
-                .catch((error) => console.error('Error:', error));
+                } catch (error) {
+                    console.error('Error:', error);
+                }
             });
+        
 
 
             function validateForm() {

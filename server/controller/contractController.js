@@ -1,6 +1,7 @@
 const contracts = require('../model/contractModel');
 const path = require('path');
 
+
 exports.getpage = async (req, res) => {
   res.sendFile(path.join(__dirname, '..', '..', 'conts.html'));
 };
@@ -65,11 +66,15 @@ exports.getTasks = async (req, res) => {
 
 exports.markAttendance = async (req, res) => {
   try {
-    const { date, workerID, status, latitude, longitude } = req.body;
+    const { date, workerID, status, shift,latitude, longitude } = req.body;
     const userId = req.session.auth;
     const role  = req.session.role; // Assuming the user's role is stored in the session
     
     console.log(date);
+
+    const parsedShift = parseFloat(shift);
+
+    console.log(parsedShift);
     // Get today's date in UTC
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
@@ -79,10 +84,16 @@ exports.markAttendance = async (req, res) => {
 
     if (contract) {
       // If a document exists for today, update the "pa" field with the given status
-      contract.shift=0.5;
+      contract.shift=parsedShift;
       contract.role= role;
       contract.pa = status;
-      contract.total = parseInt(contract.shift)*parseInt(contract.total);  // status should be 'Present' or 'Absent'
+      console.log(contract.total);
+
+      if (isNaN(contract.total)) {
+        contract.total = 0;
+      }
+
+      contract.total = parsedShift*contract.total;
 
       // Only update latitude and longitude if the role is 'supervisor'
       if (role === 'supervisor') {
@@ -143,9 +154,11 @@ exports.markAttendance = async (req, res) => {
 
 exports.attforrec = async (req,res) => {
   try {
-    const { date, workerID, status, latitude, longitude } = req.body;
+    const { date, workerID, status,shift,latitude, longitude } = req.body;
     const userId = req.session.auth;
     const role  = req.session.role; // Assuming the user's role is stored in the session
+
+    const parsedShift = parseFloat(shift);
     
 
     // Get today's date in UTC
@@ -157,10 +170,15 @@ exports.attforrec = async (req,res) => {
 
     if (contract) {
       // If a document exists for today, update the "pa" field with the given status
-      contract.shift=0.5;
+      contract.shift=parsedShift;
       contract.role= role;
       contract.pa = status;
-      contract.total = parseInt(contract.shift)*parseInt(contract.total); // status should be 'Present' or 'Absent'
+
+      if (isNaN(contract.total)) {
+        contract.total = 0;
+      }
+
+      contract.total = parsedShift*contract.total;
 
       // Only update latitude and longitude if the role is 'supervisor'
       if (role === 'supervisor') {
@@ -287,6 +305,13 @@ exports.attcount = async(req,res) =>{
 
   res.status(200).json({ presentCount, absentCount });
 
+}
+
+exports.totalwages = async(req,res) =>{
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  
 }
 
 

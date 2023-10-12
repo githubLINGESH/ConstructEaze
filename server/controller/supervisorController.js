@@ -7,7 +7,7 @@ const path = require('path');
     };
 
     exports.submitSup = async (req, res) => {
-    const { name, userid ,pass} = req.body;
+    const { name,email, userid ,pass} = req.body;
     const userId = req.session.auth;
     const role = req.session.role;
 
@@ -17,12 +17,13 @@ const path = require('path');
             userId:userId,
             role:role,
             name : name ,
+            email: email,
             password: pass,
         });
 
     await record.save();
     res.status(200).send("Record inserted successfully.");
-    
+
     } catch (error) {
         console.error('Error inserting record:', error);
         res.status(500).send('Error inserting record.');

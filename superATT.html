@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        *{
+            font-family: Sora, 'Source Sans Pro';
+            text-transform: uppercase;
+        }
+        .sidebar{
+            color: #fff;
+        }
+        h1{
+            font-size: x-large;
+            font-weight: 700;
+        }
+        .btn{
+            border: 2px solid yellow;
+            border-radius: 20px;
+        }
+        .btn:hover{
+            border: 2px solid #242e82;
+        }
+        .sidebar .active{
+            color: white !important; 
+            background-color: rgba(0, 0, 0, 0.2); 
+            border-left: 3px solid #F2D200;
+        }
+        .navbar .nav-item .active{
+            background-color: #242e82;
+            border-radius: 20px !important;
+            color: #fff !important;
+        }
+        .navbar .nav-item a:hover{
+            background-color: yellow;
+            border-radius: 20px !important;
+            color: black !important;
+        }
+    </style>
+</head>
+
+<body>
+    
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a href="#" class="navbar-brand d-flex">
+                <img class="d-inline-block align-top" style="margin-right: 70px;" src="./assets/img/logo.png" width="200">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active " style="margin-right: 7px;">
+                        <a href="masnode.html" class="nav-link">
+                            Master
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="conts.html" class="nav-link active">
+                            Labour Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="prod.html" class="nav-link">
+                            Vendor Management
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="todo.html" class="nav-link">
+                            Site Activity
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="labrep.html" class="nav-link">
+                            Report Generation
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <button id="logoutButton" class="d-flex btn">Logout</button>
+        </div>
+    </nav>
+
+
+
+    <!-- Sidebar -->
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="sidebar col-md-2 d-none d-md-block sidebar min-vh-100" style="background-color: #242e82 !important;">
+                <div class="position-relative" style="margin-top: 100px;">
+                    <ul class="nav flex-column"  style="margin-top: 150px;">
+                        <li class="nav-item">
+                            <a class="nav-link sidebar" href="conts.html">
+                                Attendance
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active sidebar" href="#">
+                                Supervisor Attendance
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px;">
+                <div class="satt">
+            
+                    <div class="container-fluid">
+                        <div class="row">
+                            <h1>SUPERVISOR ATTENDANCE</h1>
+                        </div>
+                        
+                        <!--th-Table Head Cells
+                            td-Table Data Cells-->
+                        <div class="row table-responsive mt-5">
+                            <table class="table table-bordered table-hover text-center" style="border: 3px solid #ccc;">
+                                <thead id="supervisorbody" class="table">
+                                    <tr>
+                                        <th>Supervisor Name</th>
+                                        <th>Attendance</th>
+                                        <th>Location</th>
+                                        <th>Login Time</th>
+                                        <th>Login out Time</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+
+        function createGoogleMapsLink(latitude, longitude) {
+            const mapUrl = `https://maps.google.com/maps?q=${latitude},${longitude}`;
+            const link = document.createElement('a');
+            link.href = mapUrl;
+            link.target = '_blank';
+            link.textContent = 'View on Google Maps';
+            return link;
+            }
+
+
+            const fetchSupervisor = () => {
+                const supervisorbody = document.querySelector('tbody'); // Use the correct ID 'tbody' here
+            
+                fetch('/sAtt/getstatus')
+                    .then(response => response.json())
+
+                    .then(sups => {
+                        console.log(sups);
+                        const loginTime = new Date(sups.login_t);
+                        const hours = loginTime.getHours();
+                        const minutes = loginTime.getMinutes();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+
+                        // Convert to 12-hour format
+                        const formattedTime = `${(hours % 12) || 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+
+                        //for logout conversion to AM - PM format
+
+                        const logoutTime = new Date(sups.logout_t);
+                        const hrs = logoutTime.getHours();
+                        const min = logoutTime.getMinutes();
+                        const AmPm = hrs >= 12 ? 'PM' : 'AM';
+
+                        // Convert to 12-hour format
+                        const formattedTime_o = `${(hrs % 12) || 12}:${min.toString().padStart(2, '0')} ${AmPm}`;
+
+                            supervisorbody.innerHTML = ''; // Clear existing table rows
+            
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                <td>${sups.name}</td>
+                                <td>${sups.status}</td>
+                                <td class="google-maps-link"></td>
+                                <td>${formattedTime}</td>
+                                <td>${formattedTime_o}</td>
+                                `;
+                                supervisorbody.appendChild(row);
+            
+                                const googleMapsLinkContainer = row.querySelector('.google-maps-link');
+            
+                                const googleMapsLink = createGoogleMapsLink(sups.latitude, sups.longitude);
+                                googleMapsLinkContainer.appendChild(googleMapsLink);
+                            })
+                    .catch(error => console.error('Error retrieving tasks:', error));
+            };
+            // Fetch tasks when the page loads
+            fetchSupervisor();
+
+        });
+
+        // Async function to handle supervisor logout
+            async function handleSupervisorLogout() {
+                try {
+                    const date = new Date();
+
+                    // Send an HTTP request to update the logout_t time
+                    const response = await fetch('/sAtt/logout', {
+                        method: 'PUT', // You can use PUT or POST based on your API
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            logout_t: date.toISOString(), // Convert the date to ISO format for the server
+                        }),
+                    });
+
+                    if (response.ok) {
+                        // Logout successful, you can do any client-side operations here
+                        console.log('Logout successful');
+                    } else {
+                        // Handle errors if needed
+                        console.error('Error logging out');
+                    }
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    // Handle errors if needed
+                }
+            }
+
+            // Add an event listener to the logout button to call the function
+            document.getElementById('logoutButton').addEventListener('click', handleSupervisorLogout);
+
+    </script>
+</body>
+</html>

@@ -539,8 +539,9 @@
         <div class="sidebar" style="height: 100%;">
             <nav class="nav flex-column" style="padding-top: 100px; ">
                 <a class="nav-link space"  style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#">Attendance</a>
+                <a class="nav-link space" href="superATT.html">Supervisor Attendance</a>
             </nav>
-                <button id="loginButton" class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200; font-size:15px; display: flex; width: 100%; text-align:left;">SUPERVISOR ATTENDANCE</button>
+                <button id="loginButton" class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200; font-size:15px; display: none; width: 100%; text-align:left;">SUPERVISOR ATTENDANCE</button>
         </div>
         </div>
         <div class="col-lg-10">
@@ -639,6 +640,11 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
                     <button class="btn-block" id="markAttendanceButton" style="margin-left: 20px;">Mark Attendance</button>
                 </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
+                    <button class="btn-block" id="SuperATTButton" onclick="MarksuperAtt()" style="margin-left: 20px;">Mark My Attendance</button>
+                </div>
+
             </div>
             <div class="four">
                 <table id="table" class="table">
@@ -724,6 +730,9 @@
         });
     </script>
     <script>
+
+        let modifiedShiftValue;
+
         const contractForm = document.getElementById('contractForm');
         const workerContractForm = document.getElementById('workerContractForm');
         const addButton = document.getElementById('addButton');
@@ -742,6 +751,61 @@
                 submitRecord(workerId,status);
             }
         };
+        
+        async function MarksuperAtt(){
+        // Assuming you have your button element with the id "SuperATTButton"
+        const superAttButton = document.getElementById('SuperATTButton');
+
+        function getPreciseLocation() {
+            return new Promise((resolve, reject) => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                } else {
+                    reject(new Error('Geolocation is not available.'));
+                }
+            });
+        }
+    
+        const position = await getPreciseLocation(); // Wait for location data
+    
+        const SattendanceData = {
+            status : 'Present',
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+        };
+
+        superAttButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch('/sAtt/superAtt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(SattendanceData),
+            });
+
+            if (response.ok) {
+            const data = await response.json();
+            console.log(data);
+            } else {
+            console.error('Error marking supervisor attendance:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error marking supervisor attendance:', error);
+            
+        }
+        });
+
+        }
+
+        function submitModifiedRecord(workerID, status, buttonElement) {
+            // Capture the modified shift value
+            const row = buttonElement.closest('tr');
+            const modifiedShift = row.querySelector('.shift').textContent;
+        
+            // Call the submitRecord function with the modified shift value
+            submitRecord(workerID, status, modifiedShift);
+        }
         
             // Assuming you have an empty table with an ID "tasksTable"
             //geolocation getting fns
@@ -789,7 +853,7 @@
                             row.innerHTML = `
                                 <td>${task.w_name}</td>
                                 <td>${task.w_type}</td>
-                                <td>${task.shift}</td>
+                                <td class="shift" data-shift="${task.shift}">${task.shift}</td>
                                 <td class="cntr" style="display: flex;
                                     justify-content: center;
                                     align-items: center;
@@ -806,12 +870,25 @@
                                 <td>${task.total}</td>
                                 <td class="google-maps-link"></td>
                                 <td class="joker">${task.role}</td>
-                                <td><button onclick="submitRecord('${task.w_name}','Present')" type="button" style="display: flex; background-color: #007bff; border: 8px solid #007bff;">submit</button></td>
+                                <td><button onclick="submitModifiedRecord('${task.w_name}', 'Present', this)" type="button" style="display: flex; background-color: #007bff; border: 8px solid #007bff;">submit</button></td>
                                 <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
                             `;
         
                             // Append the new row to the end of the table
                             tasksTableBody.appendChild(row);
+
+                            const shiftField = row.querySelector('.shift');
+                            shiftField.addEventListener('click', () => {
+                                shiftField.setAttribute('contenteditable', 'true');
+                                shiftField.focus();
+                            });
+                    
+                            // Add a blur event listener to capture the modified "shift" value when it loses focus
+                            shiftField.addEventListener('blur', () => {
+                                const modifiedShift = shiftField.textContent;
+                                shiftField.setAttribute('data-shift', modifiedShift);
+                                shiftField.removeAttribute('contenteditable');
+                            });
 
                             const cntr=row.querySelector('.cntr');
 
@@ -838,21 +915,40 @@
                         });
                         
                         // Define the markAttendance function at the global scope
-                        const markAttendance = async (workerID, status, latitude, longitude) => {
+                        const markAttendance = async (attendanceArray) => {
+
+                            for (const attendance of attendanceArray) {
+
+
+                            const {workerID, status, shift, latitude, longitude} = attendance;
+
+
                             const currentDate = new Date();
                             const year = currentDate.getFullYear();
                             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
                             const day = currentDate.getDate().toString().padStart(2, '0');
                             const formattedDate = `${year}-${month}-${day}`;
 
-                            const attendanceData = { date: formattedDate, workerID, status, latitude, longitude };
+                            
+
+                            const date = formattedDate;
+
+                            const data = {
+                                date,
+                                workerID,
+                                status,
+                                shift,
+                                latitude,
+                                longitude
+                                };
+
                             try {
                                 const response = await fetch('/contract/markAttendance', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json',
                                     },
-                                    body: JSON.stringify(attendanceData),
+                                    body: JSON.stringify(data),
                                 });
 
                                 if (response.ok) {
@@ -860,7 +956,6 @@
                                     // Handle the response if needed
                                     openModal();
                                     console.log(result);
-                                    fetchAndDisplayTasks();
                                 } else {
                                     // Handle the case where the POST request was not successful
                                     console.error('Error marking attendance:', response.statusText);
@@ -870,9 +965,14 @@
                                 console.error('Error marking attendance:', error);
                             }
                         };
+                    };
 
                         // Add an event listener to the "Mark Attendance" button
                         const markAttendanceButton = document.getElementById('markAttendanceButton');
+
+
+                        if (!markAttendanceButton.hasEventListener) {
+                            markAttendanceButton.hasEventListener = true;
                         markAttendanceButton.addEventListener('click', async () => {
                             const position = await getPreciseLocation(); // Wait for location data
                             // Find all checkboxes
@@ -887,11 +987,22 @@
                                 
                                 // Determine the status based on checkbox checked state
                                 const status = checkbox.checked ? 'Present' : 'Absent';
+
+                                const modifiedShift = checkbox.closest('tr').querySelector('.shift').getAttribute('data-shift');
+                                console.log(modifiedShift);
                                 
                                 // Call the markAttendance function with location data to send the data to the server
-                                markAttendance(workerID, status, position.coords.latitude, position.coords.longitude);
+                                attendanceData.push({
+                                    workerID,
+                                    status,
+                                    shift:modifiedShift,
+                                    latitude: position.coords.latitude,
+                                    longitude: position.coords.longitude,
+                                    });
                             });
+                            markAttendance(attendanceData);
                         });
+                    }
 
                     // Modify the getPreciseLocation function to return a Promise
                     function getPreciseLocation() {
@@ -906,13 +1017,19 @@
                     });
             };
             fetchAndDisplayTasks();
+            
 
 
-            async function submitRecord(workerID, status) {
+            async function submitRecord(workerID, status , shift) {
                 // Prompt the user to confirm before submitting for a specific record
-                const confirmation = confirm(`Submit record for Worker ID: ${workerID} as ${status}?`);
+                const confirmation = confirm(`Submit record for Worker ID: ${workerID} as ${status} with shift: ${shift}?`);
+
+                if (!shift) {
+                    shift = modifiedShiftValue;
+                }
+
                 if (!confirmation) {
-                    return; // User canceled the submission
+                    return;
                 }
             
                 // Send a request to mark attendance for the specific record
@@ -938,6 +1055,7 @@
                     date: formattedDate,
                     workerID,
                     status,
+                    shift:shift || modifiedShiftValue,
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
                 };
@@ -961,9 +1079,6 @@
                     console.error('Error marking attendance for record:', error);
                 });
             }
-            
-    
-        
 
             // Function to handle the search input and trigger fetching and displaying tasks
             const handleSearch = () => {
