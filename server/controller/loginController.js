@@ -16,7 +16,8 @@
     };
 
     exports.postLogin = (req, res) => {
-    const { email, password, auth ,toggle} = req.body;
+    const { email, password, auth} = req.body;
+    const toggle = req.body.toggle;
     const role = auth ? 'engineer' : 'supervisor';
 
     console.log(toggle);

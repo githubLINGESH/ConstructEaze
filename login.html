@@ -62,24 +62,27 @@
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
     var toggleInput = document.getElementById("myToggle");
-    function showHideInput() {
-      var authCodeInput = document.getElementById("authCode");
-      var toggle = document.getElementById("myToggle");
-      var input = document.getElementById("auth");
-      var name = document.getElementById("name");
-      name.textContent="SUPERVISOR"
-      if (toggle.checked) {
-        toggleInput.value =1;
+
+function showHideInput() {
+    var authCodeInput = document.getElementById("authCode");
+    var toggle = document.getElementById("myToggle");
+    var input = document.getElementById("auth");
+    var name = document.getElementById("name");
+    name.textContent = "SUPERVISOR";
+
+    if (toggle.checked) {
+        toggleInput.value = "1";
         input.style.display = "block";
-        name.textContent="ENGINEER";
+        name.textContent = "ENGINEER";
         authCodeInput.setAttribute("required", "required");
-      } else {
-        toggleInput.value =0
+    } else {
+        toggleInput.value = "0";
         input.style.display = "none";
-        name.textContent="SUPERVISOR"
+        name.textContent = "SUPERVISOR";
         authCodeInput.removeAttribute("required");
-      }
     }
+}
+
 
     /*function togglePasswordVisibility() {
       var passwordInput = document.getElementById("password");
