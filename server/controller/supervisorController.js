@@ -8,15 +8,17 @@ const path = require('path');
 
     exports.submitSup = async (req, res) => {
     const { name,email, userid ,pass} = req.body;
-    const userId = req.session.auth;
-    const role = req.session.role;
+    const userId = req.session.userId;
+    const E_name = req.session.name;
+    const projectId = req.session.projectId;
 
     try {
         const record = new Login({
+            projectId : projectId,
             superId:userid,
             userId:userId,
-            role:role,
-            name : name ,
+            E_name: E_name,
+            name : name,
             email: email,
             password: pass,
         });
@@ -31,12 +33,15 @@ const path = require('path');
     };
 
     exports.getSuber = async (req, res) => {
-        const userId = req.session.auth;
+        const userId = req.session.userId;
         const role = req.session.role;
-        
+        const projectId = req.session.projectId;
+
         try {
             // Query to find documents where both 'name' and 'superId' fields exist
             const projects = await Login.find({
+                userId : userId,
+                projectId : projectId,
                 name: { $exists: true },
                 superId: { $exists: true }
             });

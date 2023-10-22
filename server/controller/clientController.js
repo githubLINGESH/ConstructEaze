@@ -12,9 +12,11 @@ exports.submitTask = async (req, res) => {
   const { name, phone, address } = req.body;
   const userId = req.session.auth;
   const role = req.session.role;
+  const projectId = req.session.projectId;
 
   try {
       const record = new E_client({
+          projectId:projectId,
           userId:userId,
           role:role,
           name: name,
@@ -25,7 +27,7 @@ exports.submitTask = async (req, res) => {
       await record.save();
       console.log('Record inserted successfully.');
 
-      res.status(200).send('Record inserted successfully.');
+      res.status(200).json({ role: role });
   } catch (error) {
       console.error('Error inserting record:', error);
       res.status(500).send('Error inserting record.');
@@ -36,6 +38,7 @@ exports.handleFileUpload = (req, res) => {
   const file = req.file;
   const userId = req.session.auth;
   const role = req.session.role;
+  const projectId = req.session.projectId;
 
   if (!file) {
     return res.status(400).send('No file uploaded');
@@ -53,6 +56,7 @@ exports.handleFileUpload = (req, res) => {
 
       // Map data to MongoDB worker documents
       const workers = results.map((result) => ({
+        projectId: projectId,
         userId:userId,
         role:role,
         name: result.name,

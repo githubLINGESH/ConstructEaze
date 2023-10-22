@@ -9,11 +9,13 @@
 
     exports.submitlabour = async (req, res) => {
     const { name, phone, w_type, salary} = req.body;
-    const userId = req.session.auth;
+    const userId = req.session.userId;
     const role = req.session.role;
+    const projectId = req.session.projectId;
 
     try {
         const record = new contracts({
+        projectId:projectId,
         userId:userId,
         role:role,
         w_name: name,
@@ -35,8 +37,9 @@
 
         exports.handleFileUploadlab = (req, res) => {
             const file = req.file;
-            const userId = req.session.auth;
+            const userId = req.session.userId;
             const role = req.session.role;
+            const projectId = req.session.projectId;
         
             if (!file) {
             return res.status(400).send('No file uploaded');
@@ -56,6 +59,7 @@
                 const workers = results.map((result) => ({
                 userId:userId,
                 role:role,
+                projectId:projectId,
                 name: result.name,
                 phone: parseInt(result.phone),
                 Category: result.Category,

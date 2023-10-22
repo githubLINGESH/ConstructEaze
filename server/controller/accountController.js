@@ -7,13 +7,16 @@ exports.getaccountpage = (req, res) => {
 
 exports.getVendorNames = async (req, res) => {
     try {
-        const vendorNames = await e_products.find().distinct('Vendor_name');
+        const projectId = req.session.projectId;
+
+        const vendorNames = await e_products.distinct('vendor.vendorName', { 'vendor.projectId': projectId });
         res.json(vendorNames);
-    } catch (error) {
+        } catch (error) {
         console.error('Error fetching vendor names:', error);
         res.status(500).json({ message: 'Internal server error' });
-    }
-};
+        }
+    };
+    
 
 exports.getProductNames = async (req, res) => {
     try {

@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="./assets/css/login.css" />
-  
 
 </head>
 <body>
@@ -32,7 +31,7 @@
       <h1><b>L O G I N</b></h1>
     </strong>
   </div>
-  <div class="eng-container">
+  <!--<div class="eng-container">
     <br><br>
     <strong>
       <h3 id="name" style="display: inline-block; margin-right: 10px;">SUPERVISOR</h3>
@@ -41,7 +40,7 @@
       <input type="checkbox" id="myToggle" onclick="showHideInput()" value="0">
       <span class="slider"></span>
     </label>
-  </div>
+  </div>-->
   <div id="message"></div>
   <div>
     <form style="margin-left: 7.9%; margin-top: 3%;" action="/login" method="POST">
@@ -49,9 +48,6 @@
       <div style="position: relative;">
         <input type="password" class="pass-textbox" id="password" name="password" placeholder="Password" required>
         <i class="far fa-eye" id="toggleButton"style="margin-left: -30px; cursor: pointer; "></i>
-      </div>
-      <div style="margin-top: 1.5%; display: none;" id="auth">
-        <input type="text" class="pass-textbox" id="authCode" name="auth" placeholder="Authentication Code"><br>
       </div>
       <div style="margin-top: 1.5%;">
         <button type="submit" class="custom-button">Login</button>
@@ -61,7 +57,7 @@
   
   <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
-    var toggleInput = document.getElementById("myToggle");
+    /*var toggleInput = document.getElementById("myToggle");
     function showHideInput() {
       var authCodeInput = document.getElementById("authCode");
       var toggle = document.getElementById("myToggle");
@@ -84,7 +80,7 @@
         input2.setAttribute("type","text");
         authCodeInput.removeAttribute("required");
       }
-    }
+    }*/
 
     /*function togglePasswordVisibility() {
       var passwordInput = document.getElementById("password");

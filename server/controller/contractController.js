@@ -6,47 +6,23 @@ exports.getpage = async (req, res) => {
   res.sendFile(path.join(__dirname, '..', '..', 'conts.html'));
 };
 
-exports.submitTask = async (req, res) => {
-  const { w_name, phone, w_type, sal, shift, start, end } = req.body;
-
-  try {
-    console.log('Received data:', req.body);
-
-    const record = new contracts({
-      w_name: w_name,
-      phone: phone,
-      w_type: w_type,
-      sal: sal,
-      shift: shift,
-      start: start,
-      end: end,
-      pa: null // You can change this to 'Present' or 'Absent' if you want to set a default value.
-    });
-
-    await record.save();
-    console.log('Record inserted successfully.');
-  } catch (error) {
-    console.error('Error inserting record:', error);
-    res.status(500).send('Error inserting record.');
-  }
-};
-
 exports.getTasks = async (req, res) => {
   const searchQuery = req.query.search;
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const role = req.session.role;
-  const userId= req.session.auth;
+  const userId= req.session.userId;
+  const projectId = req.session.projectId;
 
   let query = {};
 
   if (!searchQuery) {
-    query = { date: today};
+    query = { date: today,projectId:projectId};
   } else {
     query = {
       $or: [
-        { w_name: { $regex: new RegExp(searchQuery, 'i') }, date: today},
-        { w_name: { $regex: new RegExp(searchQuery, 'i') }, date: null},
+        { w_name: { $regex: new RegExp(searchQuery, 'i') }, date: today,projectId:projectId},
+        { w_name: { $regex: new RegExp(searchQuery, 'i') }, date: null,projectId:projectId},
       ],
     };
   }
@@ -68,7 +44,9 @@ exports.markAttendance = async (req, res) => {
   try {
     const { date, workerID, status, shift,latitude, longitude } = req.body;
     const userId = req.session.auth;
-    const role  = req.session.role; // Assuming the user's role is stored in the session
+    const role  = req.session.role;
+    const name = req.session.name;
+    const projectId = req.session.projectId;
     
     console.log(date);
 
@@ -85,15 +63,17 @@ exports.markAttendance = async (req, res) => {
     if (contract) {
       // If a document exists for today, update the "pa" field with the given status
       contract.shift=parsedShift;
-      contract.role= role;
+      contract.name= name;
+      contract.role = role;
       contract.pa = status;
+      contract.projectId = projectId;
       console.log(contract.total);
 
       if (isNaN(contract.total)) {
         contract.total = 0;
       }
 
-      contract.total = parsedShift*contract.total;
+      contract.total = parsedShift*contract.sal;
 
       // Only update latitude and longitude if the role is 'supervisor'
       if (role === 'supervisor') {
@@ -117,7 +97,9 @@ exports.markAttendance = async (req, res) => {
       const shiftt = 1;
 
       const contractData = {
+        projectId:projectId,
         userId:userId,
+        name:name,
         role:role,
         w_name: workerID,
         w_type: originalContract.w_type,
@@ -157,6 +139,8 @@ exports.attforrec = async (req,res) => {
     const { date, workerID, status,shift,latitude, longitude } = req.body;
     const userId = req.session.auth;
     const role  = req.session.role; // Assuming the user's role is stored in the session
+    const name = req.session.name;
+    const projectId = req.session.projectId;
 
     const parsedShift = parseFloat(shift);
     
@@ -171,6 +155,8 @@ exports.attforrec = async (req,res) => {
     if (contract) {
       // If a document exists for today, update the "pa" field with the given status
       contract.shift=parsedShift;
+      contract.name = name;
+      contract.projectId = projectId;
       contract.role= role;
       contract.pa = status;
 
@@ -178,7 +164,7 @@ exports.attforrec = async (req,res) => {
         contract.total = 0;
       }
 
-      contract.total = parsedShift*contract.total;
+      contract.total = parsedShift*contract.sal;
 
       // Only update latitude and longitude if the role is 'supervisor'
       if (role === 'supervisor') {
@@ -200,7 +186,9 @@ exports.attforrec = async (req,res) => {
       const shiftt = 1;
 
       const contractData = {
+        projectId:projectId,
         userId:userId,
+        name:name,
         role:role,
         w_name: workerID,
         w_type: originalContract.w_type,
@@ -246,13 +234,15 @@ exports.getlabouratt = async () => {
 
 exports.autosearch = async (req, res) => {
   const query = req.query.term.toLowerCase();
-  const userId = req.session.auth;
+  const userId = req.session.userId;
+  const projectId = req.session.projectId;
 
   try {
     const suggestions = await contracts
       .find({
         w_name: { $regex: query, $options: 'i' },
         date: null,
+        projectId : projectId
       })
       .select('w_name') // Select only the w_name field
       .limit(10); // Limit the number of suggestions to 10
@@ -270,9 +260,12 @@ exports.getworkertypecount = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    const projectId = req.session.projectId;
+
     // Find unique worker types for today
     const uniqueWorkerTypes = await contracts.distinct('w_type', {
       date: { $gte: today },
+      projectId:projectId
     });
 
     // Initialize an object to store counts for worker types
@@ -282,6 +275,7 @@ exports.getworkertypecount = async (req, res) => {
     for (const w_type of uniqueWorkerTypes) {
       const count = await contracts.countDocuments({
         date: { $gte: today },
+        projectId:projectId,
         w_type: w_type,
       });
       workerTypeCounts[w_type] = count;
@@ -307,12 +301,45 @@ exports.attcount = async(req,res) =>{
 
 }
 
-exports.totalwages = async(req,res) =>{
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+  exports.totalwages = async (req, res) => {
+    try {
+        const today = new Date();
+        today.setUTCHours(0, 0, 0, 0);
 
-  
-}
+        const projectId = req.session.projectId;
+
+        // Query the database to find entries that match the date condition
+        const totalWages = await contracts.aggregate([
+            {
+                $match: {
+                    date: today,
+                    projectId:projectId,
+
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    total: { $sum: '$total' },
+                },
+            },
+        ]);
+
+        // Check if any data was found
+        if (totalWages.length > 0) {
+            // The total wages for the given date
+            const total = totalWages[0].total;
+            
+            return res.status(200).json({ total });
+        } else {
+            // No data found for the given date
+            return res.status(404).json({ error: 'No data found for today' });
+        }
+    } catch (error) {
+        console.error('Error retrieving total wages:', error);
+        res.status(500).send('Error retrieving total wages.');
+    }
+};
 
 
 

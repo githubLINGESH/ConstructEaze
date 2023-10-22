@@ -30,10 +30,6 @@
     box-sizing: border-box;
     font-family: 'Sora', sans-serif;
 }
-
-input[type="checkbox"]{
-display: none;
-}
 .container{
 display: none;
 position: absolute;
@@ -133,7 +129,7 @@ height: 35px;
 width: 100%;
 margin: 30px 0;
 }
-form .data input{
+form .data input, select{
 height: 100%;
 width: 100%;
 padding-left: 10px;
@@ -212,8 +208,8 @@ cursor: pointer;
 box-shadow: 0 5px 5px rgba(0,0,0,0.2);
 }
 
-.modal {
-display: none; /* Hidden by default */
+/* .modal {
+display: none; /* Hidden by default 
 position: fixed;
 z-index: 1;
 left: 0;
@@ -221,7 +217,7 @@ top: 0;
 width: 100%;
 height: 100%;
 overflow: auto;
-background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background 
 }
 
 .modal-content {
@@ -230,7 +226,7 @@ margin: 15% auto;
 padding: 20px;
 border: 1px solid #888;
 width: 80%;
-}
+} */
 
 .close {
 color: #aaa;
@@ -274,6 +270,61 @@ background-color: rgb(200, 255, 0);
 background-color: #ff5733; /* New background color */
 color: #000; /* New text color */
 }
+
+
+.down{
+          margin-left: 100px;
+        }
+        @media (min-width:1246px){
+          .down{
+            margin-left: 100px;
+          }
+        }
+
+    .modal .btn-block{
+        width: 100px !important;
+        margin-left: 10px !important;
+    }
+    .modal .entries, .entities,.notes,.extra {
+        width: 550px !important;
+        border: double black !important;
+    }
+
+    .modal .modal-header input{
+        border-radius: 10px !important;
+    }
+    
+    .modal .modal-body select,.modal .modal-body input, select{
+        margin-left: 10px !important;
+        width: 200px !important;
+        border-radius: 10px !important;
+    }
+    .modal .form-group, .modal .modal-title{
+        margin: 10px 0 0 10px !important;
+    }
+    textarea {
+        width: 90% !important; /* 100% width by default */
+        height: 100px !important; /* 100px height by default */
+    }
+    .modal .btn-block{
+        background-color: #242e82 !important;
+        border: none !important;
+    }
+    .modal #date{
+        border: 2px solid #242e82 !important; 
+        background-color: #242e82 !important;
+        color: white !important;
+        height: 30px !important; 
+        padding-top: 4px !important;
+        border-radius: 20px !important;
+        width: 170px !important; 
+        padding-left: 15px !important;
+    }
+
+    .modal .modal-header{
+      background-color: none !important;
+    }
+
 
     </style>
 </head>
@@ -333,7 +384,7 @@ color: #000; /* New text color */
             </div>
     
     
-            <div class="row">
+            <!-- <div class="row">
                     <div  style="display: flex;">
                         <div  style="display: flex;">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
@@ -413,8 +464,36 @@ color: #000; /* New text color */
                     </table>
                 </form>
                 </div>
-            </div>
+            </div> -->
+
+
             
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex">
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="search input-group d-flex">
+                      <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
+                      <input type="text" placeholder="Search Product..">
+                    </div>
+                  </div>
+                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                      <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="product-container">
+                <!-- Product divs will be populated here -->
+              </div>              
+            
+              </div>
+                </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
         </div>
         </div>
         </div>
@@ -439,9 +518,58 @@ color: #000; /* New text color */
         const modal = document.getElementById("myModal");
         modal.style.display = "none";
     }
+
+
 </script>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
+ <script>
+
+async function populateProductDivs() {
+  try {
+    // Call the API to update total supplied quantities
+    const updateResponse = await fetch('/mato/update-to-stocks',{
+      method: 'POST',
+    });
+    if (!updateResponse.ok) {
+      console.error('Failed to update total supplied quantities');
+    }
+
+    // Call the API to fetch total supplied quantities
+    const response = await fetch('/mato/getstocks');
+    if (response.ok) {
+      const totalSuppliedQuantities = await response.json();
+      const productContainer = document.getElementById('product-container');
+
+      // Clear existing content
+      productContainer.innerHTML = '';
+
+      // Iterate through the total supplied quantities and create/update product divs
+      totalSuppliedQuantities.forEach(item => {
+        const productDiv = document.createElement('div');
+        productDiv.classList.add('product-item');
+
+        // Use item.nameOfMaterial and item.totalSuppliedQuantity to populate the div
+        productDiv.innerHTML = `
+          <h3>${item.nameOfMaterial}</h3>
+          <p>Total Supplied Quantity: ${item.totalSuppliedQuantity}</p>
+        `;
+
+        productContainer.appendChild(productDiv);
+      });
+    } else {
+      console.error('Failed to fetch total supplied quantities');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+// Call the function to populate product divs when the page loads
+window.addEventListener('load', populateProductDivs);
+
+
+
+      
+ document.addEventListener('DOMContentLoaded', () => {
 const tasksTableBody = document.querySelector('#tabla tbody');
 const formPopup = document.getElementById("myFormin");
   const vendorNameInput = document.getElementById("vendorNameInput");

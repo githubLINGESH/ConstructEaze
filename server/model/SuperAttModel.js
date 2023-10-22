@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const SuperAttSchema = new mongoose.Schema({
 
+    projectId:{
+        type:String,
+        required:true
+    },
     superId:{
         type:String,
         required:true

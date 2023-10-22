@@ -1,577 +1,1027 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <script>
-        function openFormin() {
-        var formPopup = document.getElementById("myFormin");
-        formPopup.style.display = "block";
-        formPopup.style.backgroundColor = "transparent";
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <script>
+                function openFormin() {
+                var formPopup = document.getElementById("myFormin");
+                formPopup.style.display = "block";
+                formPopup.style.backgroundColor = "transparent";
+                }
+                function closeFormin() {
+                    document.getElementById("myFormin").style.display = "none";
+                }
+            </script>
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+            <link rel="stylesheet" href="./assets/css/pent.css">
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+                <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+            <style>
+                *{
+        margin: 0;
+        padding: 0;
+        outline: none;
+        box-sizing: border-box;
+        font-family: 'Sora', sans-serif;
         }
-        function closeFormin() {
-            document.getElementById("myFormin").style.display = "none";
+
+        .container{
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        width: 510px;
+        height: 600px;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 0 8px rgba(0,0,0,0.1);
         }
-    </script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="./assets/css/pent.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        *{
-margin: 0;
-padding: 0;
-outline: none;
-box-sizing: border-box;
-font-family: 'Sora', sans-serif;
-}
+        #show:checked ~ .container{
+        display: block;
+        }
+        .container .close-btn{
+        position: absolute;
+        right: 20px;
+        top: 15px;
+        font-size: 18px;
+        cursor: pointer;
+        }
+        .container .text{
+        font-size: 35px;
+        font-weight: 600;
+        text-align: center;
+        }
+        .container form{
+        margin-top: -20px;
+        }
+        .container form .data{
+        height: 35px;
+        width: 100%;
+        margin: 30px 0;
+        }
+        form .data input, select{
+        height: 100%;
+        width: 100%;
+        padding-left: 10px;
+        font-size: 17px;
+        border: 1px solid silver;
+        border-radius: 5px;
+        }
+        form .data input:focus{
+        border-color: #242E82;
+        border-bottom-width: 2px;
+        }
 
-input[type="checkbox"]{
-display: none;
-}
-.container{
-display: none;
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%);
-background: #fff;
-width: 510px;
-height: 600px;
-border-radius: 20px;
-padding: 30px;
-box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-#show:checked ~ .container{
-display: block;
-}
-.container .close-btn{
-position: absolute;
-right: 20px;
-top: 15px;
-font-size: 18px;
-cursor: pointer;
-}
-.container .text{
-font-size: 35px;
-font-weight: 600;
-text-align: center;
-}
-.container form{
-margin-top: -20px;
-}
-.container form .data{
-height: 35px;
-width: 100%;
-margin: 30px 0;
-}
-form .data input{
-height: 100%;
-width: 100%;
-padding-left: 10px;
-font-size: 17px;
-border: 1px solid silver;
-border-radius: 5px;
-}
-form .data input:focus{
-border-color: #242E82;
-border-bottom-width: 2px;
-}
+        form .btn1{
+        margin: 45% 0 0 0;
+        height: 45px;
+        width: 100%;
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+        }
+        form .btn1 .inner{
+        height: 100%;
+        width: 300%;
+        position: absolute;
+        left: -100%;
+        z-index: -1;
+        background-color: #242E82;
+        transition: all 0.4s;
+        }
+        form .btn1 button{
+        height: 100%;
+        width: 100%;
+        background: none;
+        border : none;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 1px;
+        cursor: pointer;
+        }
+        .btn {
+            background-color: white !;
+            color: black !important;
+            border: 3px solid #F2D200;
+            border-radius: 25px;
+            font-weight: 400 !important;
+        }
+        .popup{
+            width: 400px;
+            background: #fff;
+            border-radius: 6px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            text-align: center;
+            padding: 0 30px 30px;
+            color: #333;
+        }
+        .popup img{
+            width: 100px;
+            margin-top: -50px;
+            border-radius: 50px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .popup h2{
+            font-size: 38px;
+            font-weight: 500;
+            font-family: 'Sora' sans-serif !important;
+            margin: 30px 0 10px;
+        }
+        .popup button{
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px 0;
+            background: #242e82;
+            color: #fff;
+            border: 0;
+            outline: none;
+            font-size: 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+        }
 
-form .btn1{
-margin: 45% 0 0 0;
-height: 45px;
-width: 100%;
-border-radius: 12px;
-position: relative;
-overflow: hidden;
-}
-form .btn1 .inner{
-height: 100%;
-width: 300%;
-position: absolute;
-left: -100%;
-z-index: -1;
-background-color: #242E82;
-transition: all 0.4s;
-}
-form .btn1 button{
-height: 100%;
-width: 100%;
-background: none;
-border : none;
-color: #ffffff;
-font-size: 18px;
-font-weight: 500;
-letter-spacing: 1px;
-cursor: pointer;
-}
-.btn {
-    background-color: white !;
-    color: black !important;
-    border: 3px solid #F2D200;
-    border-radius: 25px;
-    font-weight: 400 !important;
-}
-.popup{
-    width: 400px;
-    background: #fff;
-    border-radius: 6px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    text-align: center;
-    padding: 0 30px 30px;
-    color: #333;
-}
-.popup img{
-    width: 100px;
-    margin-top: -50px;
-    border-radius: 50px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-.popup h2{
-    font-size: 38px;
-    font-weight: 500;
-    font-family: 'Sora' sans-serif !important;
-    margin: 30px 0 10px;
-}
-.popup button{
-    width: 100%;
-    margin-top: 20px;
-    padding: 10px 0;
-    background: #242e82;
-    color: #fff;
-    border: 0;
-    outline: none;
-    font-size: 18px;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.2);
-}
 
-.modal {
-display: none; /* Hidden by default */
-position: fixed;
-z-index: 1;
-left: 0;
-top: 0;
-width: 100%;
-height: 100%;
-overflow: auto;
-background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
-}
 
-.modal-content {
-background-color: #fefefe;
-margin: 15% auto;
-padding: 20px;
-border: 1px solid #888;
-width: 80%;
-}
+        .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        }
 
-.close {
-color: #aaa;
-float: right;
-font-size: 28px;
-font-weight: bold;
-cursor: pointer;
-}
+        .close:hover,
+        .close:focus {
+        color: black;
+        }
 
-.close:hover,
-.close:focus {
-color: black;
-}
+        .custom-checkbox {
+        width: 30px;
+        height: 30px;
+        background-color: transparent;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        position: relative;
+        transition: background-color 0.3s, color 0.3s;
+        }
 
-.custom-checkbox {
-  width: 30px;
-  height: 30px;
-  background-color: transparent;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  cursor: pointer;
-  position: relative;
-  transition: background-color 0.3s, color 0.3s;
-}
+        .custom-checkbox::after {
+        content: '';
+        font-size: 20px;
+        color: transparent;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        }
 
-.custom-checkbox::after {
-  content: '';
-  font-size: 20px;
-  color: transparent;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+        .custom-checkbox:active {
+        background-color: rgb(200, 255, 0);
+        }
 
-.custom-checkbox:active {
-  background-color: rgb(200, 255, 0);
-}
+        .custom-checkbox.clicked {
+        background-color: #ff5733; /* New background color */
+        color: #000; /* New text color */
+        }
 
-.custom-checkbox.clicked {
-  background-color: #ff5733; /* New background color */
-  color: #000; /* New text color */
-}
 
-    </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid" style="margin: 10px 20px;">
-        <a class="navbar-brand" href="home.html">
-            <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+        .down{
+                margin-left: 100px;
+                }
+                @media (min-width:1246px){
+                .down{
+                    margin-left: 100px;
+                }
+                }
+
+            .modal .btn-block{
+                width: 100px !important;
+                margin-left: 10px !important;
+            }
+            .modal .entries, .entities,.notes,.extra {
+                width: 550px !important;
+                border: double black !important;
+            }
+
+            .modal .modal-header input{
+                border-radius: 10px !important;
+            }
             
-            <li class="nav-item">
-                <a class="nav-link" href="masnode.html">Master</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="conts.html">Labour Management</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="matinf.html">Site Activity</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="labrep.html">Report Generation</a>
-            </li>
-            </ul>
-            <form class="d-flex" style="padding-left: 190px; padding-top: 5px;">
-            <button class="btn" type="submit"><span class="txt">Logout</span></button>
-            </form>
-        </div>
-        </div>
-    </nav>
+            .modal .modal-body select,.modal .modal-body input, select{
+                margin-left: 10px !important;
+                width: 200px !important;
+                border-radius: 10px !important;
+            }
+            .modal .form-group, .modal .modal-title{
+                margin: 10px 0 0 10px !important;
+            }
+            textarea {
+                width: 90% !important; /* 100% width by default */
+                height: 100px !important; /* 100px height by default */
+            }
+            .modal .btn-block{
+                background-color: #242e82 !important;
+                border: none !important;
+            }
+            .modal #date{
+                border: 2px solid #242e82 !important; 
+                background-color: #242e82 !important;
+                color: white !important;
+                height: 30px !important; 
+                padding-top: 4px !important;
+                border-radius: 20px !important;
+                width: 170px !important; 
+                padding-left: 15px !important;
+            }
 
-    <div class="row content" style="display: flex; width: 100%; height: 100%;" >
-        <div class="col-lg-2">
-        <div class="sidebar" style="height: 100%;">
-            <nav class="nav flex-column" style="padding-top: 100px; ">
-            <a class="nav-link space" href="todo.html">To Do</a>
-            <a class="nav-link space" href="#">Check List</a>
-            <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#" href="matin.html">Material Inward</a>
-            <a class="nav-link space" href="matoutf.html">Material Outward</a>
-            <a class="nav-link space" href="wrkdone.html">Work Done</a>
-            <a class="nav-link space" href="totexp.html">Total Expense</a>
+            .modal .modal-header{
+            background-color: none !important;
+            }
+
+
+            </style>
+        </head>
+        <body>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid" style="margin: 10px 20px;">
+                <a class="navbar-brand" href="home.html">
+                    <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="masnode.html">Master</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="conts.html">Labour Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="prod.html">Purchase Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="matinf.html">Site Activity</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="labrep.html">Report Generation</a>
+                    </li>
+                    </ul>
+                    <form class="d-flex" style="padding-left: 190px; padding-top: 5px;">
+                    <button class="btn" type="submit"><span class="txt">Logout</span></button>
+                    </form>
+                </div>
+                </div>
             </nav>
-        </div>
-        </div>
-        <div class="col-lg-10">
-        <div class="content" style="height: 100%;margin-top: 5%;">
-            <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <h1>M A T E R I A L &nbsp;&nbsp;  I N W A R D</h1></div>
-            </div>
-    
-    
-            <div class="row">
 
-                    <div  style="display: flex;">
-                        <div  style="display: flex;">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
-                                <div class="input-group" type="display: flex;">
-                                    <div class="input-group-addon" style="background-color: rgb(177, 177, 177);">
-                                        <button id="search-button" type="button" style="margin: 10px 10px; border: none; background: none;">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                    <input style="width: 500px ;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
-                                </div>
-                              </div>
-                        <div style="display: flex;">
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
-                                <div class="container" id="myFormin">
-                                    <button onclick="closeFormin()" style="border: 0; background-color: white;" class="close-btn fas fa-times" title="close"></button>
-                                    <div class="text" style="margin: 0 0 15% 0;">
-                                        Material Inward
-                                    </div>
-                                    <form id="FORM_CCCC" action="/mat/submit" method="POST">
-                                        <div class="data">
-                                            <input type="text" id="dateInput" required placeholder="Date" name="Date_i">
+            <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+                <div class="col-lg-2">
+                <div class="sidebar" style="height: 100%;">
+                    <nav class="nav flex-column" style="padding-top: 100px; ">
+                    <a class="nav-link space" href="todo.html">To Do</a>
+                    <a class="nav-link space" href="#">Check List</a>
+                    <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#" href="matin.html">Material Inward</a>
+                    <a class="nav-link space" href="matoutf.html">Material Outward</a>
+                    <a class="nav-link space" href="wrkdone.html">Work Done</a>
+                    <a class="nav-link space" href="totexp.html">Total Expense</a>
+                    </nav>
+                </div>
+                </div>
+                <div class="col-lg-10">
+                <div class="content" style="height: 100%;margin-top: 5%;">
+                    <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <h1>M A T E R I A L &nbsp;&nbsp;  I N W A R D</h1></div>
+                    </div>
+            
+            
+                    <!-- <div class="row">
+
+                            <div  style="display: flex;">
+                                <div  style="display: flex;">
+                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
+                                        <div class="input-group" type="display: flex;">
+                                            <div class="input-group-addon" style="background-color: rgb(177, 177, 177);">
+                                                <button id="search-button" type="button" style="margin: 10px 10px; border: none; background: none;">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                            <input style="width: 500px ;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
                                         </div>
-                                            <div class="data">
-                                                <input type="text" id="vendorNameInput" required placeholder="Vendor Name" name="Vendor_name">
+                                    </div>
+                                <div style="display: flex;">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
+                                        <div class="container" id="myFormin">
+                                            <button onclick="closeFormin()" style="border: 0; background-color: white;" class="close-btn fas fa-times" title="close"></button>
+                                            <div class="text" style="margin: 0 0 15% 0;">
+                                                Material Inward
                                             </div>
-                                            <div class="data">
-                                                <input type="text"   id="materialNameInput" required placeholder="Name of the Material" name="Name_of_Material">
-                                            </div>
-                                            <div class="data">
-                                                <input type="number" required placeholder="Supplied Quantity" name="Supplied_quantity">
-                                            </div>
-                                            <div class="data">
-                                                <input type="number"  name="Unit_prize" required placeholder="Unit Price">
-                                            </div>
-                                            <div class="data">
-                                                <button type="submit" class="btn-block">Submit</button>
-                                            </div>
+                                            <form id="FORM_CCCC" action="/mat/submit" method="POST">
+                                                <div class="data">
+                                                    <input type="text" id="dateInput" required placeholder="Date" name="Date_i">
+                                                </div>
+                                                    <div class="data">
+                                                        <input type="text" id="vendorNameInput" required placeholder="Vendor Name" name="Vendor_name">
+                                                    </div>
+                                                    <div class="data">
+                                                        <input type="text"   id="materialNameInput" required placeholder="Name of the Material" name="Name_of_Material">
+                                                    </div>
+                                                    <div class="data">
+                                                        <input type="number" required placeholder="Supplied Quantity" name="Supplied_quantity">
+                                                    </div>
+                                                    <div class="data">
+                                                        <input type="number"  name="Unit_prize" required placeholder="Unit Price">
+                                                    </div>
+                                                    <div class="data">
+                                                        <button type="submit" class="btn-block">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                    <form >
+                                        <input style="display: inline-block;" type="hidden" name="report_type" value="labour">
+                                        <a href="/mat/matindownload"><div><button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;margin-left:400px;">Download</button></div></a>
+                                        
                                     </form>
                                 </div>
                                 </div>
                             </div>
-                            <div>
-                            <form >
-                                <input style="display: inline-block;" type="hidden" name="report_type" value="labour">
-                                <a href="/mat/matindownload"><div><button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;margin-left:400px;">Download</button></div></a>
-                                
-                            </form>
+                    </div>
+            
+            
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table id="table" class="table">
+                                <thead>
+                                    <tr>
+                                        
+                                        <th>VENDOR</th>
+                                        <th>MATERIAL</th>
+                                        <th>REQUIRED</th>
+                                        <th>SUPPLIED</th>
+
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody id="mat-table-body">
+                                    <tr>
+                                        
+                                        <td>${task.Vendor_name}</td>
+                                        <td>${task.Name_of_Material}</td>
+                                        <td>${task.Required_quantity}</td>
+                                        <td>${task.Supplied_quantity}</td>
+                                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div> -->
+
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="search input-group d-flex">
+                            <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
+                            <input type="text" placeholder="Search Product..">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;" data-bs-toggle="modal" data-bs-target="#exampleModal">Choose Vendor</button>
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
+                            </div>
                         </div>
                         </div>
                     </div>
-            </div>
-    
-    
-            <div class="row">
-                <div class="table-responsive">
-                    <table id="table" class="table">
-                        <thead>
-                            <tr>
+                    
+                    <!-- Modal -->
+                    <form id="matform" action="/mat/submit" method="POST">
+                    <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: #ffffff;">
+                                <div class="d-flex justify-content-between align-items-center w-100">
+                                    <div class="form-group">
+                                        <label for="purnum">Purchase No:</label>
+                                        <select id="purnum" name="purnum">
+                                            <option value="" disabled selected>Select</option>
+                                        </select>
+                                    </div>
+                                    <h5 class="m-3" style="font-weight: bolder;" id="exampleModalLabel">Material Inward</h5>
+                                    <h6 class="m-0" id="date" style="padding-left: 20px !important;"></h6>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            </div>
+                            
+                            
+                            <div class="modal-body">
+                                <div class="first d-flex justify-content-between mb-3">
+                                    <div class="entries">
+                                        <form class="form-inline">
+                                            <div class="form-group m-0">
+                                                <label for="vename" class="mr-2">Vendor Name:</label>
+                                                <input type="vename" id="vennam" name="vename">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="fname">Address</label>
+                                                <input type="text" id="add" name="add">
+                                            </div>
+                                            <div class="form-group">
+                                            <label for="gst">GST: </label>
+                                            <input type="text" id="gst" name="gst">
+                                        </div>
+                                        </form>
+                                    </div>
+                                    <div class="entities d-flex">
+                                        <form class="form-inline" style="margin-bottom: 20px;">
+                                            <div class="form-group">
+                                                <label for="ship">Shipped to Site:</label>
+                                                <input type="text" id="ship" name="ship">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="trans">Transport:</label>
+                                                <input type="text" id="trans" name="trans">
+                                            </div>
+                                            <div class="form-group">
+                                            <label for="dos">Date of Supply:</label>
+                                            <input type="date" id="dos" name="dos">
+                                        </div>
+                                        </form>
+                                    </div>
+                                </div>
                                 
-                                <th>VENDOR</th>
-                                <th>MATERIAL</th>
-                                <th>REQUIRED</th>
-                                <th>SUPPLIED</th>
+                                <div class="tabel-responsive">
+                                    <table class="table table-bordered table-hover text-center" style="border: 3px solid #ccc;">
+                                        <thead class="">
+                                            <tr>
+                                                <th style="width: 30px;">
+                                                <input type="checkbox" onclick="selectall(this)" id="selectall" style="display: block !important; box-shadow: none !important; width: 20px !important; margin: 0 px 5px 0 !important;">
+                                                </th>
+                                                <th>Sl. No</th>
+                                                <th>Details</th>
+                                                <th>Quantity</th>
+                                                <th>Unit Price</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-body">
+                                            <tr>
+                                            <td><input type="checkbox" class="checkbox" onclick="checkAllChecked()" style="display: block !important; box-shadow: none !important; width: 20px !important; margin: 0 px 5px 0 !important;"></td>
+                                            <td contenteditable="true"></td>
+                                            <td contenteditable="true"></td>
+                                            <td contenteditable="true"></td>
+                                            <td contenteditable="true"></td>
+                                            <td contenteditable="true"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <button type="button" name="arow" id="arow" onclick="addRow()" class="btn btn-primary btn-md btn-block"  style="color: #fff !important;">Add</button>
+                                    <button type="button" name="drow" id="drow" onclick="delRow()" class="btn btn-primary btn-md btn-block"  style="color: #fff !important;"  >Delete</button>
+                                </div>
+                                <div class="add d-flex justify-content-between mt-3">
+                                    <div class="notes">
+                                        <form>
+                                            <div class="form-group">
+                                                <label for="some">Addtional Notes:</label>
+                                                <textarea name="some" id="some" ></textarea>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="extra">
+                                        <form class="form-inline mb-3">
+                                            <div class="form-group">
+                                                <label for="ship">Sub-Total: </label>
+                                                <input type="text" id="subt" name="subt">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="tax">TAX: </label>
+                                                <input type="text" id="tax" name="tax">
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="grdt">Grand Total: </label>
+                                                <input type="text" id="grdt" name="grdt">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-md" onclick="reset()" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary btn-md btn-block" onclick="submitInw()" style="color: #fff !important;" data-bs-dismiss="modal">Save</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </form>
 
-                                
-                            </tr>
-                        </thead>
-                        <tbody id="mat-table-body">
-                            <tr>
-                                
-                                <td>${task.Vendor_name}</td>
-                                <td>${task.Name_of_Material}</td>
-                                <td>${task.Required_quantity}</td>
-                                <td>${task.Supplied_quantity}</td>
-                                
-                            </tr>
-                        </tbody>
-                    </table>
+                </div>
+                </div>
                 </div>
             </div>
-        </div>
-        </div>
-        </div>
-    </div>
-    <div id="myModal" class="modal">
-        <div class="popup">
-            <img src="assets/img/succs.png">
-            <h2>Material Inward</h2>
-            <p>Material Inward Submitted!</p>
-            <button onclick="closeModal()">OK</button>
-        </div>
-    </div>
-    <script>
-        function openModal() {
-            const modal = document.getElementById("myModal");
-            modal.style.display = "block";
-        }
+            <div id="myModal" class="modal">
+                <div class="popup">
+                    <img src="assets/img/succs.png">
+                    <h2>Material Inward</h2>
+                    <p>Material Inward Submitted!</p>
+                    <button onclick="closeModal()">OK</button>
+                </div>
+            </div>
+            <script>
+                function openModal() {
+                    const modal = document.getElementById("myModal");
+                    modal.style.display = "block";
+                }
 
-        function closeModal() {
-            const modal = document.getElementById("myModal");
-            modal.style.display = "none";
-        }
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tasksTableBody = document.querySelector('#table tbody');
-            const formPopup = document.getElementById("myFormin");
-            const vendorNameInput = document.getElementById("vendorNameInput");
-            const materialNameInput = document.getElementById("materialNameInput");
-            const dateInput = document.getElementById("dateInput");
-            var year=null;
-            var day=null;
-            var month=null;
-    
-        // Function to fetch and display tasks
-        const fetchAndDisplayTasks = () => {
-            fetch('/mat/get')
-                .then(response => response.json())
-                .then(tasks => {
-                    tasksTableBody.innerHTML = ''; // Clear existing table rows
-    
-                    tasks.forEach(task => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
+                function closeModal() {
+                    const modal = document.getElementById("myModal");
+                    modal.style.display = "none";
+                }
 
-                            <td>${task.Vendor_name}</td>
-                            <td>${task.Name_of_Material}</td>
-                            <td>${task.Required_quantity}</td>
-                            <td>
-                                <button style="text-align: center; padding: 8px;" class="btn-block">Add</button>
-   
-                            </td>
-                            
-                        `;
-                        tasksTableBody.appendChild(row);
+const PDropdown = document.getElementById('purnum');
+const addInput = document.getElementById('add');
+const gstInput = document.getElementById('gst');
+const shipInput = document.getElementById('ship');
+const vendorNameInput = document.getElementById('vennam');
+const tableBody = document.getElementById('table-body');
 
-                        const addButton = row.querySelector('button');
-                        addButton.addEventListener('click', () => {
-                            function updateDate() {
-                        // Create a new Date object
-                        currentDate = new Date();
+PDropdown.addEventListener('change', () => {
+    const selectedPno = PDropdown.value;
 
-                        // Get the day, month, and year
-                        day = currentDate.getDate();
-                        month = currentDate.getMonth() + 1; // Months are zero-based
-                        year = currentDate.getFullYear();
+    if (selectedPno) {
+        // Send a GET request to the server to retrieve vendor information and products
+        fetch(`/mat/get/${selectedPno}`)
+            .then(response => response.json())
+            .then(details => {
+                // Check if the details object exists
+                if (details) {
+                    if (details.add && details.gst && details.products && details.vendorName) {
+                        // Set the vendor details
+                        addInput.value = details.add;
+                        gstInput.value = details.gst;
+                        vendorNameInput.value = details.vendorName;
 
-                        // Display the date in the "date" element
-                        var dateElement = document.getElementById("date");
-                                dateInput.value = "Today's Date: " + month + "/" + day + "/" + year;
-                            }
-
-                        // Call the updateDate function to initially set the date
-                        updateDate();
-
-                        // Set an interval to update the date every 24 hours (86400000 milliseconds)
-                        setInterval(updateDate, 86400000);
-                        // When the button is clicked, extract the vendor name and material name
-                        const vendorName = task.Vendor_name;
-                        const materialName = task.Name_of_Material;
-
-                        // Populate the form fields with the vendor name and material name
-                        dateInput.value = year + "/" + month + "/" + day;
-                        vendorNameInput.value = vendorName;
-                        materialNameInput.value = materialName;
-
-                        // Display the form
-                        formPopup.style.display = "block";
-                        });
-                    });
-                })
-                .catch(error => console.error('Error retrieving tasks:', error));
-        };
-    
-        // Fetch tasks when the page loads
-        fetchAndDisplayTasks();
-    
-        // Handle form submission
-        const form = document.getElementById('FORM_CCCC');
-        
-        form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const url = form.getAttribute('action');
-    
-            const formData = new FormData(form);
-            const taskData = {
-                Vendor_name: formData.get('Vendor_name'),
-                Name_of_Material: formData.get('Name_of_Material'),
-                Supplied_quantity: formData.get('Supplied_quantity'),
-                Date_i: formData.get('Date_i'),
-                Unit_prize: formData.get('Unit_prize'),
-                
-            };
-    
-            fetch('/mat/submit', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(taskData)
-            })
-            .then(response => {
-                if (response.ok) {
-                    console.log('Record inserted successfully.');
-                    form.reset();
-                    openModal();
-                    fetchAndDisplayTasks();
+                        // Render the products table
+                        renderProductsTable(details.products);
+                    } else {
+                        // Handle the case where data is incomplete
+                        console.error('Incomplete vendor information in the response:', details);
+                        // Optionally clear the input values or show an error message.
+                    }
                 } else {
-                    console.error('Error inserting record.');
+                    // Handle the case where details is missing
+                    console.error('No details found in the response:', details);
+                    // Optionally clear the input values or show an error message.
                 }
             })
-            .catch(error => console.error('Error inserting record:', error));
-        });
+            .catch(error => {
+                console.error('Error retrieving vendor information:', error);
+                // Handle the error as needed
+            });
+    } else {
+        // Handle the case when no vendor is selected
+        addInput.value = '';
+        gstInput.value = '';
+        shipInput.value = '';
+        vendorNameInput.value = '';
+        tableBody.innerHTML = ''; // Clear the table
+    }
+});
+
+
+function renderProductsTable(products) {
+
+    const tableBody = document.getElementById('table-body');
+    // Clear the table body
+    tableBody.innerHTML = '';
+
+    products.forEach((product, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><input type="checkbox" class="checkbox" onclick="checkAllChecked()" style="display: block !important; box-shadow: none !important; width: 20px !important; margin: 0 px 5px 0 !important;"></td>
+            <td contenteditable="true">${index + 1}</td>
+            <td contenteditable="true">${product.nameOfMaterial}</td>
+            <td contenteditable="true">${product.suppliedQuantity} ${product.unit}</td>
+            <td contenteditable="true">${product.unitPrice}</td>
+            <td contenteditable="true">${product.unitPrice * product.suppliedQuantity}</td>
+        `;
+        tableBody.appendChild(row);
     });
+}
+
+// Add an event listener for the entire table body
+tableBody.addEventListener('input', (event) => {
+    const target = event.target;
+    const rowIndex = target.parentElement.rowIndex - 1; // Subtract 1 for the header row
+    const colIndex = target.cellIndex;
+
+    if (rowIndex >= 0 && colIndex >= 1) {
+        // Rows start from index 0, and columns start from index 1 (excluding checkboxes)
+        const editedValue = target.innerText;
+        // Update the corresponding product data
+        details.products[rowIndex][getColumnPropertyName(colIndex)] = editedValue;
+    }
+});
+
+// Function to get the property name based on column index
+function getColumnPropertyName(colIndex) {
+    switch (colIndex) {
+        case 2:
+            return 'nameOfMaterial';
+        case 3:
+            return 'suppliedQuantity';
+        case 4:
+            return 'unitPrice';
+        default:
+            return '';
+    }
+}
+
+        function submitInw(){
+            const form = document.getElementById('matform');
+
+            const purchaseOrderNo = document.getElementById('purnum').value;
+
+        if (form) {
+            // Access the form elements and create an object with the data
+            const data = {
+            purchaseOrderNo :document.getElementById('purnum').value,
+            products: [],
+            vendorName:document.getElementById('vennam').value,
+            address: document.getElementById('add').value,
+            site:document.getElementById('ship').value,
+            gst:document.getElementById('gst').value,
+            additionalNotes: document.getElementById('some').value,
+            subTotal: document.getElementById('subt').value,
+            tax: document.getElementById('tax').value,
+            grandTotal: document.getElementById('grdt').value,
+            };
 
 
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-        
-            const tasksTableBody = document.querySelector('#table tbody');
-            const searchInput = document.getElementById('search-input');
-            const searchButton = document.getElementById('search-button');
-            const allRows = document.getElementById('mat-table-body').getElementsByTagName('tr');
+            // Access the product rows
+            const productRows = document.querySelectorAll('#table-body tr');
+
+            productRows.forEach((row) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length === 6) {
+                  const suppliedQuantityParts = cells[3].textContent.split(' '); // Split the quantity and unit
+                  const quantity = parseFloat(suppliedQuantityParts[0]); // Convert quantity to a number
+                  const unit = suppliedQuantityParts[1]; // Extract the unit
+                
+                    data.products.push({
+                        slNo: cells[1].textContent,
+                        nameOfMaterial: cells[2].textContent,
+                        suppliedQuantity: quantity,
+                        unit: unit,
+                        unitPrice: cells[4].textContent,
+                        order: true,
+                        ReturnQuantity: null,
+                    });
+                    }
+                });
+                
+
+            console.log(JSON.stringify(data));
+
+
+            // Send the data to the server as a JSON string
+            fetch('/mat/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            })
+            .then((response) => {
+                if (response.ok) {
+                console.log('Form submitted successfully');
+                // You can also redirect to another page here
+                } else {
+                console.error('Form submission failed');
+                }
+            })
+            .catch((error) => {
+                console.error('An error occurred:', error);
+            });
+        }
+        }
+
+                    
             
-            function performClientSearch(query) {
-                const searchValue = query.trim().toLowerCase();
-    
-                for (const row of allRows) {
-                    const productNameCell = row.querySelector('td:nth-child(1)'); // Assuming product name is in the first column
-                    const vendorNameCell = row.querySelector('td:nth-child(2)'); // Assuming vendor name is in the second column
-    
-                    if (productNameCell && vendorNameCell) {
-                        const productName = productNameCell.textContent.toLowerCase();
-                        const vendorName = vendorNameCell.textContent.toLowerCase();
-    
-                        // Check if the search value matches either product name or vendor name
-                        if (productName.includes(searchValue) || vendorName.includes(searchValue)) {
-                            row.style.display = ''; // Show the row
+        function populateVendorNames() {
+            const PnoSelect = document.getElementById("purnum");
+            PnoSelect.innerHTML = '<option value="" disabled selected>Select</option>'; // Clear existing options and add the default "Select" option.
+            
+            // Fetch vendor names from the server.
+            fetch('/mat/purchaseNo')
+                .then((response) => response.json())
+                .then((names) => {
+                names.forEach((name) => {
+                    const option = document.createElement("option");
+                    option.value = name;
+                    option.textContent = name;
+                    PnoSelect.appendChild(option);
+                });
+                })
+                .catch((error) => {
+                console.error("Error fetching vendor names:", error);
+                });
+            }
+        
+            populateVendorNames();
+
+                
+        function checkAllChecked() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const selectAllCheckbox = document.getElementById('selectall');
+            selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
+        }
+
+            function selectall(source){
+                const checkboxes = document.querySelectorAll('.checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = source.checked;
+                });
+            }
+
+            function addRow() {
+                    const tableBody = document.querySelector("tbody");
+                    const newRow = document.createElement("tr");
+                    newRow.innerHTML = `
+                        <td><input type="checkbox" class="checkbox" onclick="checkAllChecked()" style="display: block !important; box-shadow: none !important; width: 20px !important; margin: 0 px 5px 0 !important;"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                        <td contenteditable="true"></td>
+                    `;
+                    tableBody.appendChild(newRow);
+                }
+                    
+
+            function delRow() {
+            const tableBody = document.querySelector("tbody");
+            const checkboxes = tableBody.querySelectorAll("input[type='checkbox']:checked");
+            var selectAllCheckbox = document.getElementById('selectall');
+            
+
+            checkboxes.forEach((checkbox) => {
+                const row = checkbox.parentElement.parentElement;
+                tableBody.removeChild(row);
+            });
+
+            selectAllCheckbox.checked = false;
+            }
+
+
+            function selectall() {
+            var checkboxes = document.querySelectorAll('.checkbox');
+            var selectAllCheckbox = document.getElementById('selectall');
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = selectAllCheckbox.checked;
+            }
+        }
+
+
+                // Get the current date
+                const currentDate = new Date();
+
+                // Format the date as a string
+                const formattedDate = currentDate.toDateString();
+
+                // Display the date in a paragraph element
+                document.getElementById("date").textContent = formattedDate;
+
+                function reset(){
+                    alert("Changes made wil not be saved")
+                    const forms = document.querySelectorAll("form");
+                    forms.forEach((form) => form.reset());
+
+                    // Clear the contents in the table cells
+                    const tableCells = document.querySelectorAll("td[contenteditable='true']");
+                    tableCells.forEach((cell) => (cell.textContent = ""));
+
+                    const checkbx = document.querySelectorAll(".checkbox");
+                    checkbx.forEach((checkbox) => (checkbox.checked=false));
+
+                    const headcheck = document.getElementById('selectall');
+                    headcheck.checked=false
+
+        }
+
+            </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const tasksTableBody = document.querySelector('#table tbody');
+                    const formPopup = document.getElementById("myFormin");
+                    const vendorNameInput = document.getElementById("vendorNameInput");
+                    const materialNameInput = document.getElementById("materialNameInput");
+                    const dateInput = document.getElementById("dateInput");
+                    var year=null;
+                    var day=null;
+                    var month=null;
+            
+                // Function to fetch and display tasks
+                const fetchAndDisplayTasks = () => {
+                    fetch('/mat/get')
+                        .then(response => response.json())
+                        .then(tasks => {
+                            tasksTableBody.innerHTML = ''; // Clear existing table rows
+            
+                            tasks.forEach(task => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+
+                                    <td>${task.Vendor_name}</td>
+                                    <td>${task.Name_of_Material}</td>
+                                    <td>${task.Required_quantity}</td>
+                                    <td>
+                                        <button style="text-align: center; padding: 8px;" class="btn-block">Add</button>
+        
+                                    </td>
+                                    
+                                `;
+                                tasksTableBody.appendChild(row);
+
+                                const addButton = row.querySelector('button');
+                                addButton.addEventListener('click', () => {
+                                    function updateDate() {
+                                // Create a new Date object
+                                currentDate = new Date();
+
+                                // Get the day, month, and year
+                                day = currentDate.getDate();
+                                month = currentDate.getMonth() + 1; // Months are zero-based
+                                year = currentDate.getFullYear();
+
+                                // Display the date in the "date" element
+                                var dateElement = document.getElementById("date");
+                                        dateInput.value = "Today's Date: " + month + "/" + day + "/" + year;
+                                    }
+
+                                // Call the updateDate function to initially set the date
+                                updateDate();
+
+                                // Set an interval to update the date every 24 hours (86400000 milliseconds)
+                                setInterval(updateDate, 86400000);
+                                // When the button is clicked, extract the vendor name and material name
+                                const vendorName = task.Vendor_name;
+                                const materialName = task.Name_of_Material;
+
+                                // Populate the form fields with the vendor name and material name
+                                dateInput.value = year + "/" + month + "/" + day;
+                                vendorNameInput.value = vendorName;
+                                materialNameInput.value = materialName;
+
+                                // Display the form
+                                formPopup.style.display = "block";
+                            });
+                            });
+                        })
+                        .catch(error => console.error('Error retrieving tasks:', error));
+                };
+            
+                // Fetch tasks when the page loads
+                fetchAndDisplayTasks();
+            
+                // Handle form submission
+                const form = document.getElementById('FORM_CCCC');
+                
+                form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const url = form.getAttribute('action');
+            
+                    const formData = new FormData(form);
+                    const taskData = {
+                        Vendor_name: formData.get('Vendor_name'),
+                        Name_of_Material: formData.get('Name_of_Material'),
+                        Supplied_quantity: formData.get('Supplied_quantity'),
+                        Date_i: formData.get('Date_i'),
+                        Unit_prize: formData.get('Unit_prize'),
+                        
+                    };
+            
+                    fetch('/mat/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(taskData)
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Record inserted successfully.');
+                            form.reset();
+                            openModal();
+                            fetchAndDisplayTasks();
                         } else {
-                            row.style.display = 'none'; // Hide the row
+                            console.error('Error inserting record.');
+                        }
+                    })
+                    .catch(error => console.error('Error inserting record:', error));
+                });
+            });
+
+
+            </script>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                
+                    const tasksTableBody = document.querySelector('#table tbody');
+                    const searchInput = document.getElementById('search-input');
+                    const searchButton = document.getElementById('search-button');
+                    const allRows = document.getElementById('mat-table-body').getElementsByTagName('tr');
+                    
+                    function performClientSearch(query) {
+                        const searchValue = query.trim().toLowerCase();
+            
+                        for (const row of allRows) {
+                            const productNameCell = row.querySelector('td:nth-child(1)'); // Assuming product name is in the first column
+                            const vendorNameCell = row.querySelector('td:nth-child(2)'); // Assuming vendor name is in the second column
+            
+                            if (productNameCell && vendorNameCell) {
+                                const productName = productNameCell.textContent.toLowerCase();
+                                const vendorName = vendorNameCell.textContent.toLowerCase();
+            
+                                // Check if the search value matches either product name or vendor name
+                                if (productName.includes(searchValue) || vendorName.includes(searchValue)) {
+                                    row.style.display = ''; // Show the row
+                                } else {
+                                    row.style.display = 'none'; // Hide the row
+                                }
+                            }
                         }
                     }
-                }
-            }
-    
-            searchInput.addEventListener('keydown', function (event) {
-                if (event.key === 'Enter') {
-                    event.preventDefault(); // Prevent form submission if needed
-                    const searchValue = searchInput.value.trim();
-                    performClientSearch(searchValue); // Perform client-side search
-                }
-            });
-    
-            searchButton.addEventListener('click', function () {
-                const searchValue = searchInput.value.trim();
-                performClientSearch(searchValue); // Perform client-side search
-            });
-        });
-        </script>
-        <script>
-        $(function() {
-            $("#search-input").autocomplete({
-                source: function(request, response) {
-                    // Make an AJAX request to fetch autocomplete suggestions
-                    $.ajax({
-                        url: '/mat/autosearchmat', // URL to fetch autocomplete suggestions
-                        method: 'GET', // Use GET request
-                        dataType: 'json', // Expect JSON response
-                        data: {
-                            term: request.term // Pass the user input as 'term'
-                        },
-                        success: function(data) {
-                            response(data); // Provide the response to the autocomplete widget
-                        },
-                        error: function(error) {
-                            console.error('Error fetching autocomplete suggestions:', error);
+            
+                    searchInput.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault(); // Prevent form submission if needed
+                            const searchValue = searchInput.value.trim();
+                            performClientSearch(searchValue); // Perform client-side search
                         }
                     });
-                },
-                minLength: 0, // Minimum number of characters before showing suggestions
-                select: function(event, ui) {
-                    // Handle selected item
-                    $("#search-input").val(ui.item.value);
-                    // Perform search based on the selected value
-                    searchTasks(ui.item.value);
-                }
-            });
-        });
-        
-        
-        </script>
-</body>
-</html>
+            
+                    searchButton.addEventListener('click', function () {
+                        const searchValue = searchInput.value.trim();
+                        performClientSearch(searchValue); // Perform client-side search
+                    });
+                });
+                </script>
+                <script>
+                $(function() {
+                    $("#search-input").autocomplete({
+                        source: function(request, response) {
+                            // Make an AJAX request to fetch autocomplete suggestions
+                            $.ajax({
+                                url: '/mat/autosearchmat', // URL to fetch autocomplete suggestions
+                                method: 'GET', // Use GET request
+                                dataType: 'json', // Expect JSON response
+                                data: {
+                                    term: request.term // Pass the user input as 'term'
+                                },
+                                success: function(data) {
+                                    response(data); // Provide the response to the autocomplete widget
+                                },
+                                error: function(error) {
+                                    console.error('Error fetching autocomplete suggestions:', error);
+                                }
+                            });
+                        },
+                        minLength: 0, // Minimum number of characters before showing suggestions
+                        select: function(event, ui) {
+                            // Handle selected item
+                            $("#search-input").val(ui.item.value);
+                            // Perform search based on the selected value
+                            searchTasks(ui.item.value);
+                        }
+                    });
+                });
+                
+                
+                </script>
+        </body>
+        </html>

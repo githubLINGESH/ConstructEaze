@@ -1,32 +1,38 @@
-const mongoose = require('mongoose');
+    const mongoose = require('mongoose');
 
-const ProductSchema = new mongoose.Schema({
-userId:Number,
-role:String,
-id: Number,
-order: Boolean,
-Date_o:String,
-Date_i:String,
-Date_u:String,
-flag : Boolean,
-Vendor_name: String,
-Firmname: String,
-Address: String,
-Gst: Number,
-Phone: Number,
-Item_code: Number,
-Name_of_Material: String,
-Category: String,
-Unit: String,
-Unit_prize: Number,
-Required_quantity: Number,
-Supplied_quantity: Number,
-Used: Number,
-Current_stock: Number,
-Price:Number
-});
+    const ProductSchema = new mongoose.Schema({
+    slNo:Number,
+    itemCode: Number,
+    nameOfMaterial: String,
+    category: String,
+    unit: String,
+    unitPrice: Number,
+    requiredQuantity: Number,
+    suppliedQuantity: Number,
+    currentStock: Number,
+    price: Number,
+    order:Boolean,
+    ReturnQuantity:Number
+    });
 
+    const VendorSchema = new mongoose.Schema({
+    projectId:String,
+    vendorName: String,
+    firmName: String,
+    address: String,
+    gst: String,
+    phone: String,
+    site: String,
+    });
 
-const e_products = mongoose.model('e_products', ProductSchema);
+    const PurchaseOrderSchema = new mongoose.Schema({
+    date:Date,
+    projectId:String,
+    purchaseOrderNo: String,
+    vendor: VendorSchema,
+    products: [ProductSchema],
+    });
 
-module.exports = e_products;
+    const e_products = mongoose.model('e_prod', PurchaseOrderSchema);
+
+    module.exports = e_products;

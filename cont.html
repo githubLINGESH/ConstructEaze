@@ -525,13 +525,11 @@
                             <td>${task.w_name}</td>
                             <td>${task.w_type}</td>
                             <td>${task.shift}</td>
-                            <td class="cntr" style="display: flex;
-                            justify-content: center;
-                            align-items: center;
-                            margin-right: 30px;">
-                                <input  type="checkbox" id="cbx" class="hidden-xs-up">
-                                <label for="cbx" class="cbx"></label>
-                            </td>
+                            <td>
+                            <div class="p_a">
+                                <button class="prs" style="margin-right: 10px; background-color: green;">Present</button>
+                                <button class="abs" style="margin-left: 10px; background-color: red;">Absent</button>
+                            </div></td>
                             <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
                     </tr>
                     </tbody>

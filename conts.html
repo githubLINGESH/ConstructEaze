@@ -518,7 +518,7 @@
                 <a class="nav-link active" href="#">Labour Management</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
+                <a class="nav-link" aria-current="page" href="prod.html">Purchase Management</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="todo.html">Site Activity</a>
@@ -539,7 +539,7 @@
         <div class="sidebar" style="height: 100%;">
             <nav class="nav flex-column" style="padding-top: 100px; ">
                 <a class="nav-link space"  style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#">Attendance</a>
-                <a class="nav-link space" href="superATT.html">Supervisor Attendance</a>
+                <a class="nav-link space" id="supervisor" href="superATT.html">Supervisor Attendance</a>
             </nav>
                 <button id="loginButton" class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200; font-size:15px; display: none; width: 100%; text-align:left;">SUPERVISOR ATTENDANCE</button>
         </div>
@@ -641,9 +641,18 @@
                     <button class="btn-block" id="markAttendanceButton" style="margin-left: 20px;">Mark Attendance</button>
                 </div>
 
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
-                    <button class="btn-block" id="SuperATTButton" onclick="MarksuperAtt()" style="margin-left: 20px;">Mark My Attendance</button>
+                
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display:flex; align-items: center">
+                    <button class="btn-block" id="SuperATTButton"onclick="MarksuperAtt()" style="margin-right: 10px; background-color: green;">check In</button>
+                    <button class="btn-block" id="logoutButton" style="margin-left: 10px; background-color: red;">check out</button>
                 </div>
+
+
+
+
+                <!--<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="display: flex; align-items: center;">
+                    <button class="btn-block" id="SuperATTButton" onclick="MarksuperAtt()" style="margin-left: 20px;">Mark My Attendance</button>
+                </div>-->
 
             </div>
             <div class="four">
@@ -661,6 +670,13 @@
                     <tbody id="tasks-table-body">
                     <!-- labor records are inserted dynamically-->
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4">Grand Total</td>
+                                <td id="grandTotal">0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
                 </table>
             </div>
             <div id="add_wr" class="modal fade" role="form">
@@ -706,6 +722,14 @@
             <button onclick="closeModal()">OK</button>
         </div>
     </div>
+    <div id="myModal1" class="modal">
+        <div class="popup">
+            <img src="assets/img/succs.png">
+            <h2>Attendance</h2>
+            <p>Supervisor Attendance Marked successfully!</p>
+            <button onclick="closeModal1()">OK</button>
+        </div>
+    </div>
     <script>
         function openModal() {
             const modal = document.getElementById("myModal");
@@ -715,6 +739,16 @@
         function closeModal() {
             const modal = document.getElementById("myModal");
             modal.style.display = "none";
+        }
+
+        function openModal1() {
+            const modal1 = document.getElementById("myModal1");
+            modal1.style.display = "block";
+        }
+
+        function closeModal1() {
+            const modal1 = document.getElementById("myModal1");
+            modal1.style.display = "none";
         }
     </script>
         
@@ -786,6 +820,7 @@
 
             if (response.ok) {
             const data = await response.json();
+            openModal1();
             console.log(data);
             } else {
             console.error('Error marking supervisor attendance:', response.statusText);
@@ -836,11 +871,31 @@
                     
                     const tasks = data.tasks;
                     const userRole = data.role; // Get the user's role from the response
+
+                    const absBut = document.getElementById('logoutButton');
+
+                    if(userRole == 'Engineer')
+                    {
+                        absBut.style.display ='none';
+                    }
+
+                    const superAttButton = document.getElementById('SuperATTButton');
+
+                    if(userRole == 'Engineer'){
+                        superAttButton.style.display = 'none';
+                    }
+
+                    const supervisorAtt = document.getElementById('supervisor');
+
+                    if(userRole == 'Supervisor')
+                    {
+                        supervisorAtt.style.display = 'none';
+                    }
             
                     const loginButton = document.getElementById('loginButton');
 
                         // Check the user's role and hide the login button if it's not "engineer"
-                        if (userRole !== 'engineer') {
+                        if (userRole !== 'Engineer') {
                         loginButton.style.display = 'none';
                         }
 
@@ -869,7 +924,7 @@
                                 <td>${task.sal}</td>
                                 <td>${task.total}</td>
                                 <td class="google-maps-link"></td>
-                                <td class="joker">${task.role}</td>
+                                <td class="joker">${task.name}</td>
                                 <td><button onclick="submitModifiedRecord('${task.w_name}', 'Present', this)" type="button" style="display: flex; background-color: #007bff; border: 8px solid #007bff;">submit</button></td>
                                 <td class="w_id" data-worker-id="${task.w_name}" style="display: none;">${task.w_name}</td>
                             `;
@@ -900,11 +955,11 @@
                             // Create and add the Google Maps link to the container
                             const googleMapsLink = createGoogleMapsLink(task.latitude, task.longitude);
                             googleMapsLinkContainer.appendChild(googleMapsLink);
-                            if (userRole !== 'engineer') {
+                            if (userRole !== 'Engineer') {
                                 googleMapsLinkContainer.style.display = 'none';
                             }
 
-                            if (userRole !== 'engineer') {
+                            if (userRole !== 'Engineer') {
                                 jokerid.style.display = 'none';
                             }
                         } else {
@@ -1232,6 +1287,58 @@
         
         // Call the function when needed, e.g., when the page loads or after marking attendance
         fetchAndUpdateworkertypeCounts();
+
+        // Function to fetch the total from the server and update the Grand Total in the table
+const updateGrandTotal = () => {
+    fetch('/contract/totalwagesperday') // Replace with the actual endpoint on your server
+        .then(response => response.json())
+        .then(data => {
+            const grandTotalValue = data.total; // Assuming your server responds with an object that has a 'total' property
+            const grandTotalCell = document.getElementById('grandTotal');
+            grandTotalCell.textContent = grandTotalValue;
+        })
+        .catch(error => {
+            console.error('Error fetching grand total:', error);
+        });
+};
+
+// Call the updateGrandTotal function to fetch and display the total when needed
+updateGrandTotal();
+
+
+// Async function to handle supervisor logout
+async function handleSupervisorLogout() {
+    try {
+        const date = new Date();
+
+        // Send an HTTP request to update the logout_t time
+        const response = await fetch('/sAtt/logout', {
+            method: 'PUT', // You can use PUT or POST based on your API
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                logout_t: date.toISOString(), // Convert the date to ISO format for the server
+            }),
+        });
+
+        if (response.ok) {
+            // Logout successful, you can do any client-side operations here
+            console.log('Logout successful');
+        } else {
+            // Handle errors if needed
+            console.error('Error logging out');
+        }
+    } catch (error) {
+        console.error('Error logging out:', error);
+        // Handle errors if needed
+    }
+}
+
+// Add an event listener to the logout button to call the function
+document.getElementById('logoutButton').addEventListener('click', handleSupervisorLogout);
+
+
     
     </script>
 </body>

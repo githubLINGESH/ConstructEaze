@@ -1,4 +1,4 @@
-    const E_vendor = require('../model/vendorModel');
+    const e_products = require('../model/prodModel');
     const path = require('path');
     const fs = require('fs');
     const csv = require('csv-parser');
@@ -9,16 +9,20 @@
 
     exports.submitvendor = async (req, res) => {
     const { name, firm_name, address,Gst,phone} = req.body;
-
-    try {
-        const record = new E_vendor({
-        name: name,
-        firm_name:firm_name,
-        address: address,
-        Gst:Gst,
-        phone: phone,
-        });
-
+    const projectId = req.session.projectId;
+    try{
+            const record = new e_products({
+                purchaseOrderNo: null,
+                vendor: {
+                projectId:projectId,
+                vendorName: name,
+                firmName: firm_name,
+                address: address,
+                gst: Gst,
+                phone: phone,
+                },
+                products: null,
+            });
         await record.save();
         console.log('Record inserted successfully.');
 

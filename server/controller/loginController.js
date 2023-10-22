@@ -1,12 +1,8 @@
     const path = require('path');
     const Login = require('../model/loginModel');
 
-    const validateLogin = async (email, password, auth) => {
+    const validateLogin = async (email, password) => {
         let query = {email,password}
-    
-        if (auth) {
-            query.auth = auth;
-        }
     
         return await Login.findOne(query);
         };
@@ -17,29 +13,35 @@
     };
 
     exports.postLogin = (req, res) => {
-    const { email, password, auth} = req.body;
-    const toggle = req.body.toggle;
-    const role = auth ? 'engineer' : 'supervisor';
+        const { email, password } = req.body;
+        
+        // Set the default role to 'Engineer'
+        let role = 'Engineer';
+    
+        validateLogin(email, password)
+            .then((user) => {
+                if (user) {
+                    console.log('Login successful');
+    
+                    req.session.userId = user.userId; // Store the user's ID in the session
+                    req.session.role = user.superId ? 'Supervisor' : 'Engineer';
+                    req.session.name = user.name;
 
-    console.log(toggle);
+                    req.session.superId = user.superId;
 
-    validateLogin(email, password, auth)
-        .then((user) => {
-        if (user) {
-            console.log('Login successful');
-            req.session.auth = auth;
-            req.session.role = role;
-            req.session.superId = user.superId;
-            res.sendFile(path.join(__dirname,'..', '..','home.html'));
-        } else {
-            console.log('Invalid email, password, or authentication code');
-            res
-            .status(401)
-            .send('<script>document.getElementById("message").innerText = "Invalid email, password, or authentication code";</script>');
-        }
-        })
-        .catch((error) => {
-        console.error('Error validating login', error);
-        res.status(500).send('<script>document.getElementById("message").innerText = "Error validating login";</script>');
-        });
+                    console.log(req.session.name);
+                    console.log(req.session.role);
+                    res.sendFile(path.join(__dirname, '..', '..', 'home.html'));
+                } else {
+                    console.log('Invalid email or password');
+                    res
+                        .status(401)
+                        .send('<script>document.getElementById("message").innerText = "Invalid email or password";</script>');
+                }
+            })
+            .catch((error) => {
+                console.error('Error validating login', error);
+                res.status(500).send('<script>document.getElementById("message").innerText = "Error validating login";</script>');
+            });
     };
+    

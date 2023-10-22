@@ -45,7 +45,8 @@
             resave: false,
             saveUninitialized: true
             }));
-
+        
+        //app.set('view engine', 'ejs');
         app.use(express.static(__dirname));
 
         // Mount the routers on the corresponding paths

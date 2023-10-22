@@ -282,7 +282,7 @@ color: black;
                         <a class="nav-link space" href="prodf.html">product form</a>
                         <a class="nav-link space" href="labourf.html">labour form</a>
                         <a class="nav-link space" href="vendorf.html">vendor form</a>
-                        <a class="nav-link space" href="supmas.html">SUPERVISOR</a>
+                        <div id="super"><a class="nav-link space" href="supmas.html">SUPERVISOR</a></div>
                     </nav>
                 </div>
                 </div>
@@ -406,8 +406,19 @@ color: black;
                     },
                     body: JSON.stringify(taskData)
                 })
-                .then(response => {
+                .then(response => response.json())
+                .then(data => {
                     if (response.ok) {
+                        userRole = data.role;
+                        
+                        const supervisorPage = document.getElementById('super');
+
+                        if (userRole == 'supervisor')
+                        {
+                            supervisorPage.style.display= 'none';
+                        }
+                    
+
                         console.log('Record inserted successfully.');
                         form.reset();
                         openModel();

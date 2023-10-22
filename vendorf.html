@@ -255,7 +255,7 @@ color: black;
                     <a class="nav-link" href="conts.html">Labour Management</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
+                    <a class="nav-link" aria-current="page" href="prod.html">Purchase Management</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="matinf.html">Site Activity</a>
@@ -280,7 +280,7 @@ color: black;
                     <a class="nav-link space" href="prodf.html">product form</a>
                     <a class="nav-link space" href="labourf.html">labour form</a>
                     <a class="nav-link space active" href="#">vendour form</a>
-                    <a class="nav-link space" href="supmas.html">SUPERVISOR</a>
+                    <div id="super"><a class="nav-link space" href="supmas.html">SUPERVISOR</a></div>
                 </nav>
             </div>
             </div>
@@ -367,6 +367,40 @@ color: black;
 </div>
 
 <script>
+        //Declare a global variable to store the role
+        let role = '';
+
+        // Function to get the role from the server
+        const getRole = async () => {
+        try {
+            const response = await fetch('/proj/getRole');
+            if (response.ok) {
+            const data = await response.json();
+            role = data.role; // Assign the role to the global variable
+            // Use the role in your client-side code
+            console.log('Role:', role);
+            handleRole();
+            // Now you can use the role elsewhere in your client-side code.
+            } else {
+            console.error('Error getting role:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error getting role:', error);
+        }
+        };
+
+        getRole();
+
+        const handleRole = () => {
+        superPage = document.getElementById('super');
+
+        if(role == 'Supervisor')
+        {
+            superPage.style.display = 'none';
+        }
+    }
+        
+
     function openModal() {
         const modal = document.getElementById("myModal");
         modal.style.display = "block";

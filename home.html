@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-        <!-- <link rel="stylesheet" href="pent.css"> -->
+        <link rel="stylesheet" href="D:/const/ConstructEaze/assets/css/pent.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
@@ -372,31 +372,41 @@
             fetch('/proj/getprojects') // Assuming you have a route to fetch all projects
                 .then((response) => response.json())
                 .then((data) => {
+        
                 const projectContainer = document.getElementById('projectContainer');
                 projectContainer.innerHTML = ''; // Clear the existing content before adding new elements
-        
-                // Loop through the data and create elements for each project
+
                 data.forEach((project) => {
                     const projectElement = document.createElement('div');
                     projectElement.className = 'col-md-6'; // Add the Bootstrap column class to style the element
                     projectElement.style.margin = '1%'; // Add some margin
                     projectElement.innerHTML = `
-                    <!-- Rectangle with Text -->
-                    <div class="rect row">
-                        <div class="col-md-3">
-                        <div class="square"><p style="margin: 0;">${project.Project_name[0]}</p></div>
+                        <!-- Rectangle with Text -->
+                        <div class="rect row">
+                            <div class="col-md-3">
+                                <div class="square"><p style="margin: 0;">${project.Project_name[0]}</p></div>
+                            </div>
+                            <div class="col-md-9" style="justify-content: space-between; padding-left: 0.01%;">
+                                <div class="row" style="margin-top: 6px;">
+                                    <a href="#"
+                                    class="project-link"
+                                    data-projectid="${project._id}"
+                                    style="color: black; text-decoration: none;">
+                                        ${project.Project_name}
+                                    </a>
+                                </div>
+                                <div class="row" style="margin-top: 12px;" id="sub">
+                                    <p style="width: auto; background-color: #d4d4d4; padding: 0px 20px; color: black; margin: 0; border-radius: 4px;">
+                                        ${project.City}
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-9" style="justify-content: space-between; padding-left: 0.01%;">
-                        <div class="row" style="margin-top: 6px;" ><a href="masnode.html" style="color:black; text-decoration:none;" > ${project.Project_name}</a></div>
-                        <div class="row" style="margin-top: 12px;" id="sub">
-                            <p style="width: auto; background-color: #d4d4d4; padding: 0px 20px; color: black; margin: 0; border-radius: 4px;">${project.City}</p>
-                        </div>
-                        </div>
-                    </div>
                     `;
-        
+
                     projectContainer.appendChild(projectElement);
                 });
+
                 })
                 .catch((error) => {
                 console.error('Error fetching projects:', error);
@@ -406,10 +416,43 @@
         
             // Call the function to fetch and display projects on page load
             fetchAndDisplayProjects();
-            /*const projectNameLink = document.getElementById('projectNameLink');
-            projectNameLink.addEventListener('click', () => {
-            window.location.href = 'masnode.html'; // Replace 'masnode.html' with the actual URL of the target page
-            });*/
+
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('project-link')) {
+                    e.preventDefault(); // Prevent the default link behavior
+            
+                    // Get the projectId from the data attribute
+                    const projectId = e.target.getAttribute('data-projectid');
+            
+                    // Define the URL where you want to redirect the user
+                    const link = 'masnode.html'; // Change this to your desired URL
+            
+                    // Use Fetch API to send the projectId to your server
+                    fetch('/proj/storeProjectId', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ projectId }),
+                    })
+                        .then((response) => {
+                            if (response.ok) {
+                                // Redirect to the target page
+                                window.location.href = link;
+                            } else {
+                                // Handle errors if needed
+                                console.error('Error storing projectId');
+                            }
+                        })
+                        .catch((error) => {
+                            // Handle errors if needed
+                            console.error('Error storing projectId', error);
+                        });
+                }
+            });
+            
+        
+
         </script>
         
     </body>

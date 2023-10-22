@@ -1,86 +1,133 @@
 const path = require('path');
 const e_products = require('../model/prodModel');
+const e_projects = require('../model/projectModel');
 
 
 exports.getProductPage = (req, res) => {
 res.sendFile(path.join(__dirname, '..', '..', 'prod.html'));
 };
 
+// Define a PurchaseOrder model and import it
+
+exports.generatePNo = async (req, res) => {
+  const projectId = req.session.projectId;
+
+  try {
+    // Find the max purchase order number for the given projectId
+    const maxPurchaseOrder = await e_products.findOne({ projectId })
+      .sort({ purchaseOrderNo: -1 })
+      .limit(1);
+
+    // Check if maxPurchaseOrder is null (no existing purchase order for the projectId)
+    if (!maxPurchaseOrder) {
+      // If no purchase order found, set the purchase order number to 1
+      res.status(200).json({ purchaseOrderNo: 0 });
+    } else {
+      // If purchase order found, increment the purchase order number by 1
+      const newPurchaseOrderNo = parseInt(maxPurchaseOrder.purchaseOrderNo) + 1;
+      res.status(200).json({ purchaseOrderNo: newPurchaseOrderNo });
+    }
+  } catch (error) {
+    console.error('Error fetching max purchase order number:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 exports.submitMaterial = async (req, res) => {
+  try {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
 
-  const userId = req.session.auth;
-  const role = req.session.role;
+    const projectId = req.session.projectId;
+    const purchaseOrderNo = req.body.purchaseOrderNo;
+    const vendorName = req.body.vendorName;
+    const address = req.body.address;
+    const gst = req.body.gst;
+    const phone = req.body.phone;
+    const site = req.body.shippedToSite;
 
-      const {
-        Date_o,
-        Vendor_name,
-        Name_of_Material,
-        Required_quantity,
-      } = req.body;
-      
-      console.log('Vendor_name:', Vendor_name);
-      console.log('Name_of_Material:', Name_of_Material);
+    // Convert the JSON string of products back to an array
+    const products = req.body.products;
 
-  
-      const materialInward = await e_products.findOne({ Vendor_name, Name_of_Material });
-  
-      if (!materialInward) {
-        return res.status(404).json({ error: 'Material not found' });
-      }
-      const firm_name = materialInward.Firmname;
-      const address = materialInward.Address;
-      const Gst =materialInward.Gst;
-      const phone=materialInward.Phone;
-      const Item_code=materialInward.Item_code;
-      const category=materialInward.Category;
-      const unit=materialInward.Unit;
+    // Check if a document with the same purchaseOrderNo and vendorName exists
+    const existingPurchaseOrder = await e_products.findOne({
+      'projectId':projectId,
+      'purchaseOrderNo': null,
+      'vendor.vendorName': vendorName,
+    });
 
-      
-      try {
-        const record = new e_products({
-          //id: Number,
-          userId:userId,
-          Date_o: Date_o ,
-          Date_i:null ,
-          Date_u: null,
-          flag: false,
-          order: true,
-          Vendor_name: Vendor_name,
-          Firmname: firm_name,
-          Address: address,
-          Gst: Gst,
-          Phone: phone,
-          Item_code : Item_code,
-          Name_of_Material: Name_of_Material,
-          Category: category,
-          Unit: unit,
-          Unit_prize:null,
-          Required_quantity: Required_quantity,
-          Supplied_quantity: 0,
-          Used: 0,
-          Current_stock: 0,
-          Price: null
+    if (existingPurchaseOrder) {
+      // Create a new PurchaseOrder document with the same vendor information
+      const newPurchaseOrder = new e_products({
+        projectId: projectId,
+        purchaseOrderNo: purchaseOrderNo,
+        vendor: existingPurchaseOrder.vendor, // Use the vendor information from the existing document
+        products: products,
       });
-      await record.save();
-      return res.status(200).json({ message: 'material submitted successfully'});
+
+      // Save the new purchase order document to the database
+      await newPurchaseOrder.save();
+
+      res.status(201).json(newPurchaseOrder);
+    } else {
+      // Create a new PurchaseOrder document with the provided vendor information
+      const newPurchaseOrder = new e_products({
+        date:today,
+        projectId:projectId,
+        purchaseOrderNo: purchaseOrderNo,
+        vendor: {
+          vendorName: vendorName,
+          address: address,
+          gst: gst,
+          phone: phone,
+          site : site,
+        },
+        products: products,
+      });
+
+      // Save the new purchase order document to the database
+      await newPurchaseOrder.save();
+
+      res.status(201).json(newPurchaseOrder);
+    }
+  } catch (error) {
+    console.error('An error occurred:', error);
+    res.status(500).send('Error occurred while saving the purchase order.');
+  }
+};
+
+
+  exports.getVendor = async (req, res) => {
+    const vendorName = req.params.vendorName;
+    const userId = req.session.userId;
+  
+    try {
+      const vendorDocument = await e_products.findOne({
+        'vendor.vendorName': vendorName,
+      });
+  
+      if (vendorDocument) {
+        const add = vendorDocument.vendor.address;
+        const gst = vendorDocument.vendor.gst;
+        const projectDocument = await e_projects.findOne({ userId: userId });
+
+        if (projectDocument) {
+          const projectName = projectDocument.Project_name;
+          res.status(200).json({ add, gst, projectName });
+        } else {
+          res.status(404).json({ message: 'Project not found' });
+        }
+      } else {
+        
+        res.status(404).json({ message: 'Vendor not found' });
+      }
     } catch (error) {
-      console.error('Error updating record:', error);
-      res.status(500).send('Error updating record.');
+      console.error('Error retrieving vendor and project information:', error);
+      res.status(500).json({ message: 'Error retrieving vendor and project information' });
     }
   };
-
-
-exports.getTasks = async (req, res) => {
-  const userId = req.session.auth;
-
-try {
-    const tasks = await e_products.find({flag : true});
-    res.status(200).json(tasks);
-} catch (error) {
-    console.error('Error retrieving tasks:', error);
-    res.status(500).send('Error retrieving tasks.');
-}
-};
+  
 
 exports.gettableTasks = async (vendorName,res) => {
     try {

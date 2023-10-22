@@ -30,8 +30,8 @@
             border: 2px solid #242e82;
         }
         .sidebar .active{
-            color: white !important; 
-            background-color: rgba(0, 0, 0, 0.2); 
+            color: white !important;
+            background-color: rgba(0, 0, 0, 0.2);
             border-left: 3px solid #F2D200;
         }
         .navbar .nav-item .active{
@@ -88,7 +88,7 @@
                     </li>
                 </ul>
             </div>
-            <button id="logoutButton" class="d-flex btn">Logout</button>
+            <button class="d-flex btn">Logout</button>
         </div>
     </nav>
 
@@ -167,83 +167,81 @@
             
                 fetch('/sAtt/getstatus')
                     .then(response => response.json())
-
                     .then(sups => {
                         console.log(sups);
-                        const loginTime = new Date(sups.login_t);
-                        const hours = loginTime.getHours();
-                        const minutes = loginTime.getMinutes();
-                        const ampm = hours >= 12 ? 'PM' : 'AM';
-
-                        // Convert to 12-hour format
-                        const formattedTime = `${(hours % 12) || 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
-
-                        //for logout conversion to AM - PM format
-
-                        const logoutTime = new Date(sups.logout_t);
-                        const hrs = logoutTime.getHours();
-                        const min = logoutTime.getMinutes();
-                        const AmPm = hrs >= 12 ? 'PM' : 'AM';
-
-                        // Convert to 12-hour format
-                        const formattedTime_o = `${(hrs % 12) || 12}:${min.toString().padStart(2, '0')} ${AmPm}`;
-
-                            supervisorbody.innerHTML = ''; // Clear existing table rows
+            
+                        // Check if sups is an array
+                        if (Array.isArray(sups)) {
+                            // sups is an array, iterate over the items
+                            sups.forEach(sup => {
+                                const loginTime = new Date(sup.login_t);
+                                const hours = loginTime.getHours();
+                                const minutes = loginTime.getMinutes();
+                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                const formattedTime = `${(hours % 12) || 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+            
+                                const logoutTime = new Date(sup.logout_t);
+                                const hrs = logoutTime.getHours();
+                                const min = logoutTime.getMinutes();
+                                const AmPm = hrs >= 12 ? 'PM' : 'AM';
+                                const formattedTime_o = `${(hrs % 12) || 12}:${min.toString().padStart(2, '0')} ${AmPm}`;
             
                                 const row = document.createElement('tr');
                                 row.innerHTML = `
+                                    <td>${sup.name}</td>
+                                    <td>${sup.status}</td>
+                                    <td class="google-maps-link"></td>
+                                    <td>${formattedTime}</td>
+                                    <td>${formattedTime_o}</td>
+                                `;
+            
+                                supervisorbody.appendChild(row);
+            
+                                const googleMapsLinkContainer = row.querySelector('.google-maps-link');
+                                const googleMapsLink = createGoogleMapsLink(sup.latitude, sup.longitude);
+                                googleMapsLinkContainer.appendChild(googleMapsLink);
+                            });
+                        } else {
+                            // sups is not an array, handle it as a single object
+                            const loginTime = new Date(sups.login_t);
+                            const hours = loginTime.getHours();
+                            const minutes = loginTime.getMinutes();
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            const formattedTime = `${(hours % 12) || 12}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+            
+                            const logoutTime = new Date(sups.logout_t);
+                            const hrs = logoutTime.getHours();
+                            const min = logoutTime.getMinutes();
+                            const AmPm = hrs >= 12 ? 'PM' : 'AM';
+                            const formattedTime_o = `${(hrs % 12) || 12}:${min.toString().padStart(2, '0')} ${AmPm}`;
+            
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
                                 <td>${sups.name}</td>
                                 <td>${sups.status}</td>
                                 <td class="google-maps-link"></td>
                                 <td>${formattedTime}</td>
                                 <td>${formattedTime_o}</td>
-                                `;
-                                supervisorbody.appendChild(row);
+                            `;
             
-                                const googleMapsLinkContainer = row.querySelector('.google-maps-link');
+                            supervisorbody.appendChild(row);
             
-                                const googleMapsLink = createGoogleMapsLink(sups.latitude, sups.longitude);
-                                googleMapsLinkContainer.appendChild(googleMapsLink);
-                            })
+                            const googleMapsLinkContainer = row.querySelector('.google-maps-link');
+                            const googleMapsLink = createGoogleMapsLink(sups.latitude, sups.longitude);
+                            googleMapsLinkContainer.appendChild(googleMapsLink);
+                        }
+                    })
                     .catch(error => console.error('Error retrieving tasks:', error));
             };
+            
             // Fetch tasks when the page loads
             fetchSupervisor();
 
         });
 
-        // Async function to handle supervisor logout
-            async function handleSupervisorLogout() {
-                try {
-                    const date = new Date();
-
-                    // Send an HTTP request to update the logout_t time
-                    const response = await fetch('/sAtt/logout', {
-                        method: 'PUT', // You can use PUT or POST based on your API
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            logout_t: date.toISOString(), // Convert the date to ISO format for the server
-                        }),
-                    });
-
-                    if (response.ok) {
-                        // Logout successful, you can do any client-side operations here
-                        console.log('Logout successful');
-                    } else {
-                        // Handle errors if needed
-                        console.error('Error logging out');
-                    }
-                } catch (error) {
-                    console.error('Error logging out:', error);
-                    // Handle errors if needed
-                }
-            }
-
-            // Add an event listener to the logout button to call the function
-            document.getElementById('logoutButton').addEventListener('click', handleSupervisorLogout);
 
     </script>
 </body>
 </html>
+
+

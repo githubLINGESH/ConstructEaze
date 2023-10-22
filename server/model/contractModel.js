@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 const contractSchema = new mongoose.Schema({
+  projectId:{
+    type:String,
+  },
   userId:{
     type:Number
   },
@@ -47,6 +50,9 @@ const contractSchema = new mongoose.Schema({
   total:{
     type:Number,
     default:null,
+  },
+  name:{
+    type:String
   }
 });
 

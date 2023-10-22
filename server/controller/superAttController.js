@@ -3,11 +3,12 @@
 
     exports.markAttendanceforSuperv = async (req, res) => {
         const superId = req.session.superId;
+        const projectId = req.session.projectId;
         console.log(superId); // Assuming you have the supervisor's ID in the session
     
         try {
             // Retrieve the supervisor's details based on superId
-            const supervisor = await Login.findOne({ superId: superId });
+            const supervisor = await Login.findOne({ superId: superId ,projectId:projectId});
             if (!supervisor) {
                 return res.status(404).json({ error: 'Supervisor not found' });
             }
@@ -24,6 +25,7 @@
     
             // Create a new SuperAtt document with login_t and other fields
             const superAtt = new s_att({
+                projectId:projectId,
                 superId :superId,
                 name: supervisor.name,
                 email: supervisor.email,
@@ -38,7 +40,7 @@
             const savedSuperAtt = await superAtt.save();
     
             // Respond with the saved document or a success message
-            res.status(201).json(savedSuperAtt);
+            res.status(201).json({savedSuperAtt});
         } catch (error) {
             console.error('Error marking supervisor attendance:', error);
             res.status(500).send('Error marking supervisor attendance.');
@@ -50,8 +52,10 @@
         const date = new Date();
         date.setUTCHours(0, 0, 0, 0);
 
+        const projectId = req.session.projectId;
+
         try{
-            const status = await s_att.findOne({date:date});
+            const status = await s_att.find({date:date,projectId:projectId});
             res.status(200).json(status);
         }
         catch(error)
@@ -64,11 +68,12 @@
     exports.logoutSupervisor = async (req, res) => {
         const superId = req.session.superId; // Get the supervisor's ID from the query parameters
         const date = new Date();
-    
+        
+        const projectId = req.session.projectId;
         try {
             // Find the supervisor's attendance document and update the logout_t time
             await s_att.findOneAndUpdate(
-                { superId: superId, logout_t: { $exists: false } }, // You can add conditions here to ensure you're updating the correct document
+                { superId: superId, logout_t: { $exists: false } ,projectId:projectId}, // You can add conditions here to ensure you're updating the correct document
                 { logout_t: date }
             );
     

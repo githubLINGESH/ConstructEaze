@@ -12,9 +12,11 @@ router.post('/totdownload-pdf', controllller.downloadPDF);
 router.post('/totdownload-excel', controllller.downloadExcel);
 router.post('/download/:vendorName', materialController.downloadPDF);
 router.get('/', materialController.getProductPage);
-router.get('/getprod', materialController.getTasks);
+router.get('/getVendor/:vendorName', materialController.getVendor);
 router.post('/submitprod', materialController.submitMaterial);
 router.get('/autosearchprod', materialController.autosearchforprod);
+router.get('/GeneratePNo',materialController.generatePNo);
 
 
 module.exports = router;
+

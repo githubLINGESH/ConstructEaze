@@ -7,9 +7,10 @@ router.get('/matindownload-pdf', controller.downloadPDF);
 router.get('/matindownload-excel', controller.downloadExcel);
 router.get('/matindownload', materialController.downloadPDF);
 router.get('/', materialController.getMaterialPage);
-router.get('/get', materialController.getMaterialOutPage);
+router.get('/get/:selectedPno', materialController.getPurchaseDet);
 router.post('/submit', materialController.submitMaterial);
 router.get('/autosearchmat',materialController.autosearchformat);
+router.get('/purchaseNo',materialController.getPurchaseNo);
 
 
 
