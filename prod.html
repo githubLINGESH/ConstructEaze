@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js" integrity="sha512-QaF+0tGzKgKcMk0BrHueFJDDbKqkmMLidoHoqM+7L71APSov5JcUAT/Qtp9fAQFEQb/BTW2tffYFv0l1nXcuKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         function openFormin() {
           var formPopup = document.getElementById("myFormin");
@@ -10,6 +12,7 @@
         function closeFormin() {
             document.getElementById("myFormin").style.display = "none";
           }
+
     </script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -18,12 +21,11 @@
     <link rel="stylesheet" href="./assets/css/pent.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
       <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style> 
+    <style>
         *{
           margin: 0;
           padding: 0;
@@ -537,32 +539,6 @@
                   </ul>
               </div>
             </div>
-      
-      
-              <!-- <div class="row">
-                  <div class="table-responsive">
-                      <table class="table" id="table">
-                          <thead>
-                              <tr>
-                          
-                                  <th>VENDOR</th>
-                                  <th>MATERIAL</th>
-                                  <th>ORDER</th>
-                              </tr>
-                          </thead>
-                          <tbody id="prod-table-body">
-                            <tr>
-                              <td>${task.Vendor_name}</td>
-                              <td>${task.Name_of_Material}</td>
-                              <td>
-                              </td>
-                            </tr>
-                            
-                          </tbody>
-                      </table>
-                  </div>
-              </div> -->
-              
           </div>
           </div>
         </div>
@@ -577,6 +553,7 @@
             <button onclick="closeModal()">OK</button>
         </div>
     </div>
+      
     <script>
       function openModal() {
           const modal = document.getElementById("myModal");
@@ -587,6 +564,43 @@
           const modal = document.getElementById("myModal");
           modal.style.display = "none";
       }
+  </script>
+
+  <script>
+    function downloadPDF() {
+      const element = document.getElementById('exampleModal');
+    
+      // Show the modal content
+      element.style.display = 'block';
+    
+      const pdfOptions = {
+        margin: 10,
+        filename: 'purchase_order.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      };
+    
+      html2pdf(element, pdfOptions).then(pdf => {
+        // Hide the modal content again
+        element.style.display = 'none';
+    
+        const pdfBlob = new Blob([pdf], { type: 'application/pdf' });
+    
+        const downloadUrl = URL.createObjectURL(pdfBlob);
+    
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'file.pdf';
+    
+        link.click();
+    
+        URL.revokeObjectURL(downloadUrl);
+      });
+    }
+    
+    
+    
   </script>
 
 <script>
@@ -825,37 +839,6 @@ function submitForm() {
   }
 }
 
-
-/*function submitForm() {
-  // Get the form element by its ID
-  const form = document.getElementById('purchaseOrderForm');
-
-  if (form) {
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      // Send the form data to the server using Fetch API or another method
-      try {
-        const formData = new FormData(form);
-        const response = await fetch('/prod/submitprod', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (response.ok) {
-          console.log('Form submitted successfully');
-        } else {
-          console.error('Form submission failed');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
-      }
-    });
-  }
-}*/
-
-
-
         // Get the current date
         const currentDate = new Date();
 
@@ -1019,42 +1002,6 @@ function submitForm() {
   };
   // Fetch tasks when the page loads
   fetchAndDisplayTasks();
-  // Handle form submission
-  /*const form = document.getElementById('formm');
-        
-        form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const url = form.getAttribute('action');
-    
-            const formData = new FormData(form);
-            const taskData = {
-                Vendor_name: formData.get('Vendor_name'),
-                Name_of_Material: formData.get('Name_of_Material'),
-                Required_quantity: formData.get('Required_quantity'),
-                Date_o: formData.get('Date_o'),
-
-            };
-    
-            fetch('/prod/submitprod', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(taskData)
-            })
-            .then(response => {
-                if (response.ok) {
-                    openModal();
-                    console.log('Record inserted successfully.');
-                    form.reset();
-                    
-                    fetchAndDisplayTasks();
-                } else {
-                    console.error('Error inserting record.');
-                }
-            })
-            .catch(error => console.error('Error inserting record:', error));
-        });*/
 });
 
 
@@ -1131,21 +1078,6 @@ $(function() {
         }
     });
 });
-
-
-function downloadPDF() {
-  // Create a new jsPDF instance
-  const doc = new jsPDF();
-
-  // Define the source element to convert to PDF (the modal content)
-  const source = document.getElementById('exampleModal');
-
-  // Use jsPDF's built-in fromHTML method to add the HTML content to the PDF
-  doc.fromHTML(source, 10, 10);
-
-  // Save the PDF as "purchase_order.pdf"
-  doc.save('purchase_order.pdf');
-}
 
 
 
