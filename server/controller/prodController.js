@@ -139,9 +139,9 @@ exports.gettableTasks = async (vendorName,res) => {
     }
     };
 
-    exports.getProductOrders = async () => {
+    exports.getProductOrders = async (productName) => {
         try {
-        const productOrders = await e_products.find();
+        const productOrders = await e_products.find().distinct({'products.nameOfMaterial':productName});
         return productOrders;
         } catch (error) {
         throw error;
@@ -189,7 +189,7 @@ exports.gettableTasks = async (vendorName,res) => {
     exports.getVendorDetails = async (vendorName) => {
       try {
         // Use the provided vendorName parameter to filter vendor details
-        const vendorDetails = await e_products.find({ Vendor_name: vendorName });
+        const vendorDetails = await e_products.find({ 'vendor.vendorName': vendorName });
         return vendorDetails;
       } catch (error) {
         console.error('Error fetching vendor details:', error);

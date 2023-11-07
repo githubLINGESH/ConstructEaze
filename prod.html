@@ -1,19 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.0/purify.min.js" integrity="sha512-QaF+0tGzKgKcMk0BrHueFJDDbKqkmMLidoHoqM+7L71APSov5JcUAT/Qtp9fAQFEQb/BTW2tffYFv0l1nXcuKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        function openFormin() {
-          var formPopup = document.getElementById("myFormin");
-          formPopup.style.display = "block";
-          formPopup.style.backgroundColor = "transparent";
-        }
-        function closeFormin() {
-            document.getElementById("myFormin").style.display = "none";
-          }
-
-    </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
@@ -383,7 +373,7 @@
                       <button id="choosebut" type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;" data-bs-toggle="modal" data-bs-target="#exampleModal">Choose Vendor</button>
                     </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                      <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
+                      <button onclick="DownloadDivAsPDF()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
                     </div>
                   </div>
                 </div>
@@ -511,7 +501,7 @@
                           </div>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn" style="align-items:left;" onclick="downloadPDF()">Download</button>
+                        <button type="button" class="btn" style="align-items:left;" onclick="downloadDivAsPDF()">Download</button>
                         <button type="button" class="btn btn-md" onclick="reset()" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary btn-md btn-block" onclick="submitForm()" style="color: #fff !important;" data-bs-dismiss="modal">Save</button>
                       </div>
@@ -567,38 +557,58 @@
   </script>
 
   <script>
-    function downloadPDF() {
-      const element = document.getElementById('exampleModal');
-    
-      // Show the modal content
-      element.style.display = 'block';
-    
-      const pdfOptions = {
-        margin: 10,
-        filename: 'purchase_order.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      };
-    
-      html2pdf(element, pdfOptions).then(pdf => {
-        // Hide the modal content again
-        element.style.display = 'none';
-    
-        const pdfBlob = new Blob([pdf], { type: 'application/pdf' });
-    
-        const downloadUrl = URL.createObjectURL(pdfBlob);
-    
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = 'file.pdf';
-    
-        link.click();
-    
-        URL.revokeObjectURL(downloadUrl);
+  async function downloadDivAsPDF() {
+    const element = document.getElementById('exampleModal'); // The ID of the div you want to capture
+  
+    try {
+      // Use html2canvas to take a screenshot of the div
+      const canvas = await html2canvas(element, {
+        scale: window.devicePixelRatio, // Use the device's pixel ratio to capture high-resolution screenshots
+        useCORS: true // Allow images from other domains to be loaded (provided the server supports CORS)
       });
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+  
+      // Initialize jsPDF in portrait orientation with A4 format
+      const pdf = new jspdf.jsPDF({
+        orientation: 'portrait',
+        unit: 'pt',
+        format: 'a4'
+      });
+  
+      // Dimensions of the canvas image
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+  
+      // Calculate the ratio to fit the image within the PDF page width
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      const widthRatio = pdfWidth / imgWidth;
+      const heightRatio = pdfHeight / imgHeight;
+      const ratio = widthRatio; // Choose widthRatio to fit the image to page width
+      const scaledHeight = imgHeight * ratio;
+      const scaledWidth = imgWidth * ratio;
+  
+      // Add the image to the first page
+      pdf.addImage(imgData, 'JPEG', 0, 0, scaledWidth, scaledHeight);
+  
+      let heightLeft = scaledHeight - pdfHeight;
+  
+      // Add new pages for the remaining content
+      let position = -1 * pdfHeight;
+      while (heightLeft > 0) {
+        pdf.addPage();
+        pdf.addImage(imgData, 'JPEG', 0, position, scaledWidth, scaledHeight);
+        heightLeft -= pdfHeight;
+        position -= pdfHeight;
+      }
+  
+      // Download the PDF
+      pdf.save('download.pdf');
+    } catch (error) {
+      console.error('Error downloading div as PDF:', error);
     }
-    
+  }
+  
     
     
   </script>

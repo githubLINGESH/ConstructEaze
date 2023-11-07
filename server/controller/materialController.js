@@ -101,31 +101,38 @@
             
     
 
-        exports.getPurchaseDet = async (req, res) => {
-            const selectedPno = req.params.selectedPno;
-            const projectId = req.session.projectId;
-            console.log(selectedPno);
-            try {
-                const purchaseOrder = await e_products.findOne({ 'purchaseOrderNo': selectedPno , projectId:projectId});
-                if (purchaseOrder) {
-                    const details = {
+            exports.getPurchaseDet = async (req, res) => {
+                const selectedPno = req.params.selectedPno;
+                const projectId = req.session.projectId;
+                console.log(selectedPno);
+                    try {
+                    const purchaseOrder = await e_products.findOne({ 'purchaseOrderNo': selectedPno, 'projectId': projectId });
+                    if (purchaseOrder) {
+                        // Calculate the final total
+                        let finalTotal = purchaseOrder.products.reduce((acc, product) => {
+                        return acc + (product.total ? product.total : 0);
+                        }, 0);
+                
+                        const details = {
                         products: purchaseOrder.products,
                         vendorName: purchaseOrder.vendor.vendorName,
-                        site : purchaseOrder.vendor.site,
+                        site: purchaseOrder.vendor.site,
                         gst: purchaseOrder.vendor.gst,
-                        add: purchaseOrder.vendor.address
-                    };
-        
-                    res.json(details);
-                } else {
-                    res.status(404).json({ message: 'Purchase Order not found' });
-                }
-            } catch (error) {
-                console.error('Error retrieving purchase order details:', error);
-                res.status(500).json({ message: 'Error retrieving purchase order details' });
-            }
-        };
-        
+                        add: purchaseOrder.vendor.address,
+                        finalTotal: finalTotal
+                        };
+                
+                        res.json(details);
+                    } else {
+                        res.status(404).json({ message: 'Purchase Order not found' });
+                    }
+                    } catch (error) {
+                    console.error('Error retrieving purchase order details:', error);
+                    res.status(500).json({ message: 'Error retrieving purchase order details' });
+                    }
+                };
+                
+            
 
     
 

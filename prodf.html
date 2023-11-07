@@ -236,11 +236,6 @@ font-weight: 400 !important;}
             <div class="row">
                 
                 <form id="form_ccc" action="/prodf/submitprodf" method="POST">
-                    <input type="text" name="name" id="name" placeholder="Vendor Name" required><br>
-                    <input type="text" name="firm_name" id="f_name" placeholder="Firm Name" required><br>
-                    <input type="text" name="address" id="adres"  placeholder="Address" required><br>
-                    <input type="text" name="Gst" id="gst"  placeholder="GSTIN" required><br>
-                    <input type="text" name="phone" id="phno"  placeholder="Phone No" required><br>
                     <input type="number" name="Item_code" id="code" placeholder="Item Code" required><br>
                     <input type="text" name="Item_name" id="name"  placeholder="Item Name" required><br>
                     <input type="text" name="category" id="categ"  placeholder="Category" required><br>
@@ -377,11 +372,6 @@ font-weight: 400 !important;}
             const url = form.getAttribute('action');
             const formData = new FormData(form);
             const taskDataa = {
-                name: formData.get('name'),
-                firm_name: formData.get('firm_name'),
-                address: formData.get('address'),
-                Gst: formData.get('Gst'),
-                phone: formData.get('phone'),
                 Item_code: formData.get('Item_code'),
                 Item_name: formData.get('Item_name'),
                 category: formData.get('category'),
@@ -446,7 +436,5 @@ font-weight: 400 !important;}
                     .catch((error) => console.error('Error uploading file:', error));
                 });
     </script>
-    
-
 </body>
 </html>

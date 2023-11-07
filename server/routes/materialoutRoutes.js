@@ -3,8 +3,8 @@ const router = express.Router();
 const materialOutController = require('../controller/materialoutController');
 const controller = require('../controller/matrepController');
 
-router.post('/matdownload-pdf', controller.downloadPDF);
-router.post('/matdownload-excel', controller.downloadExcel);
+router.post('/matdownload-pdf/:productName', controller.downloadPDF);
+router.post('/matdownload-excel/:productName', controller.downloadExcel);
 router.get('/matdownload', materialOutController.downloadPDF);
 router.get('/', materialOutController.getp);
 router.post('/material-outward', materialOutController.updatestocks);

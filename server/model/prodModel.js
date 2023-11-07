@@ -12,7 +12,10 @@
     currentStock: Number,
     price: Number,
     order:Boolean,
-    ReturnQuantity:Number
+    ReturnQuantity:Number,
+    total:Number,
+    gst:Number,
+    grandTotal:Number,
     });
 
     const VendorSchema = new mongoose.Schema({

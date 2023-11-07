@@ -49,7 +49,7 @@
         });
 
         table.rows.push([
-            order.date,
+            formattedDate,
             order.w_name,
             order.w_type,
             order.shift,
@@ -93,68 +93,61 @@
     };
 
     // Route to generate and download the Excel file
-    exports.downloadExcelforlab= async (req, res) => {
-    try {
+    exports.downloadExcelforlab = async (req, res) => {
+        try {
+            const dateArray = JSON.parse(req.body.dateArray);
+            const l = dateArray.length;
 
-        const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
-        const l = dateArray.length;
-    
-        console.log(dateArray);
-        console.log(l);
-
-        const labourattendance = await getlabouratt(); // Fetch the product orders from the database
-
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Labour Attendance');
-
-        worksheet.columns = [
-        { header: 'w_name', key: 'w_name' },
-        { header: 'w_type', key: 'w_type' },
-        { header: 'shift', key: 'shift' },
-        { header: 'present/Absent', key: 'pa' },
-        ];
-
-        labourattendance.forEach((order) => {
-            for (let i = 0; i < l; i++) {
-                const selectedDate = dateArray[i];
+            console.log(dateArray);
         
-                // Parse the date strings to Date objects
+            const labourattendance = await getlabouratt();
+        
+            const workbook = new ExcelJS.Workbook();
+            const worksheet = workbook.addWorksheet('Labour Attendance');
+        
+            worksheet.columns = [
+                { header: 'Date', key: 'date', width: 15 },
+                { header: 'Worker Name', key: 'w_name', width: 25 },
+                { header: 'Worker Type', key: 'w_type', width: 25 },
+                { header: 'Shift', key: 'shift', width: 15 },
+                { header: 'Present/Absent', key: 'pa', width: 20 },
+            ];
+        
+            labourattendance.forEach((order) => {
+                for (let i = 0; i < l; i++) {
+                const selectedDate = dateArray[i];
                 const selectedDateObj = new Date(selectedDate);
-                    const orderDateObj = new Date(order.Date_o);
-            
-                    // Compare the date parts (year, month, and day)
-                    if (
+                const orderDateObj = new Date(order.date); // Make sure 'date' is the correct field name
+        
+                if (
                     selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
                     selectedDateObj.getMonth() === orderDateObj.getMonth() &&
                     selectedDateObj.getDate() === orderDateObj.getDate()
-                    ) {
-                    // Format the date without the time portion
+                ) {
                     const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
                     });
-        worksheet.addRow({
-            date: formattedDate,
-            w_name:order.w_name,
-            type:order.w_type,
-            shift:order.shift,
-            pa:order.pa,
-
-        })
-    }
-}
-});
-    
-
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=product_orders.xlsx');
-        res.send(buffer);
-    } catch (error) {
-        console.error('Error generating Excel:', error);
-        res.status(500).send('Error generating Excel');
-    }
-    };
-
+        
+                    worksheet.addRow({
+                    date: formattedDate,
+                    w_name: order.w_name,
+                    w_type: order.w_type,
+                    shift: order.shift,
+                    pa: order.pa,
+                    });
+                }
+                }
+            });
+        
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            res.setHeader('Content-Disposition', 'attachment; filename="Labour_Attendance.xlsx"');
+            await workbook.xlsx.write(res); // Directly write to the response stream
+            res.end();
+            } catch (error) {
+            console.error('Error generating Excel:', error);
+            res.status(500).send('Error generating Excel');
+            }
+        };
+        

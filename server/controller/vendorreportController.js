@@ -9,85 +9,75 @@ exports.downloadPDF = async (req, res) => {
   try {
     const vendorName = req.params.vendorName;
     const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
-    const l = dateArray.length;
 
-    console.log(dateArray);
-    console.log(l);
-
-    const productOrders = await getVendorDetails(vendorName);
+    const productOrders = await getVendorDetails(vendorName); // Fetch details from the database
 
     const doc = new PDFDocument();
+    res.setHeader('Content-Disposition', 'attachment; filename=material_details.pdf');
     doc.pipe(res);
 
     doc.fontSize(18).text('Material Wise Details', { align: 'center' });
     doc.moveDown();
 
-    const tableHeaders = ['Date', 'Vendor', 'Material', 'Used', 'Current Stock'];
-
+    // Define the table object here
     const table = {
-      rows: [tableHeaders],
+      headers: ['Date', 'Vendor', 'Address', 'GST', 'Site', 'Material', 'Used', 'Current Stock'],
+      rows: []
     };
 
-    
-productOrders.forEach((order) => {
-  for (let i = 0; i < l; i++) {
-    const selectedDate = dateArray[i];
+    // Loop through each order and product
+    productOrders.forEach(order => {
+      dateArray.forEach(selectedDate => {
+        const selectedDateObj = new Date(selectedDate);
+        const orderDateObj = new Date(order.date);
 
-    // Parse the date strings to Date objects
-    const selectedDateObj = new Date(selectedDate);
-    const orderDateObj = new Date(order.Date_o);
+        if (
+          selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+          selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+          selectedDateObj.getDate() === orderDateObj.getDate()
+        ) {
+          const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          });
 
-    // Compare the date parts (year, month, and day)
-    if (
-      selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-      selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-      selectedDateObj.getDate() === orderDateObj.getDate()
-    ) {
-      // Format the date without the time portion
-      const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
+          // Add rows to the table
+          order.products.forEach(product => {
+            table.rows.push([
+              formattedDate,
+              order.vendor.vendorName,
+              order.vendor.address,
+              order.vendor.gst,
+              order.vendor.site,
+              product.nameOfMaterial,
+              product.used,
+              product.currentStock
+            ]);
+          });
+        }
       });
+    });
 
-      table.rows.push([
-        formattedDate,
-        order.Date_i, // Use the formatted date
-        order.Vendor_name,
-        order.Name_of_Material,
-        order.Used,
-        order.Current_stock,
-        order.Unit
-      ]);
-    }
-  }
-});
-
-    const tableTop = doc.y + 15;
+    // Now you can generate the table as you intended
     const initialX = 50;
     const rowHeight = 25;
     const columnWidth = 100;
 
-    for (let i = 0; i < table.rows.length; i++) {
-      const currentRow = table.rows[i];
-      for (let j = 0; j < currentRow.length; j++) {
-        doc
-          .fontSize(12)
-          .text(currentRow[j], initialX + j * columnWidth, tableTop + i * rowHeight, { width: columnWidth });
-      }
-    }
+    // Draw the table header
+    doc.fontSize(12);
+    table.headers.forEach((header, i) => {
+      doc.text(header, initialX + i * columnWidth, doc.y, { width: columnWidth });
+    });
+    doc.moveDown();
 
-    // Add table lines
-    const tableBottom = tableTop + table.rows.length * rowHeight;
-    const tableRight = initialX + tableHeaders.length * columnWidth;
-
-    doc.moveTo(initialX, tableTop).lineTo(initialX, tableBottom).stroke(); // Vertical line on the left
-    doc.moveTo(tableRight, tableTop).lineTo(tableRight, tableBottom).stroke(); // Vertical line on the right
-
-    for (let i = 0; i <= table.rows.length; i++) {
-      const y = tableTop + i * rowHeight;
-      doc.moveTo(initialX, y).lineTo(tableRight, y).stroke(); // Horizontal lines
-    }
+    // Draw the table rows
+    table.rows.forEach((row, i) => {
+      row.forEach((text, j) => {
+        doc.text(text, initialX + j * columnWidth, doc.y, { width: columnWidth });
+      });
+      doc.moveDown();
+    });
 
     doc.end();
   } catch (error) {
@@ -97,67 +87,66 @@ productOrders.forEach((order) => {
 };
 
 
-// Route to generate and download the Excel file
-exports.downloadExcel= async (req, res) => {
+exports.downloadExcel = async (req, res) => {
   try {
-    vendorName = req.params.vendorName;
+    const vendorName = req.params.vendorName;
     const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
-    const l = dateArray.length;
 
-    console.log(dateArray);
-    console.log(l);
+    console.log('Date Array:', dateArray);
 
     const productOrders = await getVendorDetails(vendorName);
+    console.log('Product Orders:', productOrders);
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Material Report');
 
-    // Define the columns and add data
+    // Define the columns
     worksheet.columns = [
-      { header: 'Date', key: 'Date_o' },
-      { header: 'Vendor', key: 'Vendor_name' },
-      { header: 'Material', key: 'Name_of_Material' },
-      { header: 'Unit' ,key:'Unit'},
-      { header: 'Used', key: 'Used' },
-      { header: 'Current Stock', key: 'Current_stock' },
+      { header: 'Date', key: 'date' },
+      { header: 'Vendor', key: 'vendorName' },
+      { header: 'Address', key: 'address' },
+      { header: 'GST', key: 'gst' },
+      { header: 'Site', key: 'site' },
+      { header: 'Material', key: 'nameOfMaterial' },
+      { header: 'Unit', key: 'unit' },
+      { header: 'Used', key: 'used' },
     ];
 
-    productOrders.forEach((order) => {
-      for (let i = 0; i < l; i++) {
-        const selectedDate = dateArray[i];
-
-        // Parse the date strings to Date objects
+    for (const order of productOrders) {
+      for (const selectedDate of dateArray) {
         const selectedDateObj = new Date(selectedDate);
-        const orderDateObj = new Date(order.Date_o);
+        const orderDateObj = new Date(order.date);
 
-        // Compare the date parts (year, month, and day)
         if (
           selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
           selectedDateObj.getMonth() === orderDateObj.getMonth() &&
           selectedDateObj.getDate() === orderDateObj.getDate()
         ) {
-          // Format the date without the time portion
           const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
           });
 
-          worksheet.addRow({
-            Date_o: formattedDate, // Use the formatted date
-            Vendor_name: order.Vendor_name,
-            Name_of_Material: order.Name_of_Material,
-            Unit:order.Unit,
-            Used: order.Used,
-            Current_stock: order.Current_stock,
-          });
+          for (const product of order.products) {
+            worksheet.addRow({
+              date: formattedDate,
+              vendorName: order.vendor.vendorName,
+              address: order.vendor.address,
+              gst: order.vendor.gst,
+              site: order.vendor.site,
+              nameOfMaterial: product.nameOfMaterial,
+              unit: product.unit,
+              used: product.used ? 'Yes' : 'No', // Assuming 'used' is a boolean
+            });
+          }
         }
       }
-    });
+    }
 
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=product_orders.xlsx');
+    res.setHeader('Content-Disposition', 'attachment; filename="material_details.xlsx"');
     res.send(buffer);
   } catch (error) {
     console.error('Error generating Excel:', error);

@@ -69,6 +69,25 @@
                 <div class="report-section" id="labour-report">
                   <h3>MATERIAL WISE REPORT</h3>
 
+                  <div class="filter" style="display: flex; align-items: center;">
+                    <div id="filterOptions" class="filter-options" style="margin: 20px;">
+                        <label for="filterType">Select Filter:</label>
+                        <select id="filterType" onchange="updateButton()">
+                          <option value="" disabled selected>Select</option>
+                          <option value="product">product</option>
+                          
+                      </select>
+                    </div>
+                      <div>
+                        <button style="width: 110%; margin:40px;" class="btn-block dropdown-toggle" id="optdrop" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Select a Type</button>
+                        
+                        <ul style="padding: 5px; border-radius: 10px;" id="myDropdown" class="dropdown-menu" aria-labelledby="optdrop">
+                        <input style="margin-left: 10px; width: 90%; margin-bottom:10px ;" id="items" type="text" placeholder="Search" onkeyup="filterFunction()">
+                      </ul>
+                  </div>
+                </div>
+
                   <div style="margin-top: 3.2%;">Start Date:</div>
                   <input type="date" id="startdate">
                   <br><br>
@@ -92,6 +111,70 @@
               </div>
 
                 <script>
+
+                  function filterFunction() {
+                    var input, filter, ul, li, a, i;
+                    input = document.getElementById("items");
+                    filter = input.value.toUpperCase();
+                    div = document.getElementById("myDropdown");
+                    a = div.getElementsByTagName("li");
+                    for (i = 0; i < a.length; i++) {
+                        txtValue = a[i].textContent || a[i].innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "block";
+                        } else {
+                        a[i].style.display = "none";
+                        }
+                    }
+                    }
+
+                  function populateDropdown() {
+                    const dropdown = document.getElementById("myDropdown");
+                    const filterType = document.getElementById("filterType").value; // Get the selected filter type
+                  
+                    // Preserve the search input element
+                    const searchInput = document.getElementById("items");
+                    dropdown.innerHTML = ""; // Clear existing list items only, not the search input.
+                    dropdown.appendChild(searchInput);
+                  
+                    // Fetch names from the server based on the selected filter type (vendor or product).
+                    fetch(`/acc/get-${filterType}-names`) // Update the route as needed
+                      .then(response => response.json())
+                      .then(names => {
+                        names.forEach((name) => {
+                          const listItem = document.createElement("li");
+                          listItem.textContent = name;
+                          listItem.onclick = () => {
+                            updateDropdown(name);
+                          };
+                          dropdown.appendChild(listItem);
+                        });
+                      })
+                      .catch(error => {
+                        console.error(`Error fetching ${filterType} names:`, error);
+                      });
+                  }
+                  
+                  function updateDropdown(name) {
+                    const optdrop = document.getElementById("optdrop");
+                    optdrop.textContent = selectedName;
+                    selectedName = name;
+                  
+                    updateDropdown(name);
+                  
+                  }
+                  
+                  const filterType = document.getElementById("filterType");
+                  filterType.addEventListener("change", function () {
+                    // Populate the dropdown with names based on the selected filter type.
+                    populateDropdown();
+                  });
+                  
+                  // Initial population of the dropdown.
+                  populateDropdown();
+
+                  let selectedProduct = "";
+
                   function storeDates() {
                       // Get the values of the "Start Date" and "End Date" inputs by their id names
                       const startDateValue = document.getElementById('startdate').value;
@@ -114,7 +197,7 @@
               
                       // Create a form element dynamically to trigger the download
                       const form = document.createElement('form');
-                      form.action = '/mato/matdownload-pdf'; // Set the URL for PDF download
+                      form.action = '/mato/matdownload-pdf/:productName'; // Set the URL for PDF download
                       form.method = 'POST';
               
                       // Create an input field for dateArray
@@ -132,8 +215,7 @@
               
                       console.log('Dates Between Start and End Date:', dateArray);
                   }
-              </script>
-<script>
+
   function downloadExcel() {
     // Get the values of the "Start Date" and "End Date" inputs by their id names
     const startDateValue = document.getElementById('startdate').value;
@@ -156,7 +238,7 @@
 
     // Create a form element dynamically to trigger the download
     const form = document.createElement('form');
-    form.action = '/mato/matdownload-excel'; // Set the URL for PDF download
+    form.action = '/mato/matdownload-excel/:productName'; // Set the URL for PDF download
     form.method = 'POST';
 
     // Create an input field for dateArray

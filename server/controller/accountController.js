@@ -20,7 +20,9 @@ exports.getVendorNames = async (req, res) => {
 
 exports.getProductNames = async (req, res) => {
     try {
-        const productNames = await e_products.find().distinct('Name_of_Material');
+
+        const projectId = req.session.projectId;
+        const productNames = await e_products.find({ 'projectId': projectId }).distinct("products.nameOfMaterial");
         res.json(productNames);
     } catch (error) {
         console.error('Error fetching product names:', error);
