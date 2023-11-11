@@ -286,7 +286,7 @@
                         <a class="nav-link" href="labrep.html">Report Generation</a>
                     </li>
                     </ul>
-                    <form class="d-flex" style="padding-left: 190px; padding-top: 5px;">
+                    <form class="d-flex" style="padding-left: 190px; padding-top: 5px;" action="/login/logout" method="GET">
                     <button class="btn" type="submit"><span class="txt">Logout</span></button>
                     </form>
                 </div>
@@ -298,11 +298,12 @@
                 <div class="sidebar" style="height: 100%;">
                     <nav class="nav flex-column" style="padding-top: 100px; ">
                     <a class="nav-link space" href="todo.html">To Do</a>
-                    <a class="nav-link space" href="#">Check List</a>
+                    <a class="nav-link space" href="checklist.html">Check List</a>
                     <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#" href="matin.html">Material Inward</a>
                     <a class="nav-link space" href="matoutf.html">Material Outward</a>
                     <a class="nav-link space" href="wrkdone.html">Work Done</a>
                     <a class="nav-link space" href="totexp.html">Total Expense</a>
+                    <a class="nav-link space" href="draw.html">Drawings</a>
                     </nav>
                 </div>
                 </div>
@@ -639,7 +640,7 @@ PDropdown.addEventListener('change', () => {
             .then(details => {
                 // Check if the details object exists
                 if (details) {
-                    if (details.add && details.gst && details.products && details.vendorName && details.finalTotal) {
+                    if (details.add && details.gst && details.products && details.vendorName) {
                         // Set the vendor details
                         addInput.value = details.add;
                         gstInput.value = details.gst;

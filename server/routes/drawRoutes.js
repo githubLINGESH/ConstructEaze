@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 
-const checklistController = require('../controller/checklistController');
+const drawController = require('../controller/drawController');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -15,8 +15,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post('/uploadImages', upload.array('image', 10), checklistController.uploadImages);
-router.get('/getImages',checklistController.getImages);
-router.delete('/removeImage/:id', checklistController.removeImage);
+router.post('/uploadImages', upload.array('image', 10), drawController.uploadImages);
+router.get('/getImages',drawController.getImages);
+router.delete('/removeImage/:id', drawController.removeImage);
 
 module.exports = router;

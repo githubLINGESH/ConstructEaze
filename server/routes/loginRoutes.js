@@ -10,5 +10,5 @@ router.use(myMiddleware);
 
 router.get('/', loginController.getLoginPage);
 router.post('/', loginController.postLogin);
-
+router.get('/logout',loginController.logout);
 module.exports = router;

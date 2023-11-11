@@ -322,8 +322,31 @@ color: #000; /* New text color */
     }
 
     .modal .modal-header{
-      background-color: none !important;
+        background-color: none !important;
     }
+
+    .prod{
+        border: solid 1px black;
+        width: 30%;
+        display: flex;
+        padding-top: 2px;
+        margin-bottom: 20px;
+    }
+
+    .p_it{
+        padding-top: 5px;
+        padding-left: 15px
+    }
+
+    .count{
+        font-size: large;
+        font-weight: 700;
+    }
+    
+    input{
+        width: 45%;
+    }
+
 
 
     </style>
@@ -356,7 +379,7 @@ color: #000; /* New text color */
                 <a class="nav-link" href="labrep.html">Report Generation</a>
             </li>
             </ul>
-            <form class="d-flex">
+            <form class="d-flex" action="/login/logout" method="GET">
             <button class="btn" type="submit"><span class="txt">Logout</span></button>
             </form>
         </div>
@@ -368,11 +391,12 @@ color: #000; /* New text color */
         <div class="sidebar" style="height: 100%;">
             <nav class="nav flex-column" style="padding-top: 100px; ">
             <a class="nav-link space" href="todo.html">To Do</a>
-            <a class="nav-link space" href="#">Check List</a>
+            <a class="nav-link space" href="checklist.html">Check List</a>
             <a class="nav-link space"  href="matinf.html">Material Inward</a>
             <a class="nav-link space" style="color: white !important; background-color: rgba(0, 0, 0, 0.2); border-left: 3px solid #F2D200;" href="#">Material Outward</a>
             <a class="nav-link space" href="wrkdone.html">Work Done</a>
             <a class="nav-link space" href="totexp.html">Total Expense</a>
+            <a class="nav-link space" href="draw.html">Drawings</a>
             </nav>
         </div>
         </div>
@@ -396,7 +420,7 @@ color: #000; /* New text color */
                                     </div>
                                     <input  style="width: 250px !important;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
                                 </div>
-                              </div>
+                    </div>
                         <div style="display: flex;">
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 145%;">
                                 <div class="container" id="myFormin">
@@ -470,29 +494,30 @@ color: #000; /* New text color */
             
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex">
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                    <div class="search input-group d-flex">
-                      <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
-                      <input type="text" placeholder="Search Product..">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="search input-group d-flex">
+                        <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
+                        <input type="text" placeholder="Search Product..">
+                        </div>
                     </div>
-                  </div>
-                  <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
-                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                      <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                        <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
+                        </div>
                     </div>
-                  </div>
+                    </div>
                 </div>
-              </div>
-              <div id="product-container">
-                <!-- Product divs will be populated here -->
-              </div>              
-            
-              </div>
+
+                <div id="prod-container">
+
+                </div>
+                
                 </div>
                     </div>
-                  </div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-              </div>
             </form>
         </div>
         </div>
@@ -521,46 +546,107 @@ color: #000; /* New text color */
 
 
 </script>
- <script>
+    <script>
 
-async function populateProductDivs() {
-  try {
-    // Call the API to update total supplied quantities
-    const updateResponse = await fetch('/mato/update-to-stocks',{
-      method: 'POST',
-    });
-    if (!updateResponse.ok) {
-      console.error('Failed to update total supplied quantities');
+    async function populateProductDivs() {
+    try {
+        // Call the API to update total supplied quantities
+        const updateResponse = await fetch('/mato/update-to-stocks',{
+        method: 'POST',
+        });
+        if (!updateResponse.ok) {
+        console.error('Failed to update total supplied quantities');
+        }
+
+        // Call the API to fetch total supplied quantities
+        const response = await fetch('/mato/getstocks');
+        if (response.ok) {
+        const totalSuppliedQuantities = await response.json();
+        const productContainer = document.getElementById('prod-container');
+
+        // Clear existing content
+        productContainer.innerHTML = '';
+
+        // Iterate through the total supplied quantities and create/update product divs
+        totalSuppliedQuantities.forEach(item => {
+            const productDiv = document.createElement('div');
+            productDiv.classList.add('prod');
+
+            // Use item.nameOfMaterial and item.totalSuppliedQuantity to populate the div
+            productDiv.innerHTML = `
+                <section class="p_it">
+                    <h6>${item.product_name}</h6>
+                    <div style="border-top: solid 1px black;">
+                        <h6 class="mt-2">Current Stock: <span class="totcnt">${item.totalSuppliedQuantity}</span></h6>
+                        <form class="stockForm">
+                            <label for="count">Used Quantity: </label>
+                            <input type="text" name="count" class="stockCount">
+                        </form>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3">
+                        <button class="count mb-3 increaseStock">+</button>
+                        <button class="count mb-3 mx-3 decreaseStock">-</button>
+                        <button class="total mb-3 stockbtn">Submit</button>
+                    </div>
+                </section>
+            `;
+
+            productContainer.appendChild(productDiv);
+
+            // Add an event listener to the "Submit" button inside the current productDiv
+            const submitStockButton = productDiv.querySelector('.stockbtn');
+            const stockForm = productDiv.querySelector('.stockForm');
+            const stockCountElement = productDiv.querySelector('.stockCount');
+            const productName = item.product_name;
+
+            submitStockButton.addEventListener("click", function (event) {
+                event.preventDefault(); // Prevent the form from submitting
+
+                let currentValue = parseInt(stockCountElement.value) || 0;
+
+                if (currentValue){
+                    // Make a POST request to update the used quantity
+                    fetch('/mato/material-used', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            productName: productName,
+                            usedQuantity: currentValue,
+                        }),
+                    }).then(response => {
+                        if (response.ok) {
+                            openModal();
+                        }
+                    });
+                }
+            });
+
+            // Add event listeners to the increase and decrease buttons
+            const increaseStockButton = productDiv.querySelector('.increaseStock');
+            const decreaseStockButton = productDiv.querySelector('.decreaseStock');
+
+            increaseStockButton.addEventListener("click", function () {
+                let currentValue = parseInt(stockCountElement.value) || 0;
+                stockCountElement.value = currentValue + 1;
+            });
+
+            decreaseStockButton.addEventListener("click", function () {
+                let currentValue = parseInt(stockCountElement.value) || 0;
+                if (currentValue > 0) {
+                    stockCountElement.value = currentValue - 1;
+                }
+            });
+        });
+
+
+        } else {
+        console.error('Failed to fetch total supplied quantities');
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
-
-    // Call the API to fetch total supplied quantities
-    const response = await fetch('/mato/getstocks');
-    if (response.ok) {
-      const totalSuppliedQuantities = await response.json();
-      const productContainer = document.getElementById('product-container');
-
-      // Clear existing content
-      productContainer.innerHTML = '';
-
-      // Iterate through the total supplied quantities and create/update product divs
-      totalSuppliedQuantities.forEach(item => {
-        const productDiv = document.createElement('div');
-        productDiv.classList.add('product-item');
-
-        // Use item.nameOfMaterial and item.totalSuppliedQuantity to populate the div
-        productDiv.innerHTML = `
-          <h3>${item.nameOfMaterial}</h3>
-          <p>Total Supplied Quantity: ${item.totalSuppliedQuantity}</p>
-        `;
-
-        productContainer.appendChild(productDiv);
-      });
-    } else {
-      console.error('Failed to fetch total supplied quantities');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
 }
 
 // Call the function to populate product divs when the page loads
@@ -568,117 +654,6 @@ window.addEventListener('load', populateProductDivs);
 
 
 
-      
- document.addEventListener('DOMContentLoaded', () => {
-const tasksTableBody = document.querySelector('#tabla tbody');
-const formPopup = document.getElementById("myFormin");
-  const vendorNameInput = document.getElementById("vendorNameInput");
-  
-  const materialNameInput = document.getElementById("materialNameInput");
-  const dateInput = document.getElementById("dateInput");
-  var year=null;
-  var day=null;
-  var month=null;
-  
-// Function to fetch and display tasks
-const fetchAndDisplayTasks = () => {
-fetch('/mato/getmato')
-    .then(response => response.json())
-    .then(Materials => {
-        tasksTableBody.innerHTML = ''; // Clear existing table rows
-
-        Materials.forEach(Material => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${Material.Vendor_name}</td>
-                <td>${Material.Name_of_Material}</td>
-                <td>${Material.Required_quantity}</td>
-                <td>${Material.Current_stock}</td>
-                <td>
-                    <button style="text-align: center; padding: 8px;" class="btn-block">Add </button>
-   
-                </td>
-            `;
-            tasksTableBody.appendChild(row);
-            const addButton = row.querySelector('button');
-            addButton.addEventListener('click', () => {
-                event.preventDefault();
-                function updateDate() {
-                // Create a new Date object
-                currentDate = new Date();
-
-                // Get the day, month, and year
-                day = currentDate.getDate();
-                month = currentDate.getMonth() + 1; // Months are zero-based
-                year = currentDate.getFullYear();
-
-                // Display the date in the "date" element
-                var dateElement = document.getElementById("date");
-                        dateInput.value = "Today's Date: " + month + "/" + day + "/" + year;
-                    }
-
-                // Call the updateDate function to initially set the date
-                updateDate();
-
-                // Set an interval to update the date every 24 hours (86400000 milliseconds)
-                setInterval(updateDate, 86400000); 
-                // Handle the button click here
-                const vendorName = Material.Vendor_name;
-                const materialName = Material.Name_of_Material;
-
-                // Populate the form fields with the vendor name and material name
-                dateInput.value = year + "/" + month + "/" + day;
-                vendorNameInput.value = vendorName;
-                materialNameInput.value = materialName;
-                
-                // Display the form
-                formPopup.style.display = "block";
-                
-            });
-        });
-    })
-    .catch(error => console.error('Error retrieving tasks:', error));
-};
-
-            fetchAndDisplayTasks();
-            const form = document.getElementById('formm_ccx');
-    
-
-            form.addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent the default form submission behavior
-            const url = form.getAttribute('action');
-
-            const formData = new FormData(form);
-            const taskData = {
-            Date_u: formData.get('Date_u'),
-            Vendor_name: formData.get('Vendor_name'),
-            Name_of_Material: formData.get('Name_of_Material'),
-            Used: formData.get('Used'),
-        };
-
-        fetch('/mato/material-outward', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(taskData)
-        })
-        .then(response => {
-            if (response.ok) {
-                console.log('Record inserted successfully.');
-                form.reset();
-                openModal();
-                fetchAndDisplayTasks(); // Update the display with the new task
-            } else {
-                console.error('Error inserting record.');
-            }
-        })
-        .catch(error => console.error('Error inserting record:', error));
-    });
-});
-
-        </script>
-        <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const tasksTableBody = document.querySelector('#table tbody');
                 const searchInput = document.getElementById('search-input');

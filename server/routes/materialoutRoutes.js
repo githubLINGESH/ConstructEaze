@@ -7,7 +7,7 @@ router.post('/matdownload-pdf/:productName', controller.downloadPDF);
 router.post('/matdownload-excel/:productName', controller.downloadExcel);
 router.get('/matdownload', materialOutController.downloadPDF);
 router.get('/', materialOutController.getp);
-router.post('/material-outward', materialOutController.updatestocks);
+router.post('/material-used', materialOutController.updatestocks);
 router.get('/autosearchmato', materialOutController.autosearchformato);
 router.post('/update-to-stocks', materialOutController.updateTotalSuppliedQuantity);
 router.get('/getstocks', materialOutController.getstocks);

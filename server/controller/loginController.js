@@ -44,4 +44,26 @@
                 res.status(500).send('<script>document.getElementById("message").innerText = "Error validating login";</script>');
             });
     };
+
+
+    exports.logout = (req, res) => {
+        // Check if the session object exists before trying to destroy it
+        if (req.session) {
+            // Destroy the session
+            req.session.destroy((err) => {
+                if (err) {
+                    console.error('Error destroying session during logout', err);
+                    res.status(500).send('Error during logout');
+                } else {
+                    // Redirect to the login page or send a confirmation message
+                    res.redirect('/login');
+                }
+            });
+        } else {
+            // If session does not exist, just redirect
+            res.redirect('/prod');
+        }
+
+    };
+    
     

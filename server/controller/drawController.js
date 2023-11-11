@@ -1,6 +1,6 @@
 const fs = require('fs');
 const util = require('util');
-const checklist = require('../model/checklistModel');
+const drawing = require('../model/drawModel');
 
 // Promisify the fs.unlink function to use it with async/await
 const unlinkFile = util.promisify(fs.unlink);
@@ -11,7 +11,7 @@ exports.uploadImages = async (req, res) => {
         const projectId = req.session.projectId;
 
         const imagePromises = files.map(async file => {
-            const image = new checklist({
+            const image = new drawing({
                 projectId: projectId,
                 image: {
                     data: fs.readFileSync(file.path),
@@ -39,7 +39,7 @@ exports.getImages = async (req, res) => {
     try {
         const projectId = req.session.projectId;
         // Find and retrieve all image documents from the database based on project id
-        const images = await checklist.find({ projectId: projectId }, 'image contentType');
+        const images = await drawing.find({ projectId: projectId }, 'image contentType');
 
         // Map the image data and send it as a JSON response
         const imageData = images.map(image => {
@@ -63,7 +63,7 @@ exports.getImages = async (req, res) => {
 exports.removeImage = async (req, res) => {
     try {
         const imageId = req.params.id;
-        await checklist.findByIdAndDelete(imageId);
+        await drawing.findByIdAndDelete(imageId);
         res.status(200).send('Image deleted successfully.');
     } catch (err) {
         console.error(err);

@@ -2,14 +2,14 @@
 
     // Define the schema for the e_stock collection
     const eStockSchema = new mongoose.Schema({
-    nameOfMaterial: {
+    product_name: {
         type: String,
         required: true,
-        unique: true,
+        unique: true
     },
     totalSuppliedQuantity: {
         type: Number,
-        default: 0, // You can set a default value if needed
+        default: 0,
     },
     currentStock:{
         type:Number

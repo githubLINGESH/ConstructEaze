@@ -9,21 +9,23 @@
         exports.updatestocks = async(req,res) =>{
 
             try {
+
+                console.log("comming here in server side")
                 // Access form fields and product rows from the request body
-                const purchaseOrderNo = req.body.purchaseOrderNo;
-                const Used = req.body.Used;
+                const product_name = req.body.productName;
+                const Used = req.body.usedQuantity;
 
-                const products = req.body.products;
+                console.log(product_name);
+                console.log(Used);
 
-                const existingPurchaseOrder = await e_stock.findOne({
-                    'purchaseOrderNo': purchaseOrderNo,
-                    });
+
+                const existingPurchaseOrder = await e_stock.findOne({product_name: product_name});
 
                     if(!existingPurchaseOrder){
                         return res.status(404).json({ error: 'PO not found' });
                     }
 
-                    existingPurchaseOrder.products = products;
+                    existingPurchaseOrder.used += Used;
 
                     await existingPurchaseOrder.save();
                     res.status(201).json(existingPurchaseOrder);
@@ -34,68 +36,73 @@
         }
     };
 
+
     exports.updateTotalSuppliedQuantity = async (req, res) => {
         try {
+            // Get distinct materials with an order
             const materialsWithOrder = await e_products.distinct('products.nameOfMaterial', { 'products.order': true });
+    
+            for (const nameOfMaterial of materialsWithOrder) {
+                // Aggregate to calculate the total supplied quantity for the current nameOfMaterial
+                const totalSuppliedQuantity = await e_products.aggregate([
+                    { $unwind: '$products' },
+                    { $match: { 'products.nameOfMaterial': nameOfMaterial, 'products.order': true, 'products.nameOfMaterial': { $ne: null } } },
+                    { $group: { _id: '$products.nameOfMaterial', totalSuppliedQuantity: { $sum: '$products.suppliedQuantity' } } },
+                ]);
+                
+    
+                console.log("::::", totalSuppliedQuantity);
+                console.log(nameOfMaterial);
+    
+                if (totalSuppliedQuantity.length > 0) {
+                    for (const material of totalSuppliedQuantity) {
+                        const nameOfMaterial = material._id; // Get the nameOfMaterial
+                        const total = material.totalSuppliedQuantity; // Get the total supplied quantity
+                
+                        if (nameOfMaterial !== null) {
+                            // Find the existing stock item
+                            const existingStockItem = await e_stock.findOne({ product_name: nameOfMaterial });
+                
+                            if (existingStockItem) {
+                                // Update the existing record with the new total
+                                existingStockItem.totalSuppliedQuantity = total;
+                                console.log("existing:", existingStockItem);
+                                await existingStockItem.save();
+                            } else {
+                                // Create a new stock item record
+                                const stockItem = new e_stock({
+                                    product_name: nameOfMaterial,
+                                    totalSuppliedQuantity: total,
+                                    used: 0,
 
-for (const nameOfMaterial of materialsWithOrder) {
-    const totalSuppliedQuantity = await e_products.aggregate([
-        {
-            $unwind: '$products', // Unwind the products array
-        },
-        {
-            $match: {
-                'products.nameOfMaterial': nameOfMaterial,
-                'products.order': true,
-            },
-        },
-        {
-            $group: {
-                _id: null,
-                totalSuppliedQuantity: {
-                    $sum: '$products.suppliedQuantity',
-                },
-            },
-        },
-    ]);
-
-    if (totalSuppliedQuantity.length > 0) {
-        const total = totalSuppliedQuantity[0].totalSuppliedQuantity;
-
-        if (nameOfMaterial) {
-            // Check if a record with the same nameOfMaterial exists in e_stocks
-            const existingStockItem = await e_stock.findOne({ nameOfMaterial: nameOfMaterial });
-
-            if (existingStockItem) {
-                // Update the existing record
-                existingStockItem.totalSuppliedQuantity += total;
-                await existingStockItem.save();
-            } else {
-                // Create a new stock item if it doesn't exist
-                const newStockItem = new e_stock({
-                    nameOfMaterial: nameOfMaterial,
-                    totalSuppliedQuantity: total,
-                });
-                await newStockItem.save();
+                                });
+                                await stockItem.save();
+                                console.log("before", nameOfMaterial);
+                                console.log("name:", nameOfMaterial);
+                                console.log("maybe");
+                            }
+                
+                            console.log('Updated material:', nameOfMaterial, 'Total supplied quantity:', total);
+                        } else {
+                            // Skip inserting documents with null nameOfMaterial
+                            console.log('Skipped material with null nameOfMaterial');
+                        }
+                    }
+                }
             }
-
-            console.log('Updating material:', nameOfMaterial);
-            console.log('Total supplied quantity:', total);
-        } else {
-            console.error('Null or undefined nameOfMaterial encountered. Skipping...');
-        }
-    }
-}
+    
             res.status(200).json({ message: 'Total supplied quantities updated in e_stocks' });
         } catch (error) {
             console.error('Error updating supplied quantity:', error);
             res.status(500).json({ error: 'Error updating supplied quantity' });
         }
     };
+    
 
+    
     exports.getstocks = async (req, res) => {
         try {
-        const totalSuppliedQuantities = await e_stock.find({}, { nameOfMaterial: 1, totalSuppliedQuantity: 1 });
+        const totalSuppliedQuantities = await e_stock.find();
     
         res.status(200).json(totalSuppliedQuantities);
         } catch (error) {

@@ -18,6 +18,7 @@
         const loginRouter = require('./server/routes/loginRoutes.js');
         const superAttRouter = require('./server/routes/superAttRoutes.js');
         const checklistRouter = require('./server/routes/checklistRoutes.js');
+        const drawRouter = require('./server/routes/drawRoutes.js')
 
         const mongoose = require('mongoose')
         const bodyParser = require('body-parser');
@@ -68,6 +69,7 @@
         app.use('/sup',supervisorRouter);
         app.use('/sAtt',superAttRouter);
         app.use('/check',checklistRouter);
+        app.use('/draw',drawRouter);
 
 
 

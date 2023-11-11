@@ -170,14 +170,14 @@
                 <div class="sidebar" style="height: 100%;">
                     <nav class="nav flex-column" style="padding-top: 100px; ">
                         <a class="nav-link space" href="todo.html">To Do</a>
-                        <a class="nav-link space active" href="checklist.html" style="  color: white !important;
-                        background-color: rgba(0, 0, 0, 0.2);
-                        border-left: 3px solid #F2D200;">Check List</a>
+                        <a class="nav-link space active" href="checklist.html">Check List</a>
                         <a class="nav-link space" href="matinf.html">Material Inward</a>
                         <a class="nav-link space" href="matoutf.html">Material Outward</a>
                         <a class="nav-link space" href="wrkdone.html" >Work Done</a>
-                        <a class="nav-link space" href="totexp.html">Total Expence</a>
-                        <a class="nav-link space" href="draw.html">Drawings</a>
+                        <a class="nav-link space" href="totexp.html">Total Expense</a>
+                        <a class="nav-link space active" href="draw.html" style="  color: white !important;
+                        background-color: rgba(0, 0, 0, 0.2);
+                        border-left: 3px solid #F2D200;">Drawings</a>
                     </nav>
                 </div>
                 </div>
@@ -188,7 +188,7 @@
                 
                         <div class="container-fluid">
                             <div class="row">
-                                <h1>Check List</h1>
+                                <h1>Drawings</h1>
                             </div>
                                     <!-- HTML -->
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -276,7 +276,7 @@
                         });
             
                         // Use the Fetch API to send the images to your server
-                        fetch('/check/uploadImages', {
+                        fetch('/draw/uploadImages', {
                             method: 'POST',
                             body: formData,
                         })
@@ -303,7 +303,7 @@
                         
                         
                             // Make a GET request to retrieve the images
-                            fetch('/check/getImages')
+                            fetch('/draw/getImages')
                                 .then(response => response.json())
                                 .then(data => {
                                     data.images.forEach(imageData => {
@@ -356,7 +356,7 @@
                                 return;
                             }
                         
-                            fetch(`/check/removeImage/${imageId}`, {
+                            fetch(`/draw/removeImage/${imageId}`, {
                                 method: 'DELETE',
                             })
                             .then(response => {
