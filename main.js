@@ -19,6 +19,7 @@
         const superAttRouter = require('./server/routes/superAttRoutes.js');
         const checklistRouter = require('./server/routes/checklistRoutes.js');
         const drawRouter = require('./server/routes/drawRoutes.js')
+        const workRouter = require('./server/routes/workRoutes.js')
 
         const mongoose = require('mongoose')
         const bodyParser = require('body-parser');
@@ -70,6 +71,7 @@
         app.use('/sAtt',superAttRouter);
         app.use('/check',checklistRouter);
         app.use('/draw',drawRouter);
+        app.use('/work',workRouter);
 
 
 

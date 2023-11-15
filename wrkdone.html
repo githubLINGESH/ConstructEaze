@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
     <head>
     
@@ -57,11 +57,40 @@
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             .btn {
-        background-color: white !;
-        color: black !important;
-        border: 3px solid #F2D200;
-        border-radius: 25px;
-        font-weight: 400 !important;}
+                background-color: white !;
+                color: black !important;
+                border: 3px solid #F2D200;
+                border-radius: 25px;
+                font-weight: 400 !important;}
+            .container {
+                display: none;
+                width: 400px;
+                background: #ffffff;
+                border-radius: 6px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                text-align: center;
+                padding: 0 30px 30px;
+                color: #333;
+                box-shadow: 0 5px 5px rgba(12, 10, 10, 0.2);
+            }
+
+            .container button{
+                width: 100%;
+                margin-top: 20px;
+                padding: 10px 0;
+                background: #1a2ccc;
+                color: #fff;
+                border: 0;
+                outline: none;
+                font-size: 18px;
+                border-radius: 12px;
+                cursor: pointer;
+                box-shadow: 0 5px 5px rgba(12, 10, 10, 0.2);
+            }
+
         </style>
     </head>
     <body>
@@ -93,7 +122,7 @@
                 </li>
                 </ul>
             </div>
-                <form class="d-flex" style="padding-left: 190px; padding-top: 5px;" action="/login/logout" method="GET">
+                <form class="d-flex" style="padding-left: 190px; padding-top: 5px;">
                     <button class="btn" type="submit"><span class="txt">Logout</span></button>
                 </form>
 
@@ -106,14 +135,13 @@
             <div class="sidebar" style="height: 100%;">
                 <nav class="nav flex-column" style="padding-top: 100px; ">
                     <a class="nav-link space" href="todo.html">To Do</a>
-                    <a class="nav-link space" href="checklist.html">Check List</a>
+                    <a class="nav-link space" href="#">Check List</a>
                     <a class="nav-link space" href="matinf.html">Material Inward</a>
                     <a class="nav-link space" href="matoutf.html">Material Outward</a>
                     <a class="nav-link space active" href="wrkdone.html" style="  color: white !important;
                     background-color: rgba(0, 0, 0, 0.2);
                     border-left: 3px solid #F2D200;">Work Done</a>
-                    <a class="nav-link space" href="totexp.html">Total Expense</a>
-                    <a class="nav-link space" href="draw.html">Drawings</a>
+                    <a class="nav-link space" href="totexp.html">Total Expence</a>
                 </nav>
             </div>
             </div>
@@ -124,7 +152,7 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> <h1 style="text-transform: uppercase;">work done</h1></div>
                     </div>
-            
+                </div>
             
             
                     <div class="row">
@@ -144,136 +172,86 @@
                                             <i class="fas fa-download"></i>
                                         Download Report
                                         </button>
+                                        <!-- Button in HTML -->
+                                        <button type="button" class="btn-block" id="openPopupBtn">ADD WORK DONE</button>
+
                                     </div>
                                 </div>
                             </div>
                         </form>
+
+
+                        <div id="popup" class="container">
+                            <button id="closePopupBtn" class="close-btn fas fa-times" title="Close"></button>
+                            <div class="text">Work Done</div>
+                            <form id="workDoneForm" action="/workdone" method="POST">
+                              <!-- Add your input fields, including date selection, here -->
+                              <div class="data">
+                                <input type="text" id="ProjectidInput" required placeholder="Project ID" name="projectId">
+                              </div>
+                              <div class="data">
+                                <input type="date" id="dateInput" required placeholder="Date" name="date">
+                              </div>
+                              <div class="data">
+                                <input type="text" id="workdoneInput" required placeholder="Work Done" name="workdone">
+                              </div>
+                              <!-- Add more input fields as needed -->
+                              <div class="btn1">
+                                <div class="inner"></div>
+                                <button type="submit">Submit</button>
+                              </div>
+                            </form>
+                          </div>
+                          
                     </div>
             
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><span id="today-date"></span> </div>
-                    </div>
-            
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
-                            <button class="btn-default"> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</button>
-                        </div>
-                    </div>
-            
-            
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><span id="date2"></span> </div>
-                    </div>
-            
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
-                            <button class="btn-default"> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
-                            <button class="btn-default"> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</button>
-                        </div>
-                    </div>
-            
-            
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"><span id="date3"></span> </div>
-                    </div>
-            
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
-                            <button class="btn-default"> Task 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Count:3</button>
-                        </div>
-                    </div>
-                    
-            
-                    <!-- <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs 12">
-                                <button class="btn-block" id="pent" style="text-transform:uppercase; ">client form</button>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs 12">
-                                <button class="btn-block" id="pout"style="text-transform:uppercase;">labour form</button>
-                            </div>
-                        </div>
-                    </div>
-            
-            
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs 12">
-                                <button class="btn-block" id="pent" style="text-transform:uppercase; ">product form</button>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs 12">
-                                <button class="btn-block" id="pout"style="text-transform:uppercase;">vendour form</button>
-                            </div>
-                        </div>
-                    </div> -->
-                    
-                </div>
-            
-                <script>
-            //       document.addEventListener("DOMContentLoaded", function() {
-            //   const currentDate = new Date();
-            //   const currentYear = currentDate.getFullYear();
-            //   const currentMonth = currentDate.getMonth();
-            //   const currentDay = currentDate.getDate();
-            
-            //   const months = [
-            //     "January", "February", "March", "April", "May", "June",
-            //     "July", "August", "September", "October", "November", "December"
-            //   ];
-            
-            //   const todayDateElement = document.getElementById("today-date");
-            //   todayDateElement.textContent = `${months[currentMonth]} ${currentDay}, ${currentYear}`;
-            
-            //   const prevMonthIndex = (currentMonth === 0) ? 11 : currentMonth - 1;
-            //   const date2 = document.getElementById("date2");
-            //   date2.textContent = `${months[prevMonthIndex]} ${currentDay}, ${currentYear}`;
-            
-            //   const prevMonth = new Date(currentYear, prevMonthIndex, currentDay);
-            //   prevMonth.setMonth(prevMonth.getMonth() - 1);
-            //   const date3 = document.getElementById("date3");
-            //   date3.textContent = `${months[prevMonth.getMonth()]} ${prevMonth.getDate()}, ${prevMonth.getFullYear()}`;
-            // });
-            
-            document.addEventListener("DOMContentLoaded", function() {
-                    const currentDate = new Date();
-                    const currentYear = currentDate.getFullYear();
-                    const currentMonth = currentDate.toLocaleString("default", { month: "long" });
-                    const currentDay = currentDate.getDate();
-                    
-                    const todayDateElement = document.getElementById("today-date");
-                    todayDateElement.textContent = `${currentMonth} ${currentDay}, ${currentYear}`;
-            
-                    const date2 = document.getElementById("date2");
-                    date2.textContent = `${currentMonth} ${currentDay-1}, ${currentYear}`;
-            
-                    const date3 = document.getElementById("date3");
-                    date3.textContent = `${currentMonth} ${currentDay-2}, ${currentYear}`;
-                    });
-                    
-                
-                </script>
+             <!-- Your existing script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const openPopupBtn = document.getElementById("openPopupBtn");
+        const closePopupBtn = document.getElementById("closePopupBtn");
+        const popup = document.getElementById("popup");
+        const workDoneForm = document.getElementById("workDoneForm");
 
+        openPopupBtn.addEventListener("click", () => {
+            popup.style.display = "block";
+        });
 
+        closePopupBtn.addEventListener("click", () => {
+            popup.style.display = "none";
+        });
 
+        workDoneForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
 
+            // Gather form data
+            const formData = new FormData(workDoneForm);
+            const data = {
+                projectId: formData.get("projectId"),
+                workdone: formData.get("workdone"),
+                date: formData.get("date"),
+            };
 
+            // Send data to the server using fetch or other AJAX methods
+            const response = await fetch("/work/workdone", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
 
+            if (response.ok) {
+                // Data successfully saved, you can close the popup or display a success message
+                popup.style.display = "none";
+            } else {
+                // Handle error
+                console.error("Error saving data");
+            }
+        });
+    });
+</script>
+<!-- End of your existing script -->
 
-
-
-
-
-            </div>
-
-
-        </div>
-        <script src="todo.js"></script>
-        
     </body>
     </html>
-
-
