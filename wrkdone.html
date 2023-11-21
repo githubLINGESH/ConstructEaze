@@ -90,6 +90,10 @@
                 cursor: pointer;
                 box-shadow: 0 5px 5px rgba(12, 10, 10, 0.2);
             }
+            .koo
+            {
+              color:black;
+            }
 
         </style>
     </head>
@@ -185,10 +189,6 @@
                             <button id="closePopupBtn" class="close-btn fas fa-times" title="Close"></button>
                             <div class="text">Work Done</div>
                             <form id="workDoneForm" action="/workdone" method="POST">
-                              <!-- Add your input fields, including date selection, here -->
-                              <div class="data">
-                                <input type="text" id="ProjectidInput" required placeholder="Project ID" name="projectId">
-                              </div>
                               <div class="data">
                                 <input type="date" id="dateInput" required placeholder="Date" name="date">
                               </div>
@@ -202,6 +202,14 @@
                               </div>
                             </form>
                           </div>
+
+
+                            <div class="koo" id="projectDetails">
+                                <div>
+
+                                </div>
+                            </div>
+
                           
                     </div>
             
@@ -227,7 +235,6 @@
             // Gather form data
             const formData = new FormData(workDoneForm);
             const data = {
-                projectId: formData.get("projectId"),
                 workdone: formData.get("workdone"),
                 date: formData.get("date"),
             };
@@ -250,8 +257,34 @@
             }
         });
     });
+
+    const fetchAndDisplayworks = () => {
+    fetch('/work/getwork') 
+    .then(response => response.json())
+                    .then(works => {
+                        console.log(works);
+
+                        const getwork = document.getElementById('projectDetails')
+                        getwork.innerHTML = ''; // Clear existing table rows
+        
+                        works.forEach(work => {
+                            const workdone = document.createElement('div');
+                            workdone.innerHTML = `
+                            <h1>${work.workdone}</h1>
+                            <p>${work.date}</p>
+                            `;
+                            getwork.appendChild(workdone);
+                        });
+                    })
+                    .catch(error => console.error('Error retrieving tasks:', error));
+            };
+        
+            // Fetch tasks when the page loads
+            fetchAndDisplayworks();
+
+    
 </script>
-<!-- End of your existing script -->
+
 
     </body>
     </html>
