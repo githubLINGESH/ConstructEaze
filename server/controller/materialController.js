@@ -53,6 +53,8 @@
                     const gst = req.body.gst;
                     const site = req.body.site;
                     const products = req.body.products;
+                    const tax = req.body.tax;
+                    const grandTotal = req.body.grandTotal;
             
                     // Find the max NoPNo
                     const NoPNo = await findMaxNoPNo(projectId);
@@ -69,6 +71,8 @@
                         site: site,
                     },
                     products: products,
+                    tax:tax,
+                    grandTotal:grandTotal
                     });
             
                     // Save the new PurchaseOrder to the database
@@ -80,10 +84,20 @@
             
                     const products = req.body.products;
                     const projectId = req.session.projectId;
+                    const tax = req.body.tax;
+                    const grandTotal = req.body.grandTotal;
+
+
+                    console.log(tax)
             
                     const updatedPurchaseOrder = await e_products.findOneAndUpdate(
                     { 'purchaseOrderNo': purchaseOrderNo , projectId:projectId},
-                    { products: products },
+                        {
+                            $set: {
+                            products: products,
+                            tax: tax,
+                            }
+                        },
                     { new: true } // To return the updated document
                     );
             
@@ -119,7 +133,10 @@
                         site: purchaseOrder.vendor.site,
                         gst: purchaseOrder.vendor.gst,
                         add: purchaseOrder.vendor.address,
-                        finalTotal: finalTotal
+                        finalTotal: finalTotal,
+                        tax : purchaseOrder.tax,
+                        grandTotal : purchaseOrder.grandTotal
+
                         };
                 
                         res.json(details);

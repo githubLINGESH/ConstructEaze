@@ -34,6 +34,8 @@
     purchaseOrderNo: String,
     vendor: VendorSchema,
     products: [ProductSchema],
+    tax: Number,
+    grandTotal: Number
     });
 
     const e_products = mongoose.model('e_prod', PurchaseOrderSchema);

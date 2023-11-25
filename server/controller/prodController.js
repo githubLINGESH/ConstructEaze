@@ -46,6 +46,8 @@ exports.submitMaterial = async (req, res) => {
     const gst = req.body.gst;
     const phone = req.body.phone;
     const site = req.body.shippedToSite;
+    const tax = req.body.tax;
+    const grandTotal = req.body.grandTotal;
 
     // Convert the JSON string of products back to an array
     const products = req.body.products;
@@ -60,10 +62,13 @@ exports.submitMaterial = async (req, res) => {
     if (existingPurchaseOrder) {
       // Create a new PurchaseOrder document with the same vendor information
       const newPurchaseOrder = new e_products({
+        date:today,
         projectId: projectId,
         purchaseOrderNo: purchaseOrderNo,
         vendor: existingPurchaseOrder.vendor, // Use the vendor information from the existing document
         products: products,
+        tax:tax,
+        grandTotal: grandTotal,
       });
 
       // Save the new purchase order document to the database
@@ -84,6 +89,8 @@ exports.submitMaterial = async (req, res) => {
           site : site,
         },
         products: products,
+        tax:tax,
+        grandTotal:grandTotal
       });
 
       // Save the new purchase order document to the database

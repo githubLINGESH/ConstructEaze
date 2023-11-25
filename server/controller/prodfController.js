@@ -43,7 +43,7 @@ try {
     await record.save();
     console.log('Record inserted successfully.');
 
-    res.status(200).send('Record inserted successfully.');
+    res.status(200).send("success");
 } catch (error) {
     console.error('Error inserting record:', error);
     res.status(500).send('Error inserting record.');

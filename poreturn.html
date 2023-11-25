@@ -381,9 +381,6 @@
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                         <button type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;" data-bs-toggle="modal" data-bs-target="#exampleModal">Choose Vendor</button>
                         </div>
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                        <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
-                        </div>
                     </div>
                     </div>
                 </div>
@@ -403,6 +400,7 @@
                                 </div>
                                 <h5 class="m-3" style="font-weight: bolder;" id="exampleModalLabel">Purchase return</h5>
                                 <h6 class="m-0" id="date" style="padding-left: 20px !important;"></h6>
+                                <button type="button" class="btn" style="align-items:left; margin:20px;" onclick="downloadDivAsPDF()">Download</button>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                         </div>
@@ -504,7 +502,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn" style="align-items:left;" onclick="downloadDivAsPDF()">Download</button>
                             <button type="button" class="btn btn-md" onclick="reset()" data-bs-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-primary btn-md btn-block" onclick="submitInw()" style="color: #fff !important;" data-bs-dismiss="modal">Submit</button>
                         </div>
@@ -527,55 +524,45 @@
         </div>
         <script>
             async function downloadDivAsPDF() {
-              const element = document.getElementById('exampleModal'); // The ID of the div you want to capture
-            
-                try {
-                    // Use html2canvas to take a screenshot of the div
+                const element = document.getElementById('exampleModal');
+                
+                    try {
+                    // Save the current height and overflow properties
+                    const originalHeight = element.style.height;
+                    const originalOverflow = element.style.overflow;
+                
+                    // Set the height to the full scrollable height and allow overflow
+                    element.style.height = element.scrollHeight + 'px';
+                    element.style.overflow = 'visible';
+                
+                    // Capture the entire modal content using html2canvas
                     const canvas = await html2canvas(element, {
-                    scale: window.devicePixelRatio, // Use the device's pixel ratio to capture high-resolution screenshots
-                    useCORS: true // Allow images from other domains to be loaded (provided the server supports CORS)
+                        scale: window.devicePixelRatio,
+                        useCORS: true
                     });
-                    const imgData = canvas.toDataURL('image/jpeg', 1.0);
                 
-                    // Initialize jsPDF in portrait orientation with A4 format
+                    // Convert the canvas to a data URL
+                    const imgData = canvas.toDataURL('image/jpeg', 2.0);
+                
+                    // Initialize jsPDF
                     const pdf = new jspdf.jsPDF({
-                    orientation: 'portrait',
-                    unit: 'pt',
-                    format: 'a4'
+                        orientation: 'portrait',
+                        unit: 'pt',
+                        format: 'a4'
                     });
-                
-                    // Dimensions of the canvas image
-                    const imgWidth = canvas.width;
-                    const imgHeight = canvas.height;
-                
-                    // Calculate the ratio to fit the image within the PDF page width
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = pdf.internal.pageSize.getHeight();
-                    const widthRatio = pdfWidth / imgWidth;
-                    const heightRatio = pdfHeight / imgHeight;
-                    const ratio = widthRatio; // Choose widthRatio to fit the image to page width
-                    const scaledHeight = imgHeight * ratio;
-                    const scaledWidth = imgWidth * ratio;
                 
                     // Add the image to the first page
-                    pdf.addImage(imgData, 'JPEG', 0, 0, scaledWidth, scaledHeight);
+                    pdf.addImage(imgData, 'JPEG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
                 
-                    let heightLeft = scaledHeight - pdfHeight;
-                
-                    // Add new pages for the remaining content
-                    let position = -1 * pdfHeight;
-                    while (heightLeft > 0) {
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'JPEG', 0, position, scaledWidth, scaledHeight);
-                    heightLeft -= pdfHeight;
-                    position -= pdfHeight;
-                    }
+                    // Restore the original height and overflow properties
+                    element.style.height = originalHeight;
+                    element.style.overflow = originalOverflow;
                 
                     // Download the PDF
                     pdf.save('download.pdf');
-                } catch (error) {
+                    } catch (error) {
                     console.error('Error downloading div as PDF:', error);
-                }
+                    }
                 }
                 
                 
@@ -598,6 +585,9 @@ const gstInput = document.getElementById('gst');
 const shipInput = document.getElementById('ship');
 const vendorNameInput = document.getElementById('vennam');
 const tableBody = document.getElementById('table-body');
+const subTotalInput = document.getElementById('')
+const taxInput = document.getElementById('tax');
+const grandTotalInput = document.getElementById('grdt');
 
 PDropdown.addEventListener('change', () => {
 const selectedPno = PDropdown.value;
@@ -614,6 +604,9 @@ if (selectedPno) {
                     addInput.value = details.add;
                     gstInput.value = details.gst;
                     vendorNameInput.value = details.vendorName;
+                    subTotalInput.value = details.finalTotal;
+                    taxInput.value = details.tax;
+                    grandTotalInput.value = details.finalTotal + details.finalTotal * details.tax/100;
 
                     // Render the products table
                     renderProductsTable(details.products);
@@ -638,6 +631,8 @@ if (selectedPno) {
     gstInput.value = '';
     shipInput.value = '';
     vendorNameInput.value = '';
+    taxInput.value = '';
+    grandTotalInput.value = '';
     tableBody.innerHTML = ''; // Clear the table
 }
 });

@@ -90,7 +90,6 @@
     }
         /* CSS for parallel labels and inputs */
     .form-group {
-    display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
@@ -237,41 +236,13 @@
                 </div>
                 <div class="col-md-6 mb-4">
                     <div class="box" onclick="openModal2()">
-                    <a href="#" style="color: white; text-decoration: none;"><p>Worker's Salary Expenses</p></a>
+                    <a href="#" style="color: white; text-decoration: none;"><p>Labour Expenses</p></a>
                     </div>
                 </div>
                 <div>
                     <div class="row">
-
-                <div class="col-md-6 mb-4">
-                    <div class="box" onclick="openModal()">
-                    <a href="#" style="color: white; text-decoration: none;"><p>Total Expenses</p></a>
-                    </div>
-                    </div>
                 </div>
             </div>
-        </div>
-        <div id="myModal" class="modal">
-        <div class="popup">
-            <button type="button" class="close-icon" onclick="closeModal()">&times;</button>
-            <img src="assets/img/189249.png">
-            <h2>Total Expenses</h2>
-            <form action="/submit" method="post">
-            <div class="form-group" style="margin-top: 5%;">
-                <label for="sd">Starting_Date</label>
-                <input type="date" id="sd" name="sd" required>
-            </div>
-    
-            <div class="form-group" style="margin-top: 5%;margin-bottom: 5%;">
-                <label for="ed">Ending_Date</label>
-                <input type="date" id="ed" name="ed" required>
-            </div>
-            </form>
-            <div class="button-container">
-            <button type="button" class="pdf-button" onclick="closeModal()">Download as PDF</button>
-            <button type="button" class="excel-button" onclick="closeModal()">Download as Excel</button>
-            </div>
-        </div>
         </div>
         <div id="myModal1" class="modal">
         <div class="popup">
@@ -280,13 +251,14 @@
             <h2>Material Expenses</h2>
             <form action="/submit" method="post">
             <div class="form-group" style="margin-top: 5%;">
-                <label for="sd">Starting_Date</label>
-                <input type="date" id="sd" name="sd" required>
-            </div>
-    
-            <div class="form-group" style="margin-top: 5%;margin-bottom: 5%;">
-                <label for="ed">Ending_Date</label>
-                <input type="date" id="ed" name="ed" required>
+                <label for="name">Name of Material</label>
+                <input type="text" id="name" name="name" required>
+                <label for="Quantity">Quantity</label>
+                <input type="String" id="" name="" required>
+                <label for="">Unit</label>
+                <input type="String" id="" name="" required>
+                <label for="">Amount</label>
+                <input type="Amount" id="" name="" required>
             </div>
             </form>
             <div class="button-container">
@@ -299,16 +271,13 @@
         <div class="popup">
             <button type="button" class="close-icon" onclick="closeModal2()">&times;</button>
             <img src="assets/img/189249.png">
-            <h2>Worker's Salary Expenses</h2>
+            <h2>Labour Expenses</h2>
             <form action="/submit" method="post">
             <div class="form-group" style="margin-top: 5%;">
-                <label for="sd">Starting_Date</label>
-                <input type="date" id="sd" name="sd" required>
-            </div>
-    
-            <div class="form-group" style="margin-top: 5%;margin-bottom: 5%;">
-                <label for="ed">Ending_Date</label>
-                <input type="date" id="ed" name="ed" required>
+                <label for="name">Name of labour</label>
+                <input type="text" id="name" name="name" required>
+                <label for="">Amount</label>
+                <input type="Amount" id="" name="" required>
             </div>
             </form>
             <div class="button-container">
