@@ -142,12 +142,80 @@
     color: black;
     }
 
+    .popupven{
+        display: none;
+        width: 400px;
+        background: #fff;
+        border-radius: 6px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        text-align: center;
+        padding: 0 30px 30px;
+        color: #333;
+    }
+    .popupven img{
+        width: 100px;
+        margin-top: -50px;
+        border-radius: 50px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .popupven h2{
+        font-size: 38px;
+        font-weight: 500;
+        font-family: 'Sora' sans-serif !important;
+        margin: 30px 0 10px;
+    }
+    .popupven button{
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px 0;
+        background: #242e82;
+        color: #fff;
+        border: 0;
+        outline: none;
+        font-size: 18px;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 5px 5px rgba(0,0,0,0.2);
+    }
+    
+    .modalven {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    }
+    
+    .modalven-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    }
+    
+    .closeven {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    }
+    
+    .closeven:hover,
+    .closeven:focus {
+    color: black;
+    }
+
     </style>
     <script>
-        function openModal() {
-    const modal = document.getElementById("myModal");
-    modal.style.display = "block";
-    }
     function openModal1() {
     const modal = document.getElementById("myModal1");
     modal.style.display = "block";
@@ -157,11 +225,6 @@
     modal.style.display = "block";
     }
 
-
-    function closeModal() {
-    const modal = document.getElementById("myModal");
-    modal.style.display = "none";
-    }
     function closeModal1() {
     const modal = document.getElementById("myModal1");
     modal.style.display = "none";
@@ -231,12 +294,12 @@
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <div class="box" onclick="openModal1()">
-                    <a href="#" style="color: white; text-decoration: none;"><p>Material Expenses</p></a>
+                    <a href="#" style="color: white; text-decoration: none;"><p>Vendor Payments</p></a>
                     </div>
                 </div>
                 <div class="col-md-6 mb-4">
                     <div class="box" onclick="openModal2()">
-                    <a href="#" style="color: white; text-decoration: none;"><p>Labour Expenses</p></a>
+                    <a href="#" style="color: white; text-decoration: none;"><p>Labour Payments</p></a>
                     </div>
                 </div>
                 <div>
@@ -248,44 +311,104 @@
         <div class="popup">
             <button type="button" class="close-icon" onclick="closeModal1()">&times;</button>
             <img src="assets/img/189249.png">
-            <h2>Material Expenses</h2>
-            <form action="/submit" method="post">
+            <h2>Vendor Payments</h2>
+            <form id="form_v" action="/pay/submit-ven" method="POST">
             <div class="form-group" style="margin-top: 5%;">
-                <label for="name">Name of Material</label>
-                <input type="text" id="name" name="name" required>
-                <label for="Quantity">Quantity</label>
-                <input type="String" id="" name="" required>
-                <label for="">Unit</label>
-                <input type="String" id="" name="" required>
-                <label for="">Amount</label>
-                <input type="Amount" id="" name="" required>
+                <input type="date" id="date" name="date" placeholder="Date of Payment" style="margin:10px;" required>
+                <input type="text" id="name" name="name" placeholder="Name of Material" style="margin:10px;" required>
+                <input type="text" id="quantity" name="quantity" placeholder="Quantity" style="margin:10px;" required>
+                <input type="text" id="unit" name="unit" placeholder="unit" style="margin:10px;" required>
+                <input type="text" id="unitprice" name="unitprice" placeholder="unit price" style="margin:10px;" required>
+                <input type="Amount" id="amt" name="amt" placeholder="Amount" style="margin:10px;" required>
             </div>
+            <button type="submit" class="btn-block">Submit details</button>
             </form>
-            <div class="button-container">
-            <button type="button" class="pdf-button" onclick="closeModal1()">Download as PDF</button>
-            <button type="button" class="excel-button" onclick="closeModal1()">Download as Excel</button>
-            </div>
         </div>
         </div>
         <div id="myModal2" class="modal">
         <div class="popup">
             <button type="button" class="close-icon" onclick="closeModal2()">&times;</button>
             <img src="assets/img/189249.png">
-            <h2>Labour Expenses</h2>
-            <form action="/submit" method="post">
+            <h2>Labour Payments</h2>
+            <form id="form_c" action="/pay/submit-lab" method="POST">
             <div class="form-group" style="margin-top: 5%;">
-                <label for="name">Name of labour</label>
-                <input type="text" id="name" name="name" required>
-                <label for="">Amount</label>
-                <input type="Amount" id="" name="" required>
+                <input type="date" id="date" name="date" placeholder="Date of Payment" style="margin:10px;" required>
+                <input type="text" id="name" name="name" placeholder="Name of labour" style="margin:10px;" required>
+                <input type="Amount" id="amt" name="amt" placeholder="Amount" style="margin:10px;" required>
             </div>
+            <button type="submit" class="btn-block">submit details</button>
             </form>
-            <div class="button-container">
-            <button type="button" class="pdf-button" onclick="closeModal2()">Download as PDF</button>
-            <button type="button" class="excel-button" onclick="closeModal2()">Download as Excel</button>
-            </div>
         </div>
         </div>
     
     </body>
+    <script>
+
+        const formm = document.getElementById('form_v');
+                formm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent the default form submission behavior
+                const url = form.getAttribute('action');
+                const formData = new FormData(formm);
+                const taskDataa = {
+                    date: formData.get('date'),
+                    name: formData.get('name'),
+                    quantity: formData.get('quantity'),
+                    unit: formData.get('unit'),
+                    unitprice: formData.get('unitprice'),
+                    amt: formData.get('amt'),
+                };
+        
+        
+                fetch('/pay/submit-ven', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskDataa)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (response.ok) {
+
+                        console.log('Record inserted successfully.');
+                    } else {
+                        console.error('Error inserting record.');
+                    }
+                })
+                .catch(error => console.error('Error inserting record:', error));
+            });
+
+
+        const form = document.getElementById('form_c');
+                form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent the default form submission behavior
+                const url = form.getAttribute('action');
+                const formData = new FormData(form);
+                const taskData = {
+                    date: formData.get('date'),
+                    name: formData.get('name'),
+                    amt: formData.get('amt'),
+                    
+                };
+        
+        
+                fetch('/pay/submit-lab', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (response.ok) {
+
+                        console.log('Record inserted successfully.');
+                    } else {
+                        console.error('Error inserting record.');
+                    }
+                })
+                .catch(error => console.error('Error inserting record:', error));
+            });
+    </script>
     </html>

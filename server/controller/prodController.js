@@ -147,13 +147,35 @@ exports.gettableTasks = async (vendorName,res) => {
     };
 
     exports.getProductOrders = async (productName) => {
-        try {
-        const productOrders = await e_products.find().distinct({'products.nameOfMaterial':productName});
+      try {
+        const productOrders = await e_products.aggregate([
+          {
+            $unwind: "$products"
+          },
+          {
+            $match: {
+              "products.nameOfMaterial": productName
+            }
+          },
+          {
+            $group: {
+              _id: "$_id",
+              projectId: { $first: "$projectId" },
+              purchaseOrderNo: { $first: "$purchaseOrderNo" },
+              vendor: { $first: "$vendor" },
+              products: { $push: "$products" }
+            }
+          }
+        ]).exec();
+    
         return productOrders;
-        } catch (error) {
+      } catch (error) {
         throw error;
-        }
+      }
     };
+    
+    
+
     
     // Function to add a new product order to the database
     exports.addProductOrder = async (productOrderData) => {

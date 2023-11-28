@@ -5,7 +5,6 @@ const controller = require('../controller/matrepController');
 
 router.post('/matdownload-pdf/:productName', controller.downloadPDF);
 router.post('/matdownload-excel/:productName', controller.downloadExcel);
-router.get('/matdownload', materialOutController.downloadPDF);
 router.get('/', materialOutController.getp);
 router.post('/material-used', materialOutController.updatestocks);
 router.get('/autosearchmato', materialOutController.autosearchformato);

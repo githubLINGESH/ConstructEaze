@@ -73,7 +73,6 @@
                         <select id="filterType" onchange="updateButton()">
                           <option value="" disabled selected>Select</option>
                           <option value="product">product</option>
-                          
                       </select>
                     </div>
                       <div>
@@ -92,18 +91,12 @@
                   <div>End Date:</div>
                   <input type="date" id="enddate">
                   <br><br>
-                  <!--<button onclick="storeDates()">Confirm</button>
-                  <button onclick="downloadExcel()">Download as Excel</button>-->
 
                   <form>
                     <input type="hidden" name="report_type" value="labour">
                     <div><button onclick="storeDates()" type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div>
                     <div><button onclick="downloadExcel()" type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div>
-                    <!--<button onclick="generatePDF()">Confirm</button>-->
                 </form>
-                  <!-- <div class = img >
-                  <img src="assets/img/report1.png" alt="Labour Image" width="100">
-                  </div> -->
               </div>
               
               </div>
@@ -128,7 +121,7 @@
 
                   function populateDropdown() {
                     const dropdown = document.getElementById("myDropdown");
-                    const filterType = document.getElementById("filterType").value; // Get the selected filter type
+                    const filterType = document.getElementById("filterType").value;
                   
                     // Preserve the search input element
                     const searchInput = document.getElementById("items");
@@ -144,7 +137,7 @@
                           listItem.textContent = name;
                           listItem.onclick = () => {
                             updateDropdown(name);
-                          };
+                          }
                           dropdown.appendChild(listItem);
                         });
                       })
@@ -155,8 +148,8 @@
                   
                   function updateDropdown(name) {
                     const optdrop = document.getElementById("optdrop");
-                    optdrop.textContent = selectedName;
-                    selectedName = name;
+                    optdrop.textContent = selectedProduct;
+                    selectedProduct = name;
                   
                     updateDropdown(name);
                   
@@ -174,6 +167,8 @@
                   let selectedProduct = "";
 
                   function storeDates() {
+
+                    console.log(selectedProduct);
                       // Get the values of the "Start Date" and "End Date" inputs by their id names
                       const startDateValue = document.getElementById('startdate').value;
                       const endDateValue = document.getElementById('enddate').value;
@@ -195,7 +190,7 @@
               
                       // Create a form element dynamically to trigger the download
                       const form = document.createElement('form');
-                      form.action = '/mato/matdownload-pdf/:productName'; // Set the URL for PDF download
+                      form.action = `/mato/matdownload-pdf/${selectedProduct}`; // Set the URL for PDF download
                       form.method = 'POST';
               
                       // Create an input field for dateArray
@@ -236,7 +231,7 @@
 
     // Create a form element dynamically to trigger the download
     const form = document.createElement('form');
-    form.action = '/mato/matdownload-excel/:productName'; // Set the URL for PDF download
+    form.action = `/mato/matdownload-excel/${selectedProduct}`; // Set the URL for PDF download
     form.method = 'POST';
 
     // Create an input field for dateArray

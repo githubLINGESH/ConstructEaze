@@ -27,37 +27,63 @@ exports.downloadPDF = async (req, res) => {
 
     // Loop through each order and product
     productOrders.forEach(order => {
-      dateArray.forEach(selectedDate => {
-        const selectedDateObj = new Date(selectedDate);
-        const orderDateObj = new Date(order.date);
-
-        if (
-          selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-          selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-          selectedDateObj.getDate() === orderDateObj.getDate()
-        ) {
-          const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+      if (!dateArray || dateArray.length === 0) {
+        // Handle the case where dateArray is not provided
+        if (order.products) {
+        order.products.forEach(product => {
+          const orderDateObj = new Date(order.date);
+          const formattedDate = orderDateObj.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
           });
-
-          // Add rows to the table
+    
+          table.rows.push([
+            formattedDate,
+            order.vendor.vendorName,
+            order.vendor.address,
+            order.vendor.gst,
+            order.vendor.site,
+            product.nameOfMaterial,
+            product.used,
+            product.currentStock
+          ]);
+        });
+      }
+      } else {
+        dateArray.forEach(selectedDate => {
+          const selectedDateObj = new Date(selectedDate);
+          if (order.products) {
           order.products.forEach(product => {
-            table.rows.push([
-              formattedDate,
-              order.vendor.vendorName,
-              order.vendor.address,
-              order.vendor.gst,
-              order.vendor.site,
-              product.nameOfMaterial,
-              product.used,
-              product.currentStock
-            ]);
+            const orderDateObj = new Date(order.date);
+            if (
+              selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+              selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+              selectedDateObj.getDate() === orderDateObj.getDate()
+            ) {
+              const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              });
+    
+              table.rows.push([
+                formattedDate,
+                order.vendor.vendorName,
+                order.vendor.address,
+                order.vendor.gst,
+                order.vendor.site,
+                product.nameOfMaterial,
+                product.used,
+                product.currentStock
+              ]);
+            }
           });
         }
       });
-    });
+    }
+  });
+    
 
     // Now you can generate the table as you intended
     const initialX = 50;
@@ -113,6 +139,12 @@ exports.downloadExcel = async (req, res) => {
     ];
 
     for (const order of productOrders) {
+      let includeRecord = true;
+        let formattedDate = '';
+  
+        if (dateArray && dateArray.length > 0) {
+          includeRecord = false;
+
       for (const selectedDate of dateArray) {
         const selectedDateObj = new Date(selectedDate);
         const orderDateObj = new Date(order.date);
@@ -122,12 +154,17 @@ exports.downloadExcel = async (req, res) => {
           selectedDateObj.getMonth() === orderDateObj.getMonth() &&
           selectedDateObj.getDate() === orderDateObj.getDate()
         ) {
+          includeRecord = true;
           const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',
           });
-
+          break;
+        }
+      }
+    }
+    if (includeRecord) {
           for (const product of order.products) {
             worksheet.addRow({
               date: formattedDate,
@@ -142,7 +179,6 @@ exports.downloadExcel = async (req, res) => {
           }
         }
       }
-    }
 
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

@@ -748,8 +748,12 @@ function getColumnPropertyName(colIndex) {
                   const suppliedQuantityParts = cells[3].textContent.split(' '); // Split the quantity and unit
                   const quantity = parseFloat(suppliedQuantityParts[0]); // Convert quantity to a number
                   const unit = suppliedQuantityParts[1]; // Extract the unit
+
+                    const today = new Date();
+                    today.setUTCHours(0, 0, 0, 0);
                 
                     data.products.push({
+                        date: today,
                         slNo: cells[1].textContent,
                         nameOfMaterial: cells[2].textContent,
                         suppliedQuantity: quantity,

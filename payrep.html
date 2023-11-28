@@ -65,27 +65,202 @@
                 <div class="report-section" id="labour-report">
                   <h3>PAYMENT DETAIL REPORT</h3>
 
-                  <form action="/generate-report" method="post">
-                      <input type="hidden" name="report_type" value="labour">
-                      <button type="submit" name="format" value="pdf" style="background-color: #242e82 !important;">Download as PDF</button>
-                      <button type="submit" name="format" value="excel" style="background-color: #242e82 !important;">Download as Excel</button>
-                  </form>
+                  <div style="margin-top: 3.2%;">Start Date:</div>
+                  <input type="date" id="startdate">
+                  <br><br>
+                  <div>End Date:</div>
+                  <input type="date" id="enddate">
+                  <br><br>
+
+                  <div class="filter" style="display: flex; align-items: center;">
+                    <div id="filterOptions" class="filter-options" style="margin: 20px;">
+                        <label for="filterType">Select Filter:</label>
+                        <select id="filterType" onchange="updateButton()">
+                          <option value="" disabled selected>Select</option>
+                          <option value="vendor">Vendor</option>
+                          <option value="labour">Labour</option>
+                      </select>
+                    </div>
+                      <div>
+                        <button style="width: 110%; margin:40px;" class="btn-block dropdown-toggle" id="optdrop" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">Select a Type</button>
+                        
+                        <ul style="padding: 5px; border-radius: 10px;" id="myDropdown" class="dropdown-menu" aria-labelledby="optdrop">
+                        <input style="margin-left: 10px; width: 90%; margin-bottom:10px ;" id="items" type="text" placeholder="Search" onkeyup="filterFunction()">
+                      </ul>
+                  </div>
+                </div>
+
+                <form>
+                  <input type="hidden" name="report_type" value="labour">
+                  <div><button onclick="downloadPDF()" type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button></div>
+                  <div><button onclick="downloadExcel()" type="button"  style="background-color: #242e82 !important;width:200px; ">Download as Excel</button></div>
+              </form>
                   <div class = img >
                   <img src="assets/img/report1.png" alt="Labour Image" width="100">
                   </div>
               </div>
               
               </div>
-
-
-
-          
         </div>
 
 
       </div>
       
 </body>
+<script>
+  function filterFunction() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("items");
+    filter = input.value.toUpperCase();
+    div = document.getElementById("myDropdown");
+    a = div.getElementsByTagName("li");
+    for (i = 0; i < a.length; i++) {
+        txtValue = a[i].textContent || a[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        a[i].style.display = "block";
+        } else {
+        a[i].style.display = "none";
+        }
+    }
+    }
+
+    let selectedName='';
+
+// Function to fetch and populate the names based on the user's selection
+function populateDropdown() {
+const dropdown = document.getElementById("myDropdown");
+const filterType = document.getElementById("filterType").value; // Get the selected filter type
+
+// Preserve the search input element
+const searchInput = document.getElementById("items");
+dropdown.innerHTML = ""; // Clear existing list items only, not the search input.
+dropdown.appendChild(searchInput);
+
+// Fetch names from the server based on the selected filter type (vendor or product).
+fetch(`/pay/get-${filterType}-names`) // Update the route as needed
+.then(response => response.json())
+.then(names => {
+names.forEach((name) => {
+const listItem = document.createElement("li");
+listItem.textContent = name;
+listItem.onclick = () =>{
+  updateDropdown(name);
+}
+dropdown.appendChild(listItem);
+});
+})
+.catch(error => {
+console.error(`Error fetching ${filterType} names:`, error);
+});
+}
+
+  // Function to update the dropdown based on the selected name
+  function updateDropdown(name) {
+    const optdrop = document.getElementById("optdrop");
+    optdrop.textContent = selectedName;
+    const filterType = document.getElementById("filterType").value;
+    selectedName = name;
+
+    updateDropdown(name);
+  }
+
+  // Event listener for filter type change.
+  const filterType = document.getElementById("filterType");
+  filterType.addEventListener("change", function () {
+    // Populate the dropdown with names based on the selected filter type.
+    populateDropdown();
+  });
+
+  // Initial population of the dropdown.
+  populateDropdown();
+
+
+    function downloadPDF() {
+      const filterType = document.getElementById("filterType").value;
+      console.log(selectedName);
+      // Get the values of the "Start Date" and "End Date" inputs by their id names
+      const startDateValue = document.getElementById('startdate').value;
+      const endDateValue = document.getElementById('enddate').value;
+
+      // Parse the start and end date strings to Date objects
+      const startDate = new Date(startDateValue);
+      const endDate = new Date(endDateValue);
+
+      // Create an array to store the dates between the start and end dates
+      const dateArray = [];
+
+      // Loop through the dates and add them to the array
+      let currentDate = new Date(startDate);
+      currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+      while (currentDate < endDate) {
+          dateArray.push(currentDate.toISOString().split('T')[0]);
+          currentDate.setDate(currentDate.getDate() + 1);
+      }
+
+      // Create a form element dynamically to trigger the download
+      const form = document.createElement('form');
+      form.action = `/pay/download-pdf-get-${filterType}-details/${selectedName}` // Set the URL for PDF download
+      form.method = 'POST';
+
+      // Create an input field for dateArray
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'dateArray';
+      input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+
+      // Add the input field to the form
+      form.appendChild(input);
+
+      // Add the form to the document and submit it to trigger the download
+      document.body.appendChild(form);
+      form.submit();
+
+      console.log('Dates Between Start and End Date:', dateArray);
+  }
+  
+  function downloadExcel() {
+    const filterType = document.getElementById("filterType").value;
+  // Get the values of the "Start Date" and "End Date" inputs by their id names
+  const startDateValue = document.getElementById('startdate').value;
+  const endDateValue = document.getElementById('enddate').value;
+
+  // Parse the start and end date strings to Date objects
+  const startDate = new Date(startDateValue);
+  const endDate = new Date(endDateValue);
+
+  // Create an array to store the dates between the start and end dates
+  const dateArray = [];
+
+  // Loop through the dates and add them to the array
+  let currentDate = new Date(startDate);
+  currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+  while (currentDate < endDate) {
+  dateArray.push(currentDate.toISOString().split('T')[0]);
+  currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  // Create a form element dynamically to trigger the download
+  const form = document.createElement('form');
+  form.action = `/pay/download-excel-get-${filterType}-details/${selectedName}`; // Set the URL for PDF download
+  form.method = 'POST';
+
+  // Create an input field for dateArray
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'dateArray';
+  input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+
+  // Add the input field to the form
+  form.appendChild(input);
+
+  // Add the form to the document and submit it to trigger the download
+  document.body.appendChild(form);
+  form.submit();
+
+  console.log('Dates Between Start and End Date:', dateArray);
+  }
+</script>
 </html>
 
 

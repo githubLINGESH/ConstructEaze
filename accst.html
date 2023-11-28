@@ -12,24 +12,26 @@
     <title>Document</title>
     <style>
       select{
-        margin-left: 20px;
-        font-size: 14px;
-        font-weight: 500;
-        text-transform: uppercase;
-        height: 45px;
-        flex-shrink: 0;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 10px;
-        padding: 5px;
-        border-radius: 10px;
-        border: 2px solid #ccc;
+    
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      }
+      button[type="button"] {
+        background-color: #242e82 !important;
+        width: 200px;
+        margin-top: 10px;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow effect */
+        transition: box-shadow 0.3s ease; /* Smooth transition */
+     }
+
+    button[type="button"]:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Hover effect for box shadow */
     }
-#disable{
-    background-image: url('ConstructEaze\assets\img\icons8-filter-24.png');
-}
-li{
-    padding-bottom: 10px;
-}
     </style>
 </head>
 <body>
@@ -104,24 +106,22 @@ li{
                 </ul>
             </div>
           </div>
-          
 
-          <div id="detailsTableContainer">
-            <h2 id="detailsHeading"></h2>
-            <table id="detailsTable" class="table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th id="filterColumnHeader"></th>
-                        <th>Transaction Type</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Table data will be populated here -->
-                </tbody>
-            </table>
-        </div>
+          <!-- Start and End Date inputs -->
+          <div>Start Date:</div>
+          <input type="date" id="startdate">
+          <br><br>
+          <div>End Date:</div>
+          <input type="date" id="enddate">
+          <br><br>
+          
+          <!-- Download buttons -->
+          <form>
+              <input type="hidden" name="report_type" value="account">
+              <button onclick="storeDates()" type="button" style="background-color: #242e82 !important; width:200px;">Download as PDF</button>
+              <button onclick="downloadExcel()" type="button" style="background-color: #242e82 !important; width:200px;">Download as Excel</button>
+          </form>
+          
       </div>
           
         </div>
@@ -176,7 +176,9 @@ function populateDropdown() {
       names.forEach((name) => {
         const listItem = document.createElement("li");
         listItem.textContent = name;
-        listItem.onclick = () => updateDropdown(name);
+        listItem.onclick = () => {
+          updateDropdown(name);
+        };
         dropdown.appendChild(listItem);
       });
     })
@@ -187,53 +189,14 @@ function populateDropdown() {
 
 
   // Function to update the dropdown based on the selected name
-  function updateDropdown(selectedName) {
-    const optdrop = document.getElementById("optdrop");
-    optdrop.textContent = selectedName; // Update the dropdown text with the selected name
-    const filterType = document.getElementById("filterType").value;
-    // Call updateTable with the selected filter type and name
-    updateTable(filterType, selectedName);
-  }
+  function updateDropdown(name) {
+  const optdrop = document.getElementById("optdrop");
+  optdrop.textContent = selectedName;
+  selectedName = name;
 
-  // Function to update the table based on the selected filter and name
-  function updateTable(filterType, selectedValue) {
-    const tableBody = document.getElementById("tableBody");
-    const vendorProductHeader = document.getElementById("vendorProductHeader");
-    const detailsHeading = document.getElementById("detailsHeading");
-    const filterColumnHeader = document.getElementById("filterColumnHeader");
+  updateDropdown(name);
 
-    // Clear existing table data.
-    tableBody.innerHTML = "";
-
-    // Send a request to your server to retrieve data based on the filter and selected value.
-    fetch(`/acc/get-${filterType}-details/${selectedValue}`)
-      .then(response => response.json())
-      .then(data => {
-        // Handle the data and populate the table.
-        data.forEach(item => {
-          const row = document.createElement("tr");
-          const dateCell = document.createElement("td");
-          const vendorProductCell = document.createElement("td");
-          const transactionTypeCell = document.createElement("td");
-          const priceCell = document.createElement("td");
-
-          dateCell.textContent = item.Date_i;
-          vendorProductCell.textContent = filterType === "vendor" ? item.Vendor_name : item.Name_of_Material;
-          transactionTypeCell.textContent = item.transaction_type;
-          priceCell.textContent = item.Price;
-
-          row.appendChild(dateCell);
-          row.appendChild(vendorProductCell);
-          row.appendChild(transactionTypeCell);
-          row.appendChild(priceCell);
-
-          tableBody.appendChild(row);
-        });
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-      });
-  }
+}
 
   // Event listener for filter type change.
   const filterType = document.getElementById("filterType");
@@ -244,6 +207,97 @@ function populateDropdown() {
 
   // Initial population of the dropdown.
   populateDropdown();
+
+  let selectedName = "";
+
+function storeDates() {
+    const filterType = document.getElementById("filterType").value;
+    // Get the values of the "Start Date" and "End Date" inputs by their id names
+    const startDateValue = document.getElementById('startdate').value;
+    const endDateValue = document.getElementById('enddate').value;
+
+    // Parse the start and end date strings to Date objects
+    const startDate = new Date(startDateValue);
+    const endDate = new Date(endDateValue);
+
+    // Create an array to store the dates between the start and end dates
+    const dateArray = [];
+    
+
+    // Loop through the dates and add them to the array
+    let currentDate = new Date(startDate);
+    currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+    while (currentDate < endDate) {
+        dateArray.push(currentDate.toISOString().split('T')[0]);
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    console.log(selectedName);
+
+    // Create a form element dynamically to trigger the download
+    const form = document.createElement('form');
+    form.action = `/acc/download-${filterType}-pdf/${selectedName}`; // Set the URL for PDF download
+    form.method = 'POST';
+
+    // Create an input field for dateArray
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'dateArray';
+    input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+
+    // Add the input field to the form
+    form.appendChild(input);
+
+    // Add the form to the document and submit it to trigger the download
+    document.body.appendChild(form);
+    form.submit();
+    }
+    console.log('Dates Between Start and End Date:', dateArray);
+
+    storeDates(name);
+
+
+function downloadExcel() {
+  const filterType = document.getElementById("filterType").value;
+// Get the values of the "Start Date" and "End Date" inputs by their id names
+const startDateValue = document.getElementById('startdate').value;
+const endDateValue = document.getElementById('enddate').value;
+
+// Parse the start and end date strings to Date objects
+const startDate = new Date(startDateValue);
+const endDate = new Date(endDateValue);
+
+// Create an array to store the dates between the start and end dates
+const dateArray = [];
+
+// Loop through the dates and add them to the array
+let currentDate = new Date(startDate);
+currentDate.setDate(currentDate.getDate() + 1); // Skip the start date
+while (currentDate < endDate) {
+dateArray.push(currentDate.toISOString().split('T')[0]);
+currentDate.setDate(currentDate.getDate() + 1);
+}
+
+// Create a form element dynamically to trigger the download
+const form = document.createElement('form');
+form.action = `/acc/download-${filterType}-excel/${selectedName}`;
+form.method = 'POST';
+
+// Create an input field for dateArray
+const input = document.createElement('input');
+input.type = 'hidden';
+input.name = 'dateArray';
+input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+
+// Add the input field to the form
+form.appendChild(input);
+
+// Add the form to the document and submit it to trigger the download
+document.body.appendChild(form);
+form.submit();
+
+console.log('Dates Between Start and End Date:', dateArray);
+}
 
 
 </script>

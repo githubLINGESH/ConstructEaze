@@ -1,6 +1,8 @@
     const mongoose = require('mongoose');
 
     const ProductSchema = new mongoose.Schema({
+    date:Date,
+    dateOfSupply:Date,
     slNo:Number,
     itemCode: Number,
     nameOfMaterial: String,
