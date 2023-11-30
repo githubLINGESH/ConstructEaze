@@ -37,8 +37,9 @@
 
     exports.getVendorDetails = async (req, res) => {
     try {
+        const projectId = req.session.projectId;
         const vendorName = req.params.vendorName;
-        const vendorDetails = await e_products.findOne({ Vendor_name: vendorName });
+        const vendorDetails = await e_products.findOne({ Vendor_name: vendorName },{projectId:projectId});
         res.json(vendorDetails);
     } catch (error) {
         console.error('Error fetching vendor details:', error);
@@ -70,8 +71,9 @@
 
     exports.getProductDetails = async (req, res) => {
     try {
+        projectId = req.session.projectId;
         const productName = req.params.productName;
-        const productDetails = await e_products.find({ Name_of_Material: productName });
+        const productDetails = await e_products.find({ Name_of_Material: productName },{projectId: projectId});
         res.json(productDetails);
     } catch (error) {
         console.error('Error fetching product details:', error);
@@ -103,16 +105,46 @@
             // Loop through each order and product
             productOrders.forEach(order => {
                 if (!dateArray || dateArray.length === 0) {
-        
+                // Handle the case where dateArray is not provided
+                if (order.products) {
                 order.products.forEach(product => {
-                    const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                    const orderDateObj = new Date(order.date);
+                    const formattedDate = orderDateObj.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'short',
                     day: 'numeric',
                     });
-        
-        
+            
                     table.rows.push([
+                    formattedDate,
+                    order.vendor.vendorName,
+                    order.vendor.address,
+                    order.vendor.gst,
+                    order.vendor.site,
+                    product.nameOfMaterial,
+                    product.used,
+                    product.currentStock
+                    ]);
+                });
+                }
+                } else {
+                dateArray.forEach(selectedDate => {
+                    const selectedDateObj = new Date(selectedDate);
+                    if (order.products) {
+                    order.products.forEach(product => {
+                    const orderDateObj = new Date(order.date);
+                    if (
+                        selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                        selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                        selectedDateObj.getDate() === orderDateObj.getDate()
+                    ) {
+                        const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                        });
+            
+                        table.rows.push([
                         formattedDate,
                         order.vendor.vendorName,
                         order.vendor.address,
@@ -121,40 +153,14 @@
                         product.nameOfMaterial,
                         product.used,
                         product.currentStock
-                    ]);
+                        ]);
+                    }
                     });
                 }
-                else{
-                    dateArray.forEach(selectedDate => {
-                    const selectedDateObj = new Date(selectedDate);
-                    order.products.forEach(product => {
-                        const orderDateObj = new Date(order.date);
-                        if (
-                        selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-                        selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-                        selectedDateObj.getDate() === orderDateObj.getDate()
-                        ) {
-                        const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                        });
-                
-                            table.rows.push([
-                            formattedDate,
-                            order.vendor.vendorName,
-                            order.vendor.address,
-                            order.vendor.gst,
-                            order.vendor.site,
-                            product.nameOfMaterial,
-                            product.used,
-                            product.currentStock
-                            ]);
-                        };
-                        });
                 });
-                };
+            }
             });
+            
         
             // Now you can generate the table as you intended
             const initialX = 50;
@@ -186,58 +192,59 @@
         
         exports.downloadExcel = async (req, res) => {
             try {
-            const vendorName = req.params.vendorName;
-            const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
-        
-            console.log('Date Array:', dateArray);
-        
-            const productOrders = await getVendorDetails(vendorName);
-            console.log('Product Orders:', productOrders);
-        
-            const workbook = new ExcelJS.Workbook();
-            const worksheet = workbook.addWorksheet('Material Report');
-        
-            // Define the columns
-            worksheet.columns = [
-                { header: 'Date', key: 'date' },
-                { header: 'Vendor', key: 'vendorName' },
-                { header: 'Address', key: 'address' },
-                { header: 'GST', key: 'gst' },
-                { header: 'Site', key: 'site' },
-                { header: 'Material', key: 'nameOfMaterial' },
-                { header: 'Unit', key: 'unit' },
-                { header: 'Used', key: 'used' },
-            ];
-        
-            for (const order of productOrders) {
-                let includeRecord = true;
-                let formattedDate = '';
+                const vendorName = req.params.vendorName;
+                const dateArray = JSON.parse(req.body.dateArray);
+
+                console.log('Date Array:', dateArray);
             
-                if (dateArray && dateArray.length > 0) {
+                const productOrders = await getVendorDetails(vendorName);
+                console.log('Product Orders:', productOrders);
+            
+                const workbook = new ExcelJS.Workbook();
+                const worksheet = workbook.addWorksheet('Material Report');
+            
+                // Define the columns
+                worksheet.columns = [
+                    { header: 'Date', key: 'date' },
+                    { header: 'Vendor', key: 'vendorName' },
+                    { header: 'Address', key: 'address' },
+                    { header: 'GST', key: 'gst' },
+                    { header: 'Site', key: 'site' },
+                    { header: 'Material', key: 'nameOfMaterial' },
+                    { header: 'Unit', key: 'unit' },
+                    { header: 'Used', key: 'used' },
+                ];
+            
+                for (const order of productOrders) {
+                    let includeRecord = true;
+                    let formattedDate = '';
+            
+                    if (dateArray && dateArray.length > 0) {
                     includeRecord = false;
-        
-                for (const selectedDate of dateArray) {
-                const selectedDateObj = new Date(selectedDate);
-                const orderDateObj = new Date(order.date);
-        
-                if (
-                    selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-                    selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-                    selectedDateObj.getDate() === orderDateObj.getDate()
-                ) {
-                    includeRecord = true;
-                    const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    });
-                    break;
-                }
-                }
-            }
-            if (includeRecord) {
+            
+                    for (const selectedDate of dateArray) {
+                        const selectedDateObj = new Date(selectedDate);
+                        const orderDateObj = new Date(order.date);
+            
+                        if (
+                        selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                        selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                        selectedDateObj.getDate() === orderDateObj.getDate()
+                        ) {
+                        includeRecord = true;
+                        formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                        });
+                        break;
+                        }
+                    }
+                    }
+            
+                    if (includeRecord && order.products && order.products.length > 0) {
                     for (const product of order.products) {
-                    worksheet.addRow({
+                        worksheet.addRow({
                         date: formattedDate,
                         vendorName: order.vendor.vendorName,
                         address: order.vendor.address,
@@ -245,21 +252,21 @@
                         site: order.vendor.site,
                         nameOfMaterial: product.nameOfMaterial,
                         unit: product.unit,
-                        used: product.used ? 'Yes' : 'No', // Assuming 'used' is a boolean
-                    });
+                        used: product.used ? 'Yes' : 'No',
+                        });
+                    }
                     }
                 }
+            
+                const buffer = await workbook.xlsx.writeBuffer();
+                res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                res.setHeader('Content-Disposition', 'attachment; filename="material_details.xlsx"');
+                res.send(buffer);
+                } catch (error) {
+                console.error('Error generating Excel:', error);
+                res.status(500).send('Error generating Excel');
                 }
-        
-            const buffer = await workbook.xlsx.writeBuffer();
-            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            res.setHeader('Content-Disposition', 'attachment; filename="material_details.xlsx"');
-            res.send(buffer);
-            } catch (error) {
-            console.error('Error generating Excel:', error);
-            res.status(500).send('Error generating Excel');
-            }
-        };
+            };
 
 
     const { getProductOrders } = require('../controller/prodController');

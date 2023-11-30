@@ -12,6 +12,7 @@
 
     try {
         const record = new s_todo({
+        projectId : req.session.projectId,
         userId:userId,
         role:role,
         Task_name: Taskname,
@@ -30,10 +31,10 @@
     };
 
     exports.getTasks = async (req, res) => {
-        const userId = req.session.auth;
+        const projectId = req.session.projectId;
         const role = req.session.role;
     try {
-        const tasks = await s_todo.find({userId:userId, role:role});
+        const tasks = await s_todo.find({projectId : projectId, role:role});
 
         res.status(200).json(tasks);
     } catch (error) {

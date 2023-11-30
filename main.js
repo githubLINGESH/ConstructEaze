@@ -7,8 +7,6 @@
         const labourRouter = require('./server/routes/labourRoutes.js');
         const matRouter = require('./server/routes/materialRoutes.js');
         const contractRouter = require('./server/routes/contractRoutes.js');
-        const attRouter = require('./server/routes/attendanceRoutes.js');
-        const addLabourRouter = require('./server/routes/addLabourRoutes.js');
         const taskSearchRouter = require('./server/routes/todoRoutes.js');
         const productRouter = require('./server/routes/prodRoute.js');
         const matoutRouter = require('./server/routes/materialoutRoutes.js');
@@ -61,8 +59,6 @@
         app.use('/labour', labourRouter);
         app.use('/mat', matRouter);
         app.use('/contract', contractRouter);
-        app.use('/att', attRouter);
-        app.use('/add-labour', addLabourRouter);
         app.use('/todo', taskSearchRouter);
         app.use('/prod', productRouter);
         app.use('/mato', matoutRouter);

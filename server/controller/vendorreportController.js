@@ -116,7 +116,7 @@ exports.downloadPDF = async (req, res) => {
 exports.downloadExcel = async (req, res) => {
   try {
     const vendorName = req.params.vendorName;
-    const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+    const dateArray = JSON.parse(req.body.dateArray);
 
     console.log('Date Array:', dateArray);
 
@@ -140,45 +140,46 @@ exports.downloadExcel = async (req, res) => {
 
     for (const order of productOrders) {
       let includeRecord = true;
-        let formattedDate = '';
-  
-        if (dateArray && dateArray.length > 0) {
-          includeRecord = false;
+      let formattedDate = '';
 
-      for (const selectedDate of dateArray) {
-        const selectedDateObj = new Date(selectedDate);
-        const orderDateObj = new Date(order.date);
+      if (dateArray && dateArray.length > 0) {
+        includeRecord = false;
 
-        if (
-          selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-          selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-          selectedDateObj.getDate() === orderDateObj.getDate()
-        ) {
-          includeRecord = true;
-          const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-          });
-          break;
-        }
-      }
-    }
-    if (includeRecord) {
-          for (const product of order.products) {
-            worksheet.addRow({
-              date: formattedDate,
-              vendorName: order.vendor.vendorName,
-              address: order.vendor.address,
-              gst: order.vendor.gst,
-              site: order.vendor.site,
-              nameOfMaterial: product.nameOfMaterial,
-              unit: product.unit,
-              used: product.used ? 'Yes' : 'No', // Assuming 'used' is a boolean
+        for (const selectedDate of dateArray) {
+          const selectedDateObj = new Date(selectedDate);
+          const orderDateObj = new Date(order.date);
+
+          if (
+            selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+            selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+            selectedDateObj.getDate() === orderDateObj.getDate()
+          ) {
+            includeRecord = true;
+            formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
             });
+            break;
           }
         }
       }
+
+      if (includeRecord && order.products && order.products.length > 0) {
+        for (const product of order.products) {
+          worksheet.addRow({
+            date: formattedDate,
+            vendorName: order.vendor.vendorName,
+            address: order.vendor.address,
+            gst: order.vendor.gst,
+            site: order.vendor.site,
+            nameOfMaterial: product.nameOfMaterial,
+            unit: product.unit,
+            used: product.used ? 'Yes' : 'No',
+          });
+        }
+      }
+    }
 
     const buffer = await workbook.xlsx.writeBuffer();
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -189,3 +190,4 @@ exports.downloadExcel = async (req, res) => {
     res.status(500).send('Error generating Excel');
   }
 };
+

@@ -94,8 +94,9 @@ exports.submitlab = async (req, res) => {
 
     exports.getVendorDet = async (vendorName) => {
         try {
+            const projectId = req.session.projectId;
           // Use the provided vendorName parameter to filter vendor details
-            const vendorDetails = await vpay.find({ name : vendorName });
+            const vendorDetails = await vpay.find({ name : vendorName },{projectId : projectId});
             return vendorDetails;
             } catch (error) {
             console.error('Error fetching vendor details:', error);
@@ -105,8 +106,9 @@ exports.submitlab = async (req, res) => {
 
         exports.getLabourDet = async (labourName) => {
             try {
+                const projectId = req.session.projectId;
               // Use the provided vendorName parameter to filter vendor details
-                const labourDetails = await lpay.find({ name : labourName });
+                const labourDetails = await lpay.find({ name : labourName },{projectId : projectId});
                 return labourDetails;
                 } catch (error) {
                 console.error('Error fetching vendor details:', error);
