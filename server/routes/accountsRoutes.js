@@ -23,9 +23,15 @@ router.post('/download-vendor-excel/:vendorName', accountStatementController.dow
 router.post('/download-product-pdf/:productName', accountStatementController.downloadPDFProd);
 router.post('/download-product-excel/:productName', accountStatementController.downloadExcelProd);
 
+router.get('/download-pdf-overall', accountStatementController.downloadPDFOverall);
+router.get('/download-excel-overall', accountStatementController.downloadExcelOverall);
 
+router.post('/download-all-vendor-pdf', accountStatementController.downloadPDFallvendor);
+router.post('/download-all-vendor-excel', accountStatementController.downloadExcelallvendor);
 
-router.post('/acc/vendor/:vendorName/details/date-range', accountStatementController.getVendorDetailsWithinDateRange);
+router.post('/download-all-product-pdf', accountStatementController.downloadPDFallproduct);
+router.post('/download-all-product-excel', accountStatementController.downloadExcelallproduct);
+
 
 
 module.exports = router;

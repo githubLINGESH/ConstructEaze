@@ -95,6 +95,7 @@
                     <option value="" disabled selected>Select</option>
                     <option value="vendor">Vendor</option>
                     <option value="product">Product</option>
+                    <option value="Overall">Overall</option>
                 </select>
               </div>
                 <div>
@@ -162,7 +163,7 @@
 // Function to fetch and populate the names based on the user's selection
 function populateDropdown() {
   const dropdown = document.getElementById("myDropdown");
-  const filterType = document.getElementById("filterType").value; // Get the selected filter type
+  const filterType = document.getElementById("filterType").value;
 
   // Preserve the search input element
   const searchInput = document.getElementById("items");
@@ -236,8 +237,23 @@ function storeDates() {
 
     // Create a form element dynamically to trigger the download
     const form = document.createElement('form');
-    form.action = `/acc/download-${filterType}-pdf/${selectedName}`; // Set the URL for PDF download
-    form.method = 'POST';
+      // Check which button was clicked and set the action accordingly
+      if (filterType === 'Overall')
+    {
+      form.action = '/acc/download-pdf-overall';
+      form.method = 'GET';
+    }
+       //ALL VENDOR
+    else if(filterType ==='vendor' || filterType ==='product' && filterType !== 'Overall')
+    {
+      form.action = `/acc/download-all-${filterType}-pdf`;
+      form.method = 'POST';
+    }
+    else{
+      form.action = `/acc/download-${filterType}-pdf/${selectedName}`;
+      form.method = 'POST';
+    }
+
 
     // Create an input field for dateArray
     const input = document.createElement('input');
@@ -280,14 +296,30 @@ currentDate.setDate(currentDate.getDate() + 1);
 
 // Create a form element dynamically to trigger the download
 const form = document.createElement('form');
-form.action = `/acc/download-${filterType}-excel/${selectedName}`;
-form.method = 'POST';
+if (filterType == 'Overall')
+    {
+      form.action = '/acc/download-excel-overall';
+      form.method = 'GET';
+    }
+      //ALL PRODUCT
+  else if(filterType ==='vendor' || filterType ==='product' && filterType !== 'Overall')
+    {
+      form.action = `/acc/download-all-${filterType}-excel`;
+      form.method = 'POST';
+    }
+    else{
+      form.action = `/acc/download-${filterType}-excel/${selectedName}`;
+      form.method = 'POST';
+    }
+
+  
+
 
 // Create an input field for dateArray
 const input = document.createElement('input');
 input.type = 'hidden';
 input.name = 'dateArray';
-input.value = JSON.stringify(dateArray); // Convert dateArray to JSON string
+input.value = JSON.stringify(dateArray);
 
 // Add the input field to the form
 form.appendChild(input);

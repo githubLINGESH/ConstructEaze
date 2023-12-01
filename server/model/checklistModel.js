@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
 
 const checklistSchema = new mongoose.Schema({
-    projectId : String,
-    image: { data: Buffer, contentType: String },
+    projectId: String,
+    files: [
+        {
+            data: Buffer,
+            contentType: String,
+            originalName: String,
+        },
+    ],
 });
 
+const Checklist = mongoose.model('Checklist', checklistSchema);
 
-const checklist = mongoose.model('checklist',checklistSchema);
-
-module.exports = checklist;
+module.exports = Checklist;
