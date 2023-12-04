@@ -44,6 +44,20 @@
             border-radius: 20px !important;
             color: black !important;
         }
+
+        @media (max-width: 1000px) {
+            .col-lg-2 {
+                display: none; /* Hide the sidebar */
+            }
+        
+            .navbar-nav {
+                margin-left: 0 !important; /* Override the margin added for the sidebar */
+            }
+        
+            .nav-item.dropdown {
+                display: block !important; /* Ensure the dropdown is visible */
+            }
+        }
     </style>
 </head>
 
@@ -66,10 +80,16 @@
                             Master
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="conts.html" class="nav-link active">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Labour Management
                         </a>
+                        <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                            <a class="dropdown-item" href="conts.html" style="color: white !important;
+                            background-color: rgba(0, 0, 0, 0.2);
+                            border-left: 3px solid #F2D200;">Attendance</a>
+                            <a class="dropdown-item" id="supervisor" href="#">Supervisor Attendance</a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a href="prod.html" class="nav-link">

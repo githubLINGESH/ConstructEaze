@@ -9,18 +9,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <!-- jQuery library -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700&display=swap"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <!-- Latest compiled JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+
+
+    
 
     <style>
         *{
@@ -86,12 +97,6 @@
         .att .table2 th,.table2 td{
             padding: 8px !important;
             text-align: center !important;
-        }
-        @media (max-width: 767px) {
-        .att .form-group {
-                margin-bottom: 10px;
-            }
-            
         }
         .btn {
             background-color: white !;
@@ -306,11 +311,56 @@
                 color: #000; /* New text color */
                 }
 
+                .sidebar{
+                    color: #fff;
+                }
+                h1{
+                    font-size: x-large;
+                    font-weight: 700;
+                }
+                .btn{
+                    border: 2px solid yellow;
+                    border-radius: 20px;
+                }
+                .btn:hover{
+                    border: 2px solid #242e82;
+                }
+                .sidebar .active{
+                    color: white !important;
+                    background-color: rgba(0, 0, 0, 0.2);
+                    border-left: 3px solid #F2D200;
+                }
+                .navbar .nav-item .active{
+                    background-color: #242e82;
+                    border-radius: 20px !important;
+                    color: #fff !important;
+                }
+                .navbar .nav-item a:hover{
+                    background-color: yellow;
+                    border-radius: 20px !important;
+                    color: black !important;
+                }
+
+
+                @media (max-width: 1000px) {
+                    .col-lg-2 {
+                        display: none; /* Hide the sidebar */
+                    }
+                
+                    .navbar-nav {
+                        margin-left: 0 !important; /* Override the margin added for the sidebar */
+                    }
+                
+                    .nav-item.dropdown {
+                        display: block !important; /* Ensure the dropdown is visible */
+                    }
+                }
+
         
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid" style="margin: 10px 20px;">
         <a class="navbar-brand" href="#">
             <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
@@ -324,8 +374,16 @@
             <li class="nav-item">
                 <a class="nav-link" href="masnode.html">Master</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Labour Management</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Labour Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                    <a class="dropdown-item" href="#" style="color: white !important;
+                    background-color: rgba(0, 0, 0, 0.2);
+                    border-left: 3px solid #F2D200;">Attendance</a>
+                    <a class="dropdown-item" id="supervisor" href="superATT.html">Supervisor Attendance</a>
+                </div>
             </li>
             <li class="nav-item">
                 <a class="nav-link" aria-current="page" href="prod.html">Purchase Management</a>

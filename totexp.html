@@ -214,6 +214,20 @@
     color: black;
     }
 
+    @media (max-width: 1000px) {
+        .col-lg-2 {
+            display: none; /* Hide the sidebar */
+        }
+    
+        .navbar-nav {
+            margin-left: 0 !important; /* Override the margin added for the sidebar */
+        }
+    
+        .nav-item.dropdown {
+            display: block !important; /* Ensure the dropdown is visible */
+        }
+    }
+
     </style>
     <script>
     function openModal1() {
@@ -256,9 +270,23 @@
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="prod.html">Vendor Management</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="tofo.html">Site Activity</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Site Activity
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                        <a class="dropdown-item" href="todo.html">To Do</a>
+                        <a class="dropdown-item" href="checklist.html">Check List</a>
+                        <a class="dropdown-item" href="matinf.html">Material Inward</a>
+                        <a class="dropdown-item" href="matoutf.html">Material Outward</a>
+                        <a class="dropdown-item" href="wrkdone.html">Work Done</a>
+                        <a class="dropdown-item" href="totexp.html" style="color: white !important;
+                        background-color: rgba(0, 0, 0, 0.2);
+                        border-left: 3px solid #F2D200;">Total Expense</a>
+                        <a class="dropdown-item" href="draw.html">Drawings</a>
+                    </div>
                 </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="labrep.html">Report Generation</a>
                 </li>
@@ -270,7 +298,7 @@
             </div>
         </nav>
 
-        <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+        <div class="row content" style="display: flex; width: 100%; height: 100%;">
             <div class="col-lg-2">
             <div class="sidebar" style="height: 100%;">
                 <nav class="nav flex-column" style="padding-top: 100px; ">

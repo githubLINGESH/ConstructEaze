@@ -182,6 +182,21 @@ cursor: pointer;
 color: black;
 }
 
+@media (max-width: 1000px) {
+    .col-lg-2 {
+        display: none; /* Hide the sidebar */
+    }
+
+    .navbar-nav {
+        margin-left: 0 !important; /* Override the margin added for the sidebar */
+    }
+
+    .nav-item.dropdown {
+        display: block !important; /* Ensure the dropdown is visible */
+    }
+}
+
+
         </style>
     </head>
     <body>
@@ -205,9 +220,21 @@ color: black;
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="prod.html">Purchase Management</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="matinf.html">Site Activity</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Site Activity
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                        <a class="dropdown-item" href="todo.html">To Do</a>
+                        <a class="dropdown-item" href="checklist.html">Check List</a>
+                        <a class="dropdown-item" href="matinf.html">Material Inward</a>
+                        <a class="dropdown-item" href="matoutf.html">Material Outward</a>
+                        <a class="dropdown-item" href="wrkdone.html">Work Done</a>
+                        <a class="dropdown-item" href="totexp.html">Total Expense</a>
+                        <a class="dropdown-item" href="draw.html">Drawings</a>
+                    </div>
                 </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="labrep.html">Report Generation</a>
                 </li>

@@ -238,6 +238,20 @@
       background-color: none !important;
     }
 
+    @media (max-width: 1000px) {
+      .col-lg-2 {
+          display: none; /* Hide the sidebar */
+      }
+  
+      .navbar-nav {
+          margin-left: 0 !important; /* Override the margin added for the sidebar */
+      }
+  
+      .nav-item.dropdown {
+          display: block !important; /* Ensure the dropdown is visible */
+      }
+  }
+
 
     </style>
 </head>
@@ -259,9 +273,17 @@
               <li class="nav-item">
                 <a class="nav-link" href="conts.html">Labour Management</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="prod.html">Purchase Management</a>
-              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Purchase Management
+                </a>
+                <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                    <a class="dropdown-item" href="#" style="color: white !important;
+                    background-color: rgba(0, 0, 0, 0.2);
+                    border-left: 3px solid #F2D200;">Purchase order</a>
+                    <a class="dropdown-item" href="poreturn.html">Purchase Return</a>
+                </div>
+            </li>
               <li class="nav-item">
                 <a class="nav-link" href="matinf.html">Site Activity</a>
               </li>

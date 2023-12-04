@@ -92,8 +92,48 @@
             }
             .koo
             {
-              color:black;
+               color:black;
             }
+
+            #closePopupBtn {
+                align-self: flex-end; /* Align to the right */
+                font-size: 20px; /* Adjust the font size */
+            }
+            
+            .text {
+                /* Adjust the text style */
+                font-size: 18px;
+                margin-bottom: 10px; /* Add some space between the text and form */
+            }
+            
+            #workDoneForm {
+                /* Adjust the form layout */
+                width: 100%;
+                max-width: 400px; /* Set a maximum width for the form */
+            }
+            
+            textarea {
+                /* Adjust the text area */
+                width: 100%;
+                height: 100px; /* Adjust the height as needed */
+                margin-bottom: 10px; /* Add some space between the text area and button */
+            }
+
+
+            @media (max-width: 1000px) {
+                .col-lg-2 {
+                    display: none; /* Hide the sidebar */
+                }
+            
+                .navbar-nav {
+                    margin-left: 0 !important; /* Override the margin added for the sidebar */
+                }
+            
+                .nav-item.dropdown {
+                    display: block !important; /* Ensure the dropdown is visible */
+                }
+            }
+        
 
         </style>
     </head>
@@ -118,9 +158,23 @@
                 <li class="nav-item">
                     <a class="nav-link" aria-current="page" href="prod.html">Purchase Management</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="matinf.html">Site Activity</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Site Activity
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                        <a class="dropdown-item" href="todo.html">To Do</a>
+                        <a class="dropdown-item" href="checklist.html">Check List</a>
+                        <a class="dropdown-item" href="matinf.html">Material Inward</a>
+                        <a class="dropdown-item" href="matoutf.html">Material Outward</a>
+                        <a class="dropdown-item" href="wrkdone.html" style="color: white !important;
+                        background-color: rgba(0, 0, 0, 0.2);
+                        border-left: 3px solid #F2D200;">Work Done</a>
+                        <a class="dropdown-item" href="totexp.html">Total Expense</a>
+                        <a class="dropdown-item" href="draw.html">Drawings</a>
+                    </div>
                 </li>
+                
                 <li class="nav-item">
                     <a class="nav-link" href="labrep.html">Report Generation</a>
                 </li>
@@ -134,7 +188,7 @@
             </div>
         </nav>
 
-        <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+        <div class="row content" style="display: flex; width: 100%; height: 100%;">
             <div class="col-lg-2">
             <div class="sidebar" style="height: 100%;">
                 <nav class="nav flex-column" style="padding-top: 100px; ">
@@ -187,34 +241,27 @@
 
 
                         <div id="popup" class="container">
-                            <button id="closePopupBtn" class="close-btn fas fa-times" title="Close"></button>
-                            <div class="text">Work Done</div>
+                            <span id ="closePopupBtn" class="btn btn-md" data-bs-dismiss="modal">X</span>
+                            <div class="text" style="margin:30px;">Work Done</div>
                             <form id="workDoneForm" action="/workdone" method="POST">
-                              <div class="data">
-                                <input type="date" id="dateInput" required placeholder="Date" name="date">
-                              </div>
-                              <div class="data">
-                                <input type="text" id="workdoneInput" required placeholder="Work Done" name="workdone">
-                              </div>
-                              <!-- Add more input fields as needed -->
-                              <div class="btn1">
-                                <div class="inner"></div>
-                                <button type="submit">Submit</button>
-                              </div>
+                                <div class="data" style="margin:30px;">
+                                    <input type="date" id="dateInput" required placeholder="Date" name="date">
+                                </div>
+                                <textarea id="workdoneInput" required placeholder="Work Done" name="workdone"></textarea>
+                                <div class="btn1" style="margin:30px;">
+                                    <div class="inner"></div>
+                                    <button type="submit">Submit</button>
+                                </div>
                             </form>
-                          </div>
-
-
+                        </div>
                             <div class="koo" id="projectDetails">
                                 <div>
 
                                 </div>
                             </div>
 
-                          
                     </div>
-            
-             <!-- Your existing script -->
+
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const openPopupBtn = document.getElementById("openPopupBtn");
@@ -271,7 +318,7 @@
                         works.forEach(work => {
                             const workdone = document.createElement('div');
                             workdone.innerHTML = `
-                            <h1>${work.workdone}</h1>
+                            <p>${work.workdone}</p>
                             <p>${work.date}</p>
                             `;
                             getwork.appendChild(workdone);

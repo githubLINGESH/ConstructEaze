@@ -234,6 +234,20 @@ cursor: pointer;
 .close:focus {
 color: black;
 }
+
+@media (max-width: 1000px) {
+    .col-lg-2 {
+        display: none; /* Hide the sidebar */
+    }
+
+    .navbar-nav {
+        margin-left: 0 !important; /* Override the margin added for the sidebar */
+    }
+
+    .nav-item.dropdown {
+        display: block !important; /* Ensure the dropdown is visible */
+    }
+}
         </style>
     </head>
     <body>
@@ -248,9 +262,20 @@ color: black;
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
                 
-                <li class="nav-item">
-                    <a class="nav-link active" href="masnode.html">Master</a>
-                </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Master
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
+                            <a class="dropdown-item" href="masnode.html" >client form</a>
+                            <a class="dropdown-item" href="prodf.html">product form</a>
+                            <a class="dropdown-item" href="labourf.html" style="  color: white !important;
+                            background-color: rgba(0, 0, 0, 0.2);
+                            border-left: 3px solid #F2D200;">labour form</a>
+                            <a class="dropdown-item" href="vendorf.html">vendor form</a>
+                            <a class="dropdown-item" href="supmas.html">Supervisor</a>
+                        </div>
+                    </li>
                 <li class="nav-item">
                 </li>
                 <li class="nav-item">
