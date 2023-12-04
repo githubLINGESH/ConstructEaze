@@ -121,7 +121,7 @@ exports.submitlab = async (req, res) => {
             exports.getVendorDetailsPDF = async (req, res) => {
                 try {
                     const vendorName = req.params.vendorName;
-                    const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+                    const dateArray = JSON.parse(req.body.dateArray);
                     const l = dateArray.length;
                 
                     console.log(dateArray);
@@ -140,7 +140,6 @@ exports.submitlab = async (req, res) => {
                     const table = {
                     rows: [tableHeaders],
                     };
-            
                     labourattendance.forEach((order) => {
                         for (let i = 0; i < l; i++) {
                         const selectedDate = dateArray[i];

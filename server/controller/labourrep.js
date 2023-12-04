@@ -6,101 +6,128 @@
     const { getlabouratt } = require('../controller/contractController');
 
     exports.downloadPDFforlab = async (req, res) => {
-    try {
-        const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
-        const l = dateArray.length;
+        try {
+            const projectId = req.session.projectId;
+            const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+            const l = dateArray ? dateArray.length : 0; // Check if dateArray is null or undefined
     
-        console.log(dateArray);
-        console.log(l);
+            console.log(dateArray);
+            console.log(l);
+    
+            const labourattendance = await getlabouratt(projectId);
+    
+            const doc = new PDFDocument();
+            doc.pipe(res);
+    
+            doc.fontSize(18).text('Labour Attendance Details', { align: 'center' });
+            doc.moveDown();
+    
+            const tableHeaders = ['date', 'w_name', 'w_type', 'shift', 'present/absent'];
+    
+            const table = {
+                rows: [tableHeaders],
+            };
+    
+            if (!dateArray || dateArray.length === 0) {
+                // If dateArray is null or empty, skip filtering by date
+                labourattendance.forEach((order) => {
 
-        const labourattendance = await getlabouratt();
-
-        const doc = new PDFDocument();
-        doc.pipe(res);
-
-        doc.fontSize(18).text('Labour Attendance Details', { align: 'center' });
-        doc.moveDown();
-
-        const tableHeaders = ['date','w_name','w_type','shift','present/absent'];
-
-        const table = {
-        rows: [tableHeaders],
-        };
-
-        labourattendance.forEach((order) => {
-            for (let i = 0; i < l; i++) {
-            const selectedDate = dateArray[i];
-
-        // Parse the date strings to Date objects
-        const selectedDateObj = new Date(selectedDate);
-        const orderDateObj = new Date(order.date);
-
-        // Compare the date parts (year, month, and day)
-        if (
-        selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-        selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-        selectedDateObj.getDate() === orderDateObj.getDate()
-        ) {
-        // Format the date without the time portion
-        const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        });
-
-        table.rows.push([
-            formattedDate,
-            order.w_name,
-            order.w_type,
-            order.shift,
-            order.pa,
-        ]);
-    }
-}
-});
-
-        const tableTop = doc.y + 15;
-        const initialX = 50;
-        const rowHeight = 25;
-        const columnWidth = 100;
-
-        for (let i = 0; i < table.rows.length; i++) {
-        const currentRow = table.rows[i];
-        for (let j = 0; j < currentRow.length; j++) {
-            doc
-            .fontSize(12)
-            .text(currentRow[j], initialX + j * columnWidth, tableTop + i * rowHeight, { width: columnWidth });
+                if (order) {
+                            const orderDateObj = new Date(order.date);
+                            const formattedDate = orderDateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            });
+                    table.rows.push([
+                        formattedDate,
+                        order.w_name,
+                        order.w_type,
+                        order.shift,
+                        order.pa,
+                    ]);
+                }
+                });
+            
+            } else {
+                // If dateArray is provided, filter by selected dates
+                labourattendance.forEach((order) => {
+                    for (let i = 0; i < l; i++) {
+                        const selectedDate = dateArray[i];
+    
+                        // Parse the date strings to Date objects
+                        const selectedDateObj = new Date(selectedDate);
+                        const orderDateObj = new Date(order.date);
+    
+                        // Compare the date parts (year, month, and day)
+                        if (
+                            selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                            selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                            selectedDateObj.getDate() === orderDateObj.getDate()
+                        ) {
+                            // Format the date without the time portion
+                            const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                            });
+    
+                            table.rows.push([
+                                formattedDate,
+                                order.w_name,
+                                order.w_type,
+                                order.shift,
+                                order.pa,
+                            ]);
+                        }
+                    }
+                });
+            }
+    
+            const tableTop = doc.y + 15;
+            const initialX = 50;
+            const rowHeight = 25;
+            const columnWidth = 100;
+    
+            for (let i = 0; i < table.rows.length; i++) {
+                const currentRow = table.rows[i];
+                for (let j = 0; j < currentRow.length; j++) {
+                    doc
+                        .fontSize(12)
+                        .text(currentRow[j], initialX + j * columnWidth, tableTop + i * rowHeight, { width: columnWidth });
+                }
+            }
+    
+            // Add table lines
+            const tableBottom = tableTop + table.rows.length * rowHeight;
+            const tableRight = initialX + tableHeaders.length * columnWidth;
+    
+            doc.moveTo(initialX, tableTop).lineTo(initialX, tableBottom).stroke(); // Vertical line on the left
+            doc.moveTo(tableRight, tableTop).lineTo(tableRight, tableBottom).stroke(); // Vertical line on the right
+    
+            for (let i = 0; i <= table.rows.length; i++) {
+                const y = tableTop + i * rowHeight;
+                doc.moveTo(initialX, y).lineTo(tableRight, y).stroke(); // Horizontal lines
+            }
+    
+            doc.end();
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            res.status(500).send('Error generating PDF');
         }
-        }
-
-        // Add table lines
-        const tableBottom = tableTop + table.rows.length * rowHeight;
-        const tableRight = initialX + tableHeaders.length * columnWidth;
-
-        doc.moveTo(initialX, tableTop).lineTo(initialX, tableBottom).stroke(); // Vertical line on the left
-        doc.moveTo(tableRight, tableTop).lineTo(tableRight, tableBottom).stroke(); // Vertical line on the right
-
-        for (let i = 0; i <= table.rows.length; i++) {
-        const y = tableTop + i * rowHeight;
-        doc.moveTo(initialX, y).lineTo(tableRight, y).stroke(); // Horizontal lines
-        }
-
-        doc.end();
-    } catch (error) {
-        console.error('Error generating PDF:', error);
-        res.status(500).send('Error generating PDF');
-    }
     };
+    
 
     // Route to generate and download the Excel file
     exports.downloadExcelforlab = async (req, res) => {
         try {
             const dateArray = JSON.parse(req.body.dateArray);
             const l = dateArray.length;
+            const projectId = req.session.projectId;
 
             console.log(dateArray);
         
-            const labourattendance = await getlabouratt();
+            const labourattendance = await getlabouratt(projectId);
         
             const workbook = new ExcelJS.Workbook();
             const worksheet = workbook.addWorksheet('Labour Attendance');
@@ -113,33 +140,61 @@
                 { header: 'Present/Absent', key: 'pa', width: 20 },
             ];
         
-            labourattendance.forEach((order) => {
-                for (let i = 0; i < l; i++) {
-                const selectedDate = dateArray[i];
-                const selectedDateObj = new Date(selectedDate);
-                const orderDateObj = new Date(order.date); // Make sure 'date' is the correct field name
-        
-                if (
-                    selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-                    selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-                    selectedDateObj.getDate() === orderDateObj.getDate()
-                ) {
-                    const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    });
-        
-                    worksheet.addRow({
-                    date: formattedDate,
-                    w_name: order.w_name,
-                    w_type: order.w_type,
-                    shift: order.shift,
-                    pa: order.pa,
-                    });
+            if (!dateArray || dateArray.length === 0) {
+                // If dateArray is null or empty, skip filtering by date
+                labourattendance.forEach((order) => {
+
+                if (order) {
+                            const orderDateObj = new Date(order.date);
+                            const formattedDate = orderDateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                            });
+                            worksheet.addRow({
+                                date: formattedDate,
+                                w_name: order.w_name,
+                                w_type: order.w_type,
+                                shift: order.shift,
+                                pa: order.pa,
+                                });
                 }
-                }
-            });
+                });
+            
+            } else {
+                // If dateArray is provided, filter by selected dates
+                labourattendance.forEach((order) => {
+                    for (let i = 0; i < l; i++) {
+                        const selectedDate = dateArray[i];
+    
+                        // Parse the date strings to Date objects
+                        const selectedDateObj = new Date(selectedDate);
+                        const orderDateObj = new Date(order.date);
+    
+                        // Compare the date parts (year, month, and day)
+                        if (
+                            selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                            selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                            selectedDateObj.getDate() === orderDateObj.getDate()
+                        ) {
+                            // Format the date without the time portion
+                            const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                            });
+    
+                            worksheet.addRow({
+                                date: formattedDate,
+                                w_name: order.w_name,
+                                w_type: order.w_type,
+                                shift: order.shift,
+                                pa: order.pa,
+                                });
+                        }
+                    }
+                });
+            }
         
             res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
             res.setHeader('Content-Disposition', 'attachment; filename="Labour_Attendance.xlsx"');

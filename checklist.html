@@ -86,13 +86,13 @@
         cursor: pointer;
     }
 
-    #imageContainer {
+    #fileContainer {
         display: flex;
         flex-wrap:wrap;
         gap: 10px;
         }
         
-        #imageContainer img {
+        #fileContainer img {
             cursor: pointer;
             max-width: 100px;
             margin:30px;
@@ -121,8 +121,28 @@
         }
         
         .popup img {
-            max-width: 150%;
-            min-width:150%;
+            max-width: 300%;
+            min-width: 80%;
+            align-items: center;
+            display:flex;
+        }
+
+        .popupPdf {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            width:400px;
+            height:-250px;
+            transform: translate(-50%, -50%);
+            border-radius:50px;
+            padding: 20px;
+            z-index: 1000;
+        }
+        
+        .popupPdf iframe {
+            max-width: 300%;
+            min-width: 80%;
             align-items: center;
             display:flex;
         }
@@ -195,7 +215,7 @@
                             <div class="col-lg-2 col-md-2 col-sm-10 col-xs-10 d-grid gap-2">
                                 <input type="file" name="upload" id="upload" class="btn btn-primary">
                                 <div class="upload-preview" id="preview"></div>
-                                <button id="uploadFilesButton" class="btn-block save">Upload Images</button>
+                                <button id="uploadFilesButton" class="btn-block save">Upload Files</button>
                             </div>
                         </div>
                     
@@ -209,9 +229,16 @@
                         <div id="overlay" onclick="closePopup()"></div>
 
                         <div class="popup" id="popup" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                            <img id="popupImg" src="" alt="Popup Image" style="max-width: 100%;">
+                            <img id="popupFile" src="" alt="Popup Image">
                             <button class="btn-block save" onclick="closePopup()">Close</button>
                         </div>
+
+                        <div class="popupPdf" id="popupPdf" tabindex="-1">
+                            <iframe id="popupPdfd" src="" alt="Popup Pdf"></iframe>
+                            <button class="btn-block save" onclick="closePopupPdf()">Close</button>
+                        </div>
+
+                        
 
 
                     </div>
@@ -244,7 +271,7 @@
                                     uploadedItem.appendChild(pdfElement);
                                 } else if (file.type.includes('excel')) {
                                     // Display Excel
-                                    const excelElement = document.createElement('iframe');
+                                    const excelElement = document.createElement('embed');
                                     excelElement.src = reader.result;
                                     uploadedItem.appendChild(excelElement);
                                 } else {
@@ -309,19 +336,21 @@
                             alert('An error occurred while uploading files.');
                         });
                     });
-
+                    
+                    
                     document.addEventListener('DOMContentLoaded', () => {
                         const displayFiles = () => {
                             const fileContainer = document.getElementById('fileContainer');
                             const overlay = document.getElementById('overlay');
                             const popup = document.getElementById('popup');
+                            const popupPdf = document.getElementById('popupPdf');
                             const popupFile = document.getElementById('popupFile');
+                            const popupPdfd = document.getElementById('popupPdfd');
                         
                             // Make a GET request to retrieve the files
                             fetch('/check/getFiles')
                                 .then(response => response.json())
                                 .then(data => {
-                                    console.log('Files data:', data);
                         
                                     data.files.forEach(fileData => {
                                         console.log('File Data:', fileData);
@@ -341,6 +370,7 @@
                                             console.log(`Displaying ${fileData.contentType}:`, fileData);
                                             const embedElement = document.createElement('iframe');
                                             embedElement.src = createBlobUrl(fileData.data, fileData.contentType);
+                                            popupPdf.addEventListener('click', () => showPopupPdf(fileData.data));
                                             fileBox.appendChild(embedElement);
                                         } else {
                                             // Handle other file types as needed
@@ -361,7 +391,9 @@
                                         deleteIcon.addEventListener('click', (e) => {
                                             e.stopPropagation();
                                             const fileId = fileData._id
-                                            deleteFile(fileId, fileBox);
+                                                console.log('File ID to be deleted:', fileId);
+                                                deleteFile(fileId, fileBox, fileData);
+
                                         });
                         
                                         fileBox.appendChild(deleteIcon);
@@ -397,25 +429,59 @@
 
 
                         const showPopup = (fileSrc) => {
+                            
+                            // Clear the existing content in the modal
+                            popupFile.innerHTML = '';
+                            console.log(fileSrc);
                             popupFile.src = fileSrc;
+
                             overlay.style.display = 'block';
                             popup.style.display = 'block';
                         };
-
+                    
                         // Function to close the popup
                         window.closePopup = () => {
                             overlay.style.display = 'none';
                             popup.style.display = 'none';
                         };
 
-                        const deleteFile = (fileId, fileElement) => {
+                        const showPopupPdf = (base64Data) => {
+                            // Clear the existing content in the modal
+                            popupPdfd.src = '';
+                    
+                            // Convert base64 data to blob
+                            const byteCharacters = atob(base64Data);
+                            const byteNumbers = new Array(byteCharacters.length);
+                    
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                    
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: 'application/pdf' });
+                    
+                            // Set the blob URL as the source for the iframe
+                            popupPdfd.src = URL.createObjectURL(blob);
+                    
+                            overlay.style.display = 'block';
+                            popupPdf.style.display = 'block';
+                        };
+
+                        // Function to close the popup
+                        window.closePopupPdf = () => {
+                            overlay.style.display = 'none';
+                            popupPdf.style.display = 'none';
+                        };
+
+
+                        const deleteFile = (fileId, fileElement, fileData) => {
                             // Make sure the file ID is not undefined
-                            if (!fileData) {
+                            if (!fileId) {
                                 console.error('File ID is undefined, cannot delete.');
                                 return;
                             }
-
-                            fetch(`/check/removeFile/${fileId}`, {
+                        
+                            fetch(`/check/removeFiles/${fileId}`, {
                                 method: 'DELETE',
                             })
                             .then(response => {

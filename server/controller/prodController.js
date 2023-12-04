@@ -1,6 +1,7 @@
 const path = require('path');
 const e_products = require('../model/prodModel');
 const e_projects = require('../model/projectModel');
+const session = require('express-session');
 
 
 exports.getProductPage = (req, res) => {
@@ -193,11 +194,11 @@ exports.gettableTasks = async (vendorName,res) => {
         
         try {
           const productSuggestions = await e_products.find({ Name_of_Material: { $regex: query, $options: 'i' } })
-              .select('Name_of_Material')
+              .select('products.Name_of_Material')
               .limit(10);
   
           const vendorSuggestions = await e_products.find({ Vendor_name: { $regex: query, $options: 'i' } })
-              .select('Vendor_name')
+              .select('vendor.Vendor_name')
               .limit(10);
   
           const productNames = productSuggestions.map(task => task.Name_of_Material);
@@ -215,10 +216,10 @@ exports.gettableTasks = async (vendorName,res) => {
 
 
 
-    exports.getVendorDetails = async (vendorName) => {
+    exports.getVendorDetails = async (vendorName , projectId) => {
       try {
         // Use the provided vendorName parameter to filter vendor details
-        const vendorDetails = await e_products.find({ 'vendor.vendorName': vendorName });
+        const vendorDetails = await e_products.find({projectId : projectId},{ 'vendor.vendorName': vendorName });
         return vendorDetails;
       } catch (error) {
         console.error('Error fetching vendor details:', error);
@@ -251,7 +252,7 @@ exports.gettableTasks = async (vendorName,res) => {
         const boxWidth = pageWidth - 2 * boxMargin;
         const boxHeight = 60;
         const boxPadding = 10;
-        const backgroundColor = '#242e82'; // Dark blue background color
+        const backgroundColor = '#242e82';
         const textColor = '#ffffff';
     
         // Center align boxes on the page
@@ -346,36 +347,3 @@ exports.gettableTasks = async (vendorName,res) => {
         res.status(500).send('Error generating PDF');
       }
     };
-    
-    
-
-// Route to generate and download the Excel file
-/*exports.downloadExcel= async (req, res) => {
-  try {
-    const productOrders = await getProductOrders(); // Fetch the product orders from the database
-
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Product Orders');
-
-    worksheet.columns = [
-      { header: 'Date', key: 'Date_o' },
-      { header: 'Vendor', key: 'Vendor_name' },
-      { header: 'Material', key: 'Name_of_Material' },
-      { header: 'Required Quantity', key: 'Required_quantity' },
-      { header: 'Unit Price', key: 'Unit_prize' },
-    ];
-
-    productOrders.forEach((order) => {
-      worksheet.addRow(order);
-    });
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename=product_orders.xlsx');
-    res.send(buffer);
-  } catch (error) {
-    console.error('Error generating Excel:', error);
-    res.status(500).send('Error generating Excel');
-  }
-};
-*/

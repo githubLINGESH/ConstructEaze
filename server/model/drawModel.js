@@ -2,7 +2,13 @@ const mongoose = require('mongoose');
 
 const checklistSchema = new mongoose.Schema({
     projectId : String,
-    image: { data: Buffer, contentType: String },
+    files: [
+        {
+            data: Buffer,
+            contentType: String,
+            originalName: String,
+        },
+    ],
 });
 
 

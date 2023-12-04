@@ -56,15 +56,16 @@ exports.getFiles = async (req, res) => {
                 // Convert buffer to base64 string
                 const base64Data = file.files[0].data.toString('base64');
                 return {
-                    _id: file._id,
+                    _id: file._id, // Use file._id instead of files[0]._id
                     contentType: file.files[0].contentType,
                     data: base64Data
                 };
             } else {
                 console.error(`File data missing or invalid structure for file with id ${file._id}`, file);
-                return null; // or handle the missing or invalid data as appropriate
+                return null;
             }
         });
+
 
         const validFiles = fileData.filter(Boolean);
         res.json({ files: validFiles });

@@ -3,7 +3,7 @@
         const PDFDocument = require('pdfkit');
         const ExcelJS = require('exceljs');
 
-        const { getVendorDetailsWithinDateRange , getVendorDetails } = require('../controller/prodController');
+        const {getVendorDetails } = require('../controller/prodController');
 
 
         exports.getaccountpage = (req, res) => {
@@ -83,10 +83,11 @@
 
         exports.downloadPDF = async (req, res) => {
             try {
+            const projectId = req.session.projectId;
             const vendorName = req.params.vendorName;
             const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
         
-            const productOrders = await getVendorDetails(vendorName); // Fetch details from the database
+            const productOrders = await getVendorDetails(vendorName , projectId); // Fetch details from the database
         
             const doc = new PDFDocument();
             res.setHeader('Content-Disposition', 'attachment; filename=material_details.pdf');
@@ -485,7 +486,7 @@
             };
 
 
-        exports.downloadPDFOverall = async (req, res) => { 
+        exports.downloadPDFOverall = async (req, res) => {
             try {
 
                 const productOrders = await e_products.find();

@@ -9,14 +9,14 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname); // Unique filename
+        cb(null, Date.now() + '-' + file.originalname);
     },
 });
 
 const upload = multer({ storage: storage });
 
-router.post('/uploadImages', upload.array('image', 10), drawController.uploadImages);
-router.get('/getImages',drawController.getImages);
-router.delete('/removeImage/:id', drawController.removeImage);
+router.post('/uploadFiles', upload.array('file', 10), drawController.uploadFiles);
+router.get('/getFiles', drawController.getFiles);
+router.delete('/removeFile/:id', drawController.removeFile);
 
 module.exports = router;

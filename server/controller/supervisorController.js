@@ -24,7 +24,8 @@ const path = require('path');
         });
 
     await record.save();
-    res.status(200).send("Record inserted successfully.");
+    
+    res.status(200).send("ok");
 
     } catch (error) {
         console.error('Error inserting record:', error);

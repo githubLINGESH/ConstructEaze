@@ -223,9 +223,8 @@ exports.attforrec = async (req,res) => {
 };
 
 
-exports.getlabouratt = async () => {
+exports.getlabouratt = async (projectId) => {
   try {
-    const projectId = req.session.projectId;
   const labourattendance = await contracts.find({projectId : projectId});
   return labourattendance;
   } catch (error) {

@@ -248,7 +248,7 @@
             
                         <div class="row" >
                             
-                            <form id='form' action="/sup/submitSup" method="POST">
+                            <form id="form_c" action="/sup/submitSup" method="POST">
                                 <input class="form-control" type="text" name="name" id="name" placeholder="Name" required><br>
                                 <input class="form-control" type="text" name="email" id="email" placeholder="Email" required><br>
                                 <input class="form-control" type="text" name="userid" id="userid"  placeholder="User ID" required><br>
@@ -282,18 +282,18 @@
                     </div>
                     
                 </div>
+                <div id="myModal" class="modal">
+                    <div class="popup">
+                        <img src="assets/img/succs.png">
+                        <h2>Supervisor Assignment</h2>
+                        <p>Assignment Success</p>
+                        <button onclick=closeModal()>OK</button>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
 
-    <div id="myModal" class="modal">
-        <div class="popup">
-            <img src="assets/img/succs.png">
-            <h2>Material Inward</h2>
-            <p>Material Inward Submitted!</p>
-            <button onclick="closeModal()">OK</button>
-        </div>
-    </div>
     <script>
 
         function deleteSupervisor(element) {
@@ -322,53 +322,48 @@
             });
         }
 
+        function openModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "block";
+        }
+
+        function closeModal() {
+            const modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
 
-
-            function openModal() {
-                const modal = document.getElementById("myModal");
-                modal.style.display = "block";
-            }
-    
-            function closeModal() {
-                const modal = document.getElementById("myModal");
-                modal.style.display = "none";
-            }
-
-            //from submission
-            const form = document.querySelector('form');
+            
+            const form = document.getElementById('form_c');
         
             form.addEventListener('submit', async (event) => {
-                event.preventDefault(); // Prevent the default form submission behavior
-        
-                // Get the form data
+                event.preventDefault();
                 const formData = new FormData(form);
-                const data = {};
-                formData.forEach((value, key) => {
-                    data[key] = value;
-                });
-        
-                try {
-                    const response = await fetch('/sup/submitSup', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data),
-                    });
-        
+                const taskDataa = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    userid: formData.get('userid'),
+                    pass: formData.get('pass')
+                };
+                fetch('/sup/submitSup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskDataa)
+                })
+                .then(response => {
                     if (response.ok) {
-                        event.preventDefault();
-                        // Handle successful response
-                        openModal();
+                        console.log('Record inserted successfully.');
                         form.reset();
-                        fetchAndDisplaySupervisor();
+                        openModal();
+                        fetchAndDisplayTasks();
                     } else {
-                        console.error('Error:');
+                        console.error('Error inserting record.');
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
+                })
+                .catch(error => console.error('Error inserting record:', error));
             });
         
 

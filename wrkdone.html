@@ -139,13 +139,14 @@
             <div class="sidebar" style="height: 100%;">
                 <nav class="nav flex-column" style="padding-top: 100px; ">
                     <a class="nav-link space" href="todo.html">To Do</a>
-                    <a class="nav-link space" href="#">Check List</a>
+                    <a class="nav-link space" href="checklist.html">Check List</a>
                     <a class="nav-link space" href="matinf.html">Material Inward</a>
                     <a class="nav-link space" href="matoutf.html">Material Outward</a>
                     <a class="nav-link space active" href="wrkdone.html" style="  color: white !important;
                     background-color: rgba(0, 0, 0, 0.2);
                     border-left: 3px solid #F2D200;">Work Done</a>
-                    <a class="nav-link space" href="totexp.html">Total Expence</a>
+                    <a class="nav-link space" href="totexp.html">Total Expense</a>
+                    <a class="nav-link space" href="draw.html">Drawings</a>
                 </nav>
             </div>
             </div>
@@ -259,7 +260,7 @@
     });
 
     const fetchAndDisplayworks = () => {
-    fetch('/work/getwork') 
+    fetch('/work/getwork')
     .then(response => response.json())
                     .then(works => {
                         console.log(works);

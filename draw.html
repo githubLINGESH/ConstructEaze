@@ -126,6 +126,26 @@
             align-items: center;
             display:flex;
         }
+
+        .popupPdf {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            width:400px;
+            height:-250px;
+            transform: translate(-50%, -50%);
+            border-radius:50px;
+            padding: 20px;
+            z-index: 1000;
+        }
+        
+        .popupPdf iframe {
+            max-width: 300%;
+            min-width: 80%;
+            align-items: center;
+            display:flex;
+        }
         
             
     </style>
@@ -195,7 +215,7 @@
                             <div class="col-lg-2 col-md-2 col-sm-10 col-xs-10 d-grid gap-2">
                                 <input type="file" name="upload" id="upload" class="btn btn-primary">
                                 <div class="upload-preview" id="preview"></div>
-                                <button id="uploadImagesButton" class="btn-block save">Upload Images</button>
+                                <button id="uploadFilesButton" class="btn-block save">Upload Files</button>
                             </div>
                         </div>
                     
@@ -203,7 +223,7 @@
                             <!-- This container will hold the cards -->
                         </div>
 
-                        <div class="image-container" id="imageContainer">
+                        <div class="image-container" id="fileContainer">
                         </div>
 
                         <div id="overlay" onclick="closePopup()"></div>
@@ -211,6 +231,11 @@
                         <div class="popup" id="popup" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
                             <img id="popupImg" src="" alt="Popup Image" style="max-width: 100%;">
                             <button class="btn-block save" onclick="closePopup()">Close</button>
+                        </div>
+
+                        <div class="popupPdf" id="popupPdf" tabindex="-1">
+                            <iframe id="popupPdfd" src="" alt="Popup Pdf"></iframe>
+                            <button class="btn-block save" onclick="closePopupPdf()">Close</button>
                         </div>
 
 
@@ -225,138 +250,240 @@
 
                     // Declare the global variable to store uploaded files
                     let uploadedFiles = [];
-            
+
                     document.getElementById('upload').addEventListener('change', function() {
                         const previewElement = document.getElementById('preview');
-            
+
                         Array.from(this.files).forEach(file => {
                             const reader = new FileReader();
-            
+
                             reader.onload = function() {
-                                const uploadedImage = document.createElement('div');
-                                uploadedImage.classList.add('uploaded-image');
-            
-                                const imageElement = document.createElement('img');
-                                imageElement.src = reader.result;
-                                uploadedImage.appendChild(imageElement);
-            
+                                const uploadedItem = document.createElement('div');
+                                uploadedItem.classList.add('uploaded-item');
+
+                                if (file.type.includes('image')) {
+                                    // Display image
+                                    const imageElement = document.createElement('img');
+                                    imageElement.src = reader.result;
+                                    uploadedItem.appendChild(imageElement);
+                                } else if (file.type.includes('pdf')) {
+                                    // Display PDF
+                                    const pdfElement = document.createElement('embed');
+                                    pdfElement.src = reader.result;
+                                    uploadedItem.appendChild(pdfElement);
+                                } else if (file.type.includes('vnd')) {
+                                    // Display Excel
+                                    const excelElement = document.createElement('embed');
+                                    excelElement.src = reader.result;
+                                    uploadedItem.appendChild(excelElement);
+                                } else {
+                                    // Handle other file types as needed
+                                    const genericElement = document.createElement('div');
+                                    genericElement.textContent = 'Unsupported file type';
+                                    uploadedItem.appendChild(genericElement);
+                                }
+
                                 const closeButton = document.createElement('div');
                                 closeButton.classList.add('close-button');
                                 closeButton.innerHTML = '&#x2715;';
                                 closeButton.addEventListener('click', function() {
-                                    // Remove the image from the preview
-                                    uploadedImage.remove();
+                                    // Remove the item from the preview
+                                    uploadedItem.remove();
                                     // Remove the file from the uploadedFiles array
                                     const fileIndex = uploadedFiles.indexOf(file);
                                     if (fileIndex !== -1) {
                                         uploadedFiles.splice(fileIndex, 1);
                                     }
                                 });
-                                uploadedImage.appendChild(closeButton);
-            
-                                previewElement.appendChild(uploadedImage);
+                                uploadedItem.appendChild(closeButton);
+
+                                previewElement.appendChild(uploadedItem);
                             };
-            
+
                             reader.readAsDataURL(file);
                             // Append the file to the uploadedFiles array
                             uploadedFiles.push(file);
                         });
                     });
             
-                    document.getElementById('uploadImagesButton').addEventListener('click', function() {
+                    document.getElementById('uploadFilesButton').addEventListener('click', function() {
+
                         if (uploadedFiles.length === 0) {
-                            alert('Please select images to upload.');
+                            alert('Please select files to upload.');
                             return;
                         }
-            
+
                         // Create a FormData object to send files as multipart/form-data
                         const formData = new FormData();
                         uploadedFiles.forEach(file => {
-                            formData.append('image', file);
+                            formData.append('file', file);
                         });
-            
-                        // Use the Fetch API to send the images to your server
-                        fetch('/draw/uploadImages', {
+
+                        console.log(formData);
+
+                        // Use the Fetch API to send the files to your server
+                        fetch('/draw/uploadFiles', {
                             method: 'POST',
                             body: formData,
                         })
                         .then(response => {
                             if (response.ok) {
-                                alert('Images uploaded successfully.');
+                                alert('Files uploaded successfully.');
                             } else {
-                                alert('Error uploading images.');
+                                alert('Error uploading files.');
                             }
                         })
                         .catch(error => {
                             console.error('Error:', error);
-                            alert('An error occurred while uploading images.');
+                            alert('An error occurred while uploading files.');
                         });
                     });
-
-
-                    document.addEventListener('DOMContentLoaded', (event) => {
-                        const displayImages = () => {
-                            const imageContainer = document.getElementById('imageContainer');
+                    
+                    
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const displayFiles = () => {
+                            const fileContainer = document.getElementById('fileContainer');
                             const overlay = document.getElementById('overlay');
                             const popup = document.getElementById('popup');
-                            const popupImg = document.getElementById('popupImg');
+                            const popupPdf = document.getElementById('popupPdf');
+                            const popupFile = document.getElementById('popupFile');
+                            const popupPdfd = document.getElementById('popupPdfd');
                         
-                        
-                            // Make a GET request to retrieve the images
-                            fetch('/draw/getImages')
+                            // Make a GET request to retrieve the files
+                            fetch('/draw/getFiles')
                                 .then(response => response.json())
                                 .then(data => {
-                                    data.images.forEach(imageData => {
-                                        const imageBox = document.createElement('div');
-                                        imageBox.className = 'card list custom-card mt-3';
-                                        
-                                        const imageElement = document.createElement('img');
-                                        imageElement.src = `data:${imageData.contentType};base64,${imageData.data}`;
-                                        imageElement.addEventListener('click', () => showPopup(imageElement.src));
-                                        
-                                            const deleteIcon = document.createElement('i');
-                                            deleteIcon.className = 'fas fa-trash-alt delete-icon';
-
-                                            deleteIcon.addEventListener('click', (e) => {
-                                                e.stopPropagation();
-                                                deleteImage(imageData._id, imageBox);
-                                            });
-                                        
-                                            imageBox.appendChild(imageElement);
-                                            imageBox.appendChild(deleteIcon);
-                                            imageContainer.appendChild(imageBox);
-                                        });
-                                    })
-                                .catch(error => {
-                                console.error('Error:', error);
-                                });
-                            };
                         
-                            displayImages();
-
-                            const showPopup = (imgSrc) => {
-                                popupImg.src = imgSrc;
-                                overlay.style.display = 'block';
-                                popup.style.display = 'block';
-                            };
+                                    data.files.forEach(fileData => {
+                                        console.log('File Data:', fileData);
                                 
-                            
-                            // Function to close the popup
-                            window.closePopup = () => {
-                                overlay.style.display = 'none';
-                                popup.style.display = 'none';
-                            };
-                        });
-                        
+                                        const fileBox = document.createElement('div');
+                                        fileBox.className = 'card list custom-card mt-3';
+                                
+                                        if (fileData.contentType.includes('image')) {
+                                            // Display image
+                                            console.log('Displaying image:', fileData);
+                                            const imageElement = document.createElement('img');
+                                            imageElement.src = createBlobUrl(fileData.data, fileData.contentType);
+                                            imageElement.addEventListener('click', () => showPopup(imageElement.src));
+                                            fileBox.appendChild(imageElement);
+                                        } else if (fileData.contentType.includes('pdf') || fileData.contentType.includes('vnd')) {
+                                            // Display PDF or Excel
+                                            console.log(`Displaying ${fileData.contentType}:`, fileData);
+                                            const embedElement = document.createElement('iframe');
+                                            embedElement.src = createBlobUrl(fileData.data, fileData.contentType);
+                                            popupPdf.addEventListener('click', () => showPopupPdf(fileData.data));
+                                            fileBox.appendChild(embedElement);
+                                        } else {
+                                            // Handle other file types as needed
+                                            console.log('Unsupported file type:', fileData);
+                                            const genericElement = document.createElement('div');
+                                            genericElement.textContent = 'Unsupported file type';
+                                            fileBox.appendChild(genericElement);
+                                        }
 
-                        const deleteImage = (imageId, imageElement) => {
-                            // Make sure the image ID is not undefined
-                            if (!imageId) {
-                                console.error('Image ID is undefined, cannot delete.');
+                                        if (fileContainer) {
+                                            fileContainer.appendChild(fileBox);
+                                        } else {
+                                            console.error('File container is null:', fileContainer);
+                                        }
+                        
+                                        const deleteIcon = document.createElement('i');
+                                        deleteIcon.className = 'fas fa-trash-alt delete-icon';
+                                        deleteIcon.addEventListener('click', (e) => {
+                                            e.stopPropagation();
+                                            const fileId = fileData._id
+                                                console.log('File ID to be deleted:', fileId);
+                                                deleteFile(fileId, fileBox, fileData);
+
+                                        });
+                        
+                                        fileBox.appendChild(deleteIcon);
+                                        fileContainer.appendChild(fileBox);
+                                    });
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching files:', error);
+                                });
+                        };
+                        
+                    
+                        displayFiles();
+                    
+                        const createBlobUrl = (base64Data, contentType) => {
+                            console.log('createBlobUrl - base64Data:', base64Data);
+                            console.log('createBlobUrl - contentType:', contentType);
+                        
+                            const byteCharacters = atob(base64Data);
+                            const byteNumbers = new Array(byteCharacters.length);
+                        
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                        
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: contentType });
+                        
+                            // Create a data URL and return
+                            const dataUrl = URL.createObjectURL(blob);
+                            return dataUrl;
+                        };
+
+
+                        const showPopup = (fileSrc) => {
+                            
+                            // Clear the existing content in the modal
+                            popupFile.innerHTML = '';
+                            console.log(fileSrc);
+                            popupFile.src = fileSrc;
+
+                            overlay.style.display = 'block';
+                            popup.style.display = 'block';
+                        };
+                    
+                        // Function to close the popup
+                        window.closePopup = () => {
+                            overlay.style.display = 'none';
+                            popup.style.display = 'none';
+                        };
+
+                        const showPopupPdf = (base64Data) => {
+                            // Clear the existing content in the modal
+                            popupPdfd.src = '';
+                    
+                            // Convert base64 data to blob
+                            const byteCharacters = atob(base64Data);
+                            const byteNumbers = new Array(byteCharacters.length);
+                    
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                    
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: 'application/pdf' });
+                    
+                            // Set the blob URL as the source for the iframe
+                            popupPdfd.src = URL.createObjectURL(blob);
+                    
+                            overlay.style.display = 'block';
+                            popupPdf.style.display = 'block';
+                        };
+
+                        // Function to close the popup
+                        window.closePopupPdf = () => {
+                            overlay.style.display = 'none';
+                            popupPdf.style.display = 'none';
+                        };
+
+
+                        const deleteFile = (fileId, fileElement, fileData) => {
+                            // Make sure the file ID is not undefined
+                            if (!fileId) {
+                                console.error('File ID is undefined, cannot delete.');
                                 return;
                             }
                         
-                            fetch(`/draw/removeImage/${imageId}`, {
+                            fetch(`/draw/removeFiles/${fileId}`, {
                                 method: 'DELETE',
                             })
                             .then(response => {
@@ -367,12 +494,13 @@
                             })
                             .then(data => {
                                 console.log(data);
-                                imageElement.remove();
+                                fileElement.remove();
                             })
                             .catch(error => {
                                 console.error('Error:', error);
                             });
                         };
+                    });
                         
                         
                     </script>
