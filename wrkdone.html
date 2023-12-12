@@ -299,6 +299,7 @@
             if (response.ok) {
                 // Data successfully saved, you can close the popup or display a success message
                 popup.style.display = "none";
+                fetchAndDisplayworks();
             } else {
                 // Handle error
                 console.error("Error saving data");

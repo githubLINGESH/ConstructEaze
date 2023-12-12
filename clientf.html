@@ -296,7 +296,7 @@ color: black;
                             </div>
                 
                 
-                            <div class="row" >
+                            <div class="row">
                                 
                                 <form id="form_c" action="/client/sub" method="POST">
                                     <input type="text" name="name" id="name" placeholder="Name" required><br>
@@ -460,8 +460,8 @@ color: black;
                     .then((response) => {
                         if (response.ok) {
                             console.log('File uploaded successfully.');
-                            openModal1(); // Show the "myModal1" modal
-                            fileInput.value = null; // Reset the file input field
+                            openModal1();
+                            fileInput.value = null;
                         } else {
                             console.error('Error uploading file.');
                         }

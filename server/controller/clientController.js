@@ -54,6 +54,8 @@ exports.handleFileUpload = (req, res) => {
       // Remove the temporary file
       fs.unlinkSync(file.path);
 
+      console.log(encodeURIComponent(results[0]));
+
       // Map data to MongoDB worker documents
       const workers = results.map((result) => ({
         projectId: projectId,

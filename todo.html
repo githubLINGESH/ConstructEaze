@@ -308,12 +308,14 @@ color: black;
                                     </div>
                                     </div>
                                 </div>
+                                <form action="/todo/download-pdf" method="POST">
                                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 35%;">
-                                    <button class="btn-block">
+                                    <button type="submit" class="btn-block">
                                         <i class="fas fa-download"></i>
                                         Download
                                     </button>
                                 </div>
+                            </form>
                             </div>
                         </div>
                 </div>
@@ -363,7 +365,38 @@ color: black;
             }
         </script>
         <script>
+
+            function deleteSupervisor(element) {
+
+                console.log("comes in");
+                // Get the value of data-worker-id attribute from the closest 'tr' element
+                const taskName = element.closest('tr').querySelector('[data-worker-id]').getAttribute('data-worker-id');
+            
+                // Send a DELETE request to the server to delete the supervisor
+                fetch('/todo/DeleteTodo/', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: taskName })
+                })
+                .then((response) => {
+                    if (response.ok) {
+                        // Delete was successful, you can remove the row from the tasks table
+                        const row = element.closest('tr');
+                        row.remove();
+                    } else {
+                        // Handle error, e.g., display an error message to the user
+                        console.error('Delete request failed');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error deleting supervisor:', error);
+                });
+            }
+
             document.addEventListener('DOMContentLoaded', () => {
+
 
                 const tasksTableBody = document.querySelector('#table tbody');
         
@@ -379,9 +412,12 @@ color: black;
                             row.innerHTML = `
                             <td>${task.Start_date}</td>
                             <td>${task.End_date}</td>
-                            <td>${task.Task_name}</td>
+                            <td data-worker-id="${task.Task_name}">${task.Task_name}</td>
+                            <td><div style="cursor: pointer;" onclick="deleteSupervisor(this)"><i class="fas fa-trash-alt"></i></div></td>
                             `;
                             tasksTableBody.appendChild(row);
+
+                            
                         });
                     })
                     .catch(error => console.error('Error retrieving tasks:', error));
@@ -389,6 +425,7 @@ color: black;
         
             // Fetch tasks when the page loads
             fetchAndDisplayTasks();
+
         
             // Handle form submission
             const form = document.getElementById('FORM_CCCC');
