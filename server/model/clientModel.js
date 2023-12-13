@@ -22,6 +22,19 @@ const clientSchema = new mongoose.Schema({
         type: String,
       },
 
+      As:{
+        type : String
+      },
+      By :{
+        type : String
+      },
+      dateOfPayment:{
+        type: Date,
+      },
+      Amount:{
+        type:Number
+      }
+
 });
 
 const E_client = mongoose.model('E_client', clientSchema);

@@ -77,3 +77,28 @@ exports.handleFileUpload = (req, res) => {
     });
 };
 
+
+exports.Payment = async(req,res) =>{
+
+  try{
+    const projectId = req.session.projectId;
+    const {name , date , amt , As , By } = req.body
+
+    const payment = await E_client.findOne({projectId: projectId,name:name})
+
+    if(payment){
+      const payments ={
+        As : As,
+        By : By,
+        dateOfPayment : date,
+        Amount : amt
+      }
+      await payments.save()
+    }
+
+  }
+  catch(error)
+  {
+    console.log("Error inserting payemnts",error)
+  }
+}

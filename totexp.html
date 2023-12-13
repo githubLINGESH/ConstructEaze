@@ -248,6 +248,17 @@
     modal.style.display = "none";
     }
 
+    function openModal3() {
+        const modal = document.getElementById("myModal3");
+        modal.style.display = "block";
+        }
+        function closeModal3() {
+        const modal = document.getElementById("myModal3");
+        modal.style.display = "none";
+        }
+
+
+
     </script>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -332,6 +343,11 @@
                 </div>
                 <div>
                     <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="box" onclick="openModal3()">
+                            <a href="#" style="color: white; text-decoration: none;"><p>Client Payments</p></a>
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>
@@ -368,6 +384,24 @@
             </form>
         </div>
         </div>
+
+        <div id="myModal3" class="modal">
+            <div class="popup">
+                <button type="button" class="close-icon" onclick="closeModal3()">&times;</button>
+                <img src="assets/img/189249.png">
+                <h2>Client Payments</h2>
+                <form id="form_cl" action="/client/submit-pay" method="POST">
+                <div class="form-group" style="margin-top: 5%;">
+                    <input type="date" id="date" name="date" placeholder="Date of Payment" style="margin:10px;" required>
+                    <input type="text" id="name" name="name" placeholder="Name of Client" style="margin:10px;" required>
+                    <input type="text" id="As" name="unit" placeholder="As" style="margin:10px;" required>
+                    <input type="text" id="By" name="unitprice" placeholder="By" style="margin:10px;" required>
+                    <input type="Number" id="amt" name="amt" placeholder="Payment received" style="margin:10px;" required>
+                </div>
+                <button type="submit" class="btn-block">Submit details</button>
+                </form>
+            </div>
+            </div>
     
     </body>
     <script>
@@ -421,6 +455,41 @@
         
         
                 fetch('/pay/submit-lab', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(taskData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (response.ok) {
+
+                        console.log('Record inserted successfully.');
+                    } else {
+                        console.error('Error inserting record.');
+                    }
+                })
+                .catch(error => console.error('Error inserting record:', error));
+            });
+
+
+            const formc = document.getElementById('form_cl');
+                form.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent the default form submission behavior
+                const url = form.getAttribute('action');
+                const formData = new FormData(form);
+                const taskData = {
+                    date: formData.get('date'),
+                    name: formData.get('name'),
+                    As :formData.get('As'),
+                    By : formData.get('By'),
+                    amt: formData.get('amt'),
+                    
+                };
+        
+        
+                fetch('/client/submit-pay', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
