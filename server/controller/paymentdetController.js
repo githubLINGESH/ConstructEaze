@@ -1,5 +1,6 @@
 const lpay = require('../model/labourpayModel');
 const vpay = require('../model/vendorpayModel');
+const E_client = require('../model/clientModel');
 const path = require('path')
 const PDFDocument = require('pdfkit');
 const ExcelJS = require('exceljs');
@@ -85,6 +86,18 @@ exports.submitlab = async (req, res) => {
             const projectId = req.session.projectId;
             const productNames = await lpay.find({ 'projectId': projectId }).distinct("name");
             res.json(productNames);
+        } catch (error) {
+            console.error('Error fetching product names:', error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    };
+
+    exports.getClientNames = async (req, res) => {
+        try {
+    
+            const projectId = req.session.projectId;
+            const clientNames = await E_client.find({ 'projectId': projectId }).distinct("name");
+            res.json(clientNames);
         } catch (error) {
             console.error('Error fetching product names:', error);
             res.status(500).json({ message: 'Internal server error' });
@@ -359,6 +372,7 @@ exports.submitlab = async (req, res) => {
                         // Route to generate and download the Excel file
                         exports.getLabDetailsExcel = async (req, res) => {
                             try {
+                                
                                 const labourName = req.params.labourName;
                                 const dateArray = JSON.parse(req.body.dateArray);
                                 const l = dateArray.length;
@@ -411,3 +425,208 @@ exports.submitlab = async (req, res) => {
                                 res.status(500).send('Error generating Excel');
                                 }
                             };
+
+                            const {getClientDet} = require('../controller/clientController');
+
+                            exports.getClDetailsPDF = async (req, res) => {
+                                try {
+                                    const projectId = req.session.projectId;
+                                    const clientName = req.params.clientName;
+                                    console.log(clientName);
+                                    const dateArray = JSON.parse(req.body.dateArray);
+                                    const l = dateArray.length;
+                                
+                                    console.log(dateArray);
+                                    console.log(l);
+                            
+                                    const labourattendance = await getClientDet(clientName,projectId);
+                            
+                                    const doc = new PDFDocument();
+                                    doc.pipe(res);
+                            
+                                    doc.fontSize(18).text('Vendor Payment Details', { align: 'center' });
+                                    doc.moveDown();
+                            
+                                    const tableHeaders = ['dateOfPayment','name','As','By','Amount'];
+                            
+                                    const table = {
+                                        rows: [tableHeaders],
+                                    };
+                                    
+                                    // Check if labourattendance is an array
+                                    if (Array.isArray(labourattendance)) {
+                                        labourattendance.forEach((order) => {
+                                            // Check if order has the expected properties
+                                            if (order && order.dateOfPayment) {
+                                                for (let i = 0; i < l; i++) {
+                                                    const selectedDate = dateArray[i];
+                                    
+                                                    // Parse the date strings to Date objects
+                                                    const selectedDateObj = new Date(selectedDate);
+                                                    const orderDateObj = new Date(order.dateOfPayment);
+                                    
+                                                    // Compare the date parts (year, month, and day)
+                                                    if (
+                                                        selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                                                        selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                                                        selectedDateObj.getDate() === orderDateObj.getDate()
+                                                    ) {
+                                                        // Format the date without the time portion
+                                                        const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                        });
+                                    
+                                                        table.rows.push([
+                                                            formattedDate,
+                                                            order.clientName,
+                                                            order.C_As,
+                                                            order.C_By,
+                                                            order.Amount
+                                                        ]);
+                                                    }
+                                                }
+                                            } else {
+                                                console.error('Order does not have expected properties:', order);
+                                            }
+                                        });
+                                    } else{
+                                        if (labourattendance && labourattendance.dateOfPayment) {
+                                            // Handle the case where labourattendance is a single document
+                                            const selectedDateObj = new Date(labourattendance.dateOfPayment);
+                                            const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                            });
+                                        
+                                            table.rows.push([
+                                                formattedDate,
+                                                labourattendance.name,
+                                                labourattendance.C_As,
+                                                labourattendance.C_By,
+                                                labourattendance.Amount
+                                            ]);
+                                        }
+                                    }
+                            
+                                    const tableTop = doc.y + 15;
+                                    const initialX = 50;
+                                    const rowHeight = 25;
+                                    const columnWidth = 100;
+                            
+                                    for (let i = 0; i < table.rows.length; i++) {
+                                    const currentRow = table.rows[i];
+                                    for (let j = 0; j < currentRow.length; j++) {
+                                        doc
+                                        .fontSize(12)
+                                        .text(currentRow[j], initialX + j * columnWidth, tableTop + i * rowHeight, { width: columnWidth });
+                                    }
+                                    }
+
+                                    console.log('table:', table);
+                            
+                                    // Add table lines
+                                    const tableBottom = tableTop + table.rows.length * rowHeight;
+                                    const tableRight = initialX + tableHeaders.length * columnWidth;
+                            
+                                    doc.moveTo(initialX, tableTop).lineTo(initialX, tableBottom).stroke(); // Vertical line on the left
+                                    doc.moveTo(tableRight, tableTop).lineTo(tableRight, tableBottom).stroke(); // Vertical line on the right
+                            
+                                    for (let i = 0; i <= table.rows.length; i++) {
+                                    const y = tableTop + i * rowHeight;
+                                    doc.moveTo(initialX, y).lineTo(tableRight, y).stroke(); // Horizontal lines
+                                    }
+                            
+                                    doc.end();
+                                } catch (error) {
+                                    console.error('Error generating PDF:', error);
+                                    res.status(500).send('Error generating PDF');
+                                }
+                                };
+                            
+                                // Route to generate and download the Excel file
+                                exports.getClDetailsExcel = async (req, res) => {
+                                    try {
+                                        const projectId = req.session.projectId;
+                                        const clientName = req.params.clientName;
+                                        const dateArray = JSON.parse(req.body.dateArray);
+                                        const l = dateArray.length;
+                            
+                                        console.log(dateArray);
+                                    
+                                        const labourattendance = await getClientDet(clientName,projectId);
+                                    
+                                        const workbook = new ExcelJS.Workbook();
+                                        const worksheet = workbook.addWorksheet('Labour Attendance');
+                                    
+                                        worksheet.columns = [
+                                            { header: 'DateOfPayment', key: 'date', width: 15 },
+                                            { header: 'Client Name', key: 'name', width: 25 },
+                                            { header: 'As', key: 'As', width: 25 },
+                                            { header: 'By', key: 'By', width: 15 },
+                                            { header: 'Amount', key: 'Amount', width: 20 },
+                                        ];
+                                    
+                                        if (Array.isArray(labourattendance)) {
+                                        labourattendance.forEach((order) => {
+                                            for (let i = 0; i < l; i++) {
+                                            const selectedDate = dateArray[i];
+                                            const selectedDateObj = new Date(selectedDate);
+                                            const orderDateObj = new Date(order.date); // Make sure 'date' is the correct field name
+                                    
+                                            if (
+                                                selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                                                selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                                                selectedDateObj.getDate() === orderDateObj.getDate()
+                                            ) {
+                                                const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                });
+                                    
+                                                worksheet.addRow({
+                                                date: formattedDate,
+                                                name: order.name,
+                                                As: order.C_As,
+                                                By: order.C_By,
+                                                Amount : order.Amount
+                                                });
+                                            }
+                                            }
+                                        });
+                                    }
+                                    else
+                                    {
+
+                                            if (labourattendance && labourattendance.dateOfPayment) {
+                                                // Handle the case where labourattendance is a single document
+                                                const selectedDateObj = new Date(labourattendance.dateOfPayment);
+                                                const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                });
+                                            
+                                                worksheet.addRow({
+                                                    date: formattedDate,
+                                                    name: labourattendance.name,
+                                                    As: labourattendance.C_As,
+                                                    By: labourattendance.C_By,
+                                                    Amount : labourattendance.Amount
+                                                    });
+                                            }
+                                    }
+
+                                    
+                                        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+                                        res.setHeader('Content-Disposition', 'attachment; filename="Labour_Attendance.xlsx"');
+                                        await workbook.xlsx.write(res);
+                                        res.end();
+                                        } catch (error) {
+                                        console.error('Error generating Excel:', error);
+                                        res.status(500).send('Error generating Excel');
+                                        }
+                                    };

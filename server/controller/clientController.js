@@ -78,27 +78,59 @@ exports.handleFileUpload = (req, res) => {
 };
 
 
-exports.Payment = async(req,res) =>{
-
-  try{
+exports.Payment = async (req, res) => {
+  try {
     const projectId = req.session.projectId;
-    const {name , date , amt , As , By } = req.body
+    const { name, date, amt, C_As, C_By } = req.body;
+    console.log(C_As,C_By,amt,name);
 
-    const payment = await E_client.findOne({projectId: projectId,name:name})
+    let payment = await E_client.findOne({ projectId: projectId, name: name });
 
-    if(payment){
-      const payments ={
-        As : As,
-        By : By,
-        dateOfPayment : date,
-        Amount : amt
+    if (payment) {
+      // Check if the found document has the save method
+      if (typeof payment.save === 'function') {
+        payment.projectId = projectId,
+        payment.name = name
+        payment.C_As = C_As;
+        payment.C_By = C_By;
+        payment.dateOfPayment = date;
+        payment.Amount = amt;
+
+        await payment.save();
+
+        res.status(200).send({ message: 'Payment inserted successfully' });
+      } else {
+        res.status(500).send({ error: 'Found document does not have a save method' });
       }
-      await payments.save()
+    } else {
+      // Handle the case where no payment is found
+      res.status(404).send({ message: 'Payment not found' });
     }
+  } catch (error) {
+    console.error('Error inserting payments', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+};
 
+
+
+exports.getClientDet = async(clientName,projectId) =>{
+  try{
+  if(clientName){
+  tasks =  await E_client.findOne({projectId:projectId, name: clientName})
   }
-  catch(error)
-  {
-    console.log("Error inserting payemnts",error)
+  else{
+  tasks = await E_client.find({projectId:projectId})
   }
+  
+  console.log("client payment details:",tasks);
+  return tasks;
+  }
+  catch (error) {
+    console.error('Error retrieving tasks:', error);
+    res.status(500).send('Error retrieving tasks.');
 }
+};
+
+
+

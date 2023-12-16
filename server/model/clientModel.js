@@ -22,10 +22,10 @@ const clientSchema = new mongoose.Schema({
         type: String,
       },
 
-      As:{
+      C_As:{
         type : String
       },
-      By :{
+      C_By :{
         type : String
       },
       dateOfPayment:{

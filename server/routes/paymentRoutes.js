@@ -16,6 +16,8 @@ router.get('/get-vendor-names', payController.getVendorNames);
 
 router.get('/get-labour-names', payController.getLabourNames);
 
+router.get('/get-client-names', payController.getClientNames);
+
 router.post('/download-pdf-get-vendor-details/:vendorName', payController.getVendorDetailsPDF);
 
 router.post('/download-pdf-get-labour-details/:labourName', payController.getLabDetailsPDF);
@@ -23,5 +25,9 @@ router.post('/download-pdf-get-labour-details/:labourName', payController.getLab
 router.post('/download-excel-get-vendor-details/:vendorName', payController.getVendorDetailsExcel);
 
 router.post('/download-excel-get-labour-details/:labourName', payController.getLabDetailsExcel);
+
+router.post('/download-excel-get-client-details/:clientName', payController.getClDetailsExcel);
+
+router.post('/download-pdf-get-client-details/:clientName', payController.getClDetailsPDF);
 
 module.exports = router;
