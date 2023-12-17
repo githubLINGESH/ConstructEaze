@@ -13,6 +13,8 @@ router.get('/getVendor/:vendorName', materialController.getVendor);
 router.post('/submitprod', materialController.submitMaterial);
 router.get('/autosearchprod', materialController.autosearchforprod);
 router.get('/GeneratePNo',materialController.generatePNo);
+router.get('/getprod', materialController.getProducts)
+
 
 
 module.exports = router;

@@ -12,8 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./assets/css/pent.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
-      <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/smoothness/jquery-ui.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
@@ -321,18 +321,16 @@
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="search input-group d-flex">
                       <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
-                      <input type="text" placeholder="Search Product..">
+                      <input type="text" id="search-input" placeholder="Search Product..">
                     </div>
                   </div>
                   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
                     <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                       <button id="choosebut" type="button" class="btn-block" style="background-color: #242e82 !important; width:200px;" data-bs-toggle="modal" data-bs-target="#exampleModal">Choose Vendor</button>
                     </div>
-                    <!--<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                      <button onclick="DownloadDivAsPDF()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
-                    </div>-->
                   </div>
                 </div>
+                
               </div>
               
               <!-- Modal -->
@@ -460,6 +458,19 @@
                 </div>
             </form>
 
+            <table id="producttable" class="table table-bordered table-hover text-center" style="border: 3px solid #ccc;">
+              <thead><h3>EXISTING PRODUCTS</h3>
+                <tr>
+                  <th>Item Name</th>
+                  <th>Product code</th>
+                  <th>Unit</th>
+                  <th>Category</th>
+                  </tr>
+              </thead>
+                  <tbody id="product">
+
+                  </tbody>
+            </table>
 
               
               <!--<div class="filter" style="display: flex; align-items: center;">
@@ -872,96 +883,53 @@ function submitForm() {
             form.submit();
             }
 
-  
-
-  document.addEventListener('DOMContentLoaded', () => {
-  const tasksTableBody = document.querySelector('#table tbody');
-  const formPopup = document.getElementById("myFormin");
-  const vendorNameInput = document.getElementById("vendorNameInput");
-  const materialNameInput = document.getElementById("materialNameInput");
-
-  const dateInput = document.getElementById("dateInput");
-  var year=null;
-  var day=null;
-  var month=null;
-
-  // Function to fetch and display tasks
-  const fetchAndDisplayTasks = () => {
-      fetch('/prod/getprod')
-          .then(response => response.json())
-          .then(tasks => {
-              tasksTableBody.innerHTML = ''; // Clear existing table rows
-
-              tasks.forEach(task => {
-                  const row = document.createElement('tr');
-                  row.innerHTML = `
-                      <td>${task.Vendor_name}</td>
-                      <td>${task.Name_of_Material}</td>
-                      <td>
-                        <button style="text-align: center; padding: 8px;" class="btn-block">Add</button>
-                          
-                      </td>
-                  `;
-                  tasksTableBody.appendChild(row);
-
-                  // Add event listener to each "Add Material" button
-                  const addButton = row.querySelector('button');
-                  addButton.addEventListener('click', () => {
-                    function updateDate() {
-                      // Create a new Date object
-                      currentDate = new Date();
-
-                      // Get the day, month, and year
-                      day = currentDate.getDate();
-                      month = currentDate.getMonth() + 1; // Months are zero-based
-                      year = currentDate.getFullYear();
-
-                      // Display the date in the "date" element
-                      var dateElement = document.getElementById("date");
-                              dateInput.value = "Today's Date: " + month + "/" + day + "/" + year;
-                          }
-
-                      // Call the updateDate function to initially set the date
-                      updateDate();
-
-                      // Set an interval to update the date every 24 hours (86400000 milliseconds)
-                      setInterval(updateDate, 86400000);
-                      // When the button is clicked, extract the vendor name and material name
-                      const vendorName = task.Vendor_name;
-                      const materialName = task.Name_of_Material;
-
-                      // Populate the form fields with the vendor name and material name
-                      vendorNameInput.value = vendorName;
-                      materialNameInput.value = materialName;
-                      dateInput.value = year + "/" + month + "/" + day;
-
-                      // Display the form
-                      formPopup.style.display = "block";
-
-                  });
-              });
-          });
-  };
-  // Fetch tasks when the page loads
-  fetchAndDisplayTasks();
-});
 
 
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    const tasksTableBody = document.querySelector('#table tbody');
+  const prodTableBody = document.getElementById('product');
+  const formPopup = document.getElementById("myFormin");
+
+  // Function to fetch and display tasks
+  const fetchAndDisplayTasks = () => {
+      fetch('/prod/getprod')
+          .then(response => response.json())
+          .then(tasks => {
+              prodTableBody.innerHTML = ''; // Clear existing table rows
+
+              tasks.forEach(task => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                      <td>${task.Item_name}</td>
+                      <td>${task.Item_code}</td>
+                      <td>${task.unit}</td>
+                      <td>${task.category}</td>
+                  `;
+                  prodTableBody.appendChild(row);
+
+              });
+          });
+  };
+  // Fetch tasks when the page loads
+  fetchAndDisplayTasks();
+
+    
+});
+</script>
+<script>
+
     const searchInput = document.getElementById('search-input');
     const searchButton = document.getElementById('search-button');
-    const allRows = document.getElementById('prod-table-body').getElementsByTagName('tr');
+    const allRows = document.getElementById('product').getElementsByTagName('tr');
     
     function performClientSearch(query) {
       const searchValue = query.trim().toLowerCase();
 
       for (const row of allRows) {
-          const productNameCell = row.querySelector('td:nth-child(1)'); // Assuming product name is in the first column
-          const vendorNameCell = row.querySelector('td:nth-child(2)'); // Assuming vendor name is in the second column
+          const productNameCell = row.querySelector('td:nth-child(1)');
+          const vendorNameCell = row.querySelector('td:nth-child(2)');
 
           if (productNameCell && vendorNameCell) {
               const productName = productNameCell.textContent.toLowerCase();
@@ -989,15 +957,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const searchValue = searchInput.value.trim();
       performClientSearch(searchValue); // Perform client-side search
   });
-});
 </script>
 <script>
 $(function() {
     $("#search-input").autocomplete({
         source: function(request, response) {
-            // Make an AJAX request to fetch autocomplete suggestions
             $.ajax({
-                url: '/prod/autosearchprod', // URL to fetch autocomplete suggestions
+                url: '/prod/autosearchprod',
                 method: 'GET', // Use GET request
                 dataType: 'json', // Expect JSON response
                 data: {
@@ -1011,11 +977,9 @@ $(function() {
                 }
             });
         },
-        minLength: 0, // Minimum number of characters before showing suggestions
+        minLength: 0,
         select: function(event, ui) {
-            // Handle selected item
             $("#search-input").val(ui.item.value);
-            // Perform search based on the selected value
             searchTasks(ui.item.value);
         }
     });

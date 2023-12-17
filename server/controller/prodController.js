@@ -1,5 +1,6 @@
 const path = require('path');
 const e_products = require('../model/prodModel');
+const prods = require('../model/prodfModel');
 const e_projects = require('../model/projectModel');
 const session = require('express-session');
 
@@ -8,6 +9,18 @@ exports.getProductPage = (req, res) => {
 res.sendFile(path.join(__dirname, '..', '..', 'prod.html'));
 };
 
+
+exports.getProducts = async(req,res) =>{
+  const projectId = req.session.projectId;
+
+  try{
+    const products = await prods.find({projectId:projectId})
+    res.status(200).json(products)
+  }
+  catch(error){
+    console.log("error fetching",error)
+  }
+}
 // Define a PurchaseOrder model and import it
 
 exports.generatePNo = async (req, res) => {
@@ -191,18 +204,19 @@ exports.gettableTasks = async (vendorName,res) => {
 
     exports.autosearchforprod = async (req, res) => {
         const query = req.query.term.toLowerCase();
-        
+        const projectId = req.session.projectId
+        console.log(query);
         try {
-          const productSuggestions = await e_products.find({ Name_of_Material: { $regex: query, $options: 'i' } })
-              .select('products.Name_of_Material')
+          const productSuggestions = await prods.find({ Item_name: { $regex: query, $options: 'i' } ,projectId:projectId})
+              .select('Item_name')
               .limit(10);
   
-          const vendorSuggestions = await e_products.find({ Vendor_name: { $regex: query, $options: 'i' } })
-              .select('vendor.Vendor_name')
+          const vendorSuggestions = await prods.find({ Item_code: { $regex: query, $options: 'i' } ,projectId:projectId})
+              .select('Item_code')
               .limit(10);
   
-          const productNames = productSuggestions.map(task => task.Name_of_Material);
-          const vendorNames = vendorSuggestions.map(task => task.Vendor_name);
+          const productNames = productSuggestions.map(task => task.Item_name);
+          const vendorNames = vendorSuggestions.map(task => task.Item_code);
   
           // Concatenate product and vendor names
           const suggestions = [...productNames, ...vendorNames];
