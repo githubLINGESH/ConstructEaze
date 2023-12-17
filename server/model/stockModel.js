@@ -2,6 +2,11 @@
 
     // Define the schema for the e_stock collection
     const eStockSchema = new mongoose.Schema({
+    projectId :
+    {
+        type:String,
+        required :true
+    },
     product_name: {
         type: String,
         required: true,

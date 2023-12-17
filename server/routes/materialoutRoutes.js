@@ -11,7 +11,7 @@ router.get('/autosearchmato', materialOutController.autosearchformato);
 router.post('/update-to-stocks', materialOutController.updateTotalSuppliedQuantity);
 router.get('/getstocks', materialOutController.getstocks);
 router.put('/updatestocks',materialOutController.updatestocks);
-
+router.post('/download',materialOutController.download);
 
 
 module.exports=router;

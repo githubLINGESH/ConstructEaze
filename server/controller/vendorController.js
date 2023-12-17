@@ -34,6 +34,7 @@
     };
     
         exports.handleFileUpl = (req, res) => {
+            const projectId = req.session.projectId;
             const file = req.file;
         
             if (!file) {
@@ -52,15 +53,20 @@
         
                 // Map data to MongoDB worker documents
                 const workers = results.map((result) => ({
-                name: result.name,
-                firm_name : result.firm_name,
-                address: result.address,
-                Gst : parseInt(result.Gst),
-                phone: parseInt(result.phone)
+                    purchaseOrderNo: null,
+                    vendor: {
+                    projectId:projectId,
+                    vendorName: result.name,
+                    firmName: result.firm_name,
+                    address: result.address,
+                    gst: result.Gst,
+                    phone: result.phone,
+                    },
+                    products: null,
                 }));
         
                 // Save worker documents to MongoDB
-                E_vendor.insertMany(workers)
+                e_products.insertMany(workers)
                 .then(() => {
                     res.send('Data imported successfully');
                 })

@@ -14,13 +14,14 @@ const {Item_code ,Item_name , category , unit } = req.body;
 const projectId = req.session.projectId
 
 
+
 try {
     const record = new prods({
         projectId : projectId,
         Item_code : Item_code,
-        Name_of_Material: Item_name,
-        Category: category,
-        Unit: unit,
+        Item_name: Item_name,
+        category: category,
+        unit: unit,
     });
     await record.save();
     console.log('Record inserted successfully.');

@@ -20,6 +20,8 @@
         const workRouter = require('./server/routes/workRoutes.js');
         const paymentRouter = require('./server/routes/paymentRoutes.js');
 
+        const authenticateMiddleware = require('./server/middleware/authenticateMiddleware.js');
+
         const mongoose = require('mongoose')
         const bodyParser = require('body-parser');
         const app = express();
@@ -53,23 +55,24 @@
 
         // Mount the routers on the corresponding paths
         app.use('/login', loginRouter);
-        app.use('/client',clientRouter);
-        app.use('/prodf', prodfRouter);
-        app.use('/vendor', vendorRouter);
-        app.use('/labour', labourRouter);
-        app.use('/mat', matRouter);
-        app.use('/contract', contractRouter);
-        app.use('/todo', taskSearchRouter);
-        app.use('/prod', productRouter);
-        app.use('/mato', matoutRouter);
-        app.use('/proj', projectRouter);
-        app.use('/acc',accountRouter);
-        app.use('/sup',supervisorRouter);
-        app.use('/sAtt',superAttRouter);
-        app.use('/check',checklistRouter);
-        app.use('/draw',drawRouter);
-        app.use('/work',workRouter);
-        app.use('/pay',paymentRouter);
+        app.use('/client',authenticateMiddleware,clientRouter);
+        app.use('/prodf', authenticateMiddleware,prodfRouter);
+        app.use('/vendor', authenticateMiddleware,vendorRouter);
+        app.use('/labour', authenticateMiddleware,labourRouter);
+        app.use('/mat', authenticateMiddleware,matRouter);
+        app.use('/contract', authenticateMiddleware,contractRouter);
+        app.use('/todo', authenticateMiddleware,taskSearchRouter);
+        app.use('/prod', authenticateMiddleware,productRouter);
+        app.use('/mato', authenticateMiddleware,matoutRouter);
+        app.use('/proj',authenticateMiddleware, projectRouter);
+        app.use('/acc',authenticateMiddleware,accountRouter);
+        app.use('/sup',authenticateMiddleware,supervisorRouter);
+        app.use('/sAtt',authenticateMiddleware,superAttRouter);
+        app.use('/check',authenticateMiddleware,checklistRouter);
+        app.use('/draw', authenticateMiddleware,drawRouter);
+        app.use('/work',authenticateMiddleware,workRouter);
+        app.use('/pay',authenticateMiddleware,paymentRouter);
+
 
 
 

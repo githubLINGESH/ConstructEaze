@@ -60,10 +60,10 @@
                 userId:userId,
                 role:role,
                 projectId:projectId,
-                name: result.name,
+                w_name: result.w_name,
                 phone: parseInt(result.phone),
-                Category: result.Category,
-                wages_per_shift : parseInt(result.wages_per_shift)
+                w_type: result.w_type,
+                sal : parseInt(result.sal)
                 }));
         
                 // Save worker documents to MongoDB

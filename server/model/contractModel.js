@@ -9,18 +9,17 @@ const contractSchema = new mongoose.Schema({
   },
   role:{
     type:String,
-    required:true,
   },
   date:{
     type:Date,
     default:null,
   },
   w_name: {
-    type: String, // Name of the Worker should be a string
+    type: String,
     required: true,
   },
   phone: {
-    type: Number, // Phone Number should be a number
+    type: Number,
     required: true,
   },
   w_type: {

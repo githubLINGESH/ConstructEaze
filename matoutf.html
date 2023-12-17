@@ -445,7 +445,7 @@ color: #000; /* New text color */
                                             <i class="fas fa-search"></i>
                                         </button>
                                     </div>
-                                    <input  style="width: 250px !important;" type="text" name="search" id="search-input" class="form-control" placeholder="Search Product..">
+                                    
                                 </div>
                     </div>
                         <div style="display: flex;">
@@ -523,16 +523,23 @@ color: #000; /* New text color */
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <div class="search input-group d-flex">
-                        <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
-                        <input type="text" placeholder="Search Product..">
+                            <i class="fas fa-search" style="background-color:  rgb(177, 177, 177); padding: 10px 0 0 10px ; width:40px; border-top-left-radius: 10px; border-bottom-left-radius: 10px;"></i>
+                            <input type="text" id="search-input" placeholder="Search Product..">
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-flex">
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                        <button onclick="Downloadpdf()" type="button" class="btn-block down" style="background-color: #242e82 !important; width:200px;">Download</button>
+                    <form action="/mato/download" method="POST">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group" style="margin: 0px 0px 0px 400%;">
+                            <button type="submit" class="btn-block">
+                                <i class="fas fa-download"></i>
+                                Download
+                            </button>
                         </div>
+                    </form>
                     </div>
-                    </div>
+                </div>
+
+                <div>
+                    <h5>Wait for products to be displayed</h5>
                 </div>
 
                 <div id="prod-container">
@@ -602,9 +609,10 @@ color: #000; /* New text color */
             // Use item.nameOfMaterial and item.totalSuppliedQuantity to populate the div
             productDiv.innerHTML = `
                 <section class="p_it">
-                    <h6>${item.product_name}</h6>
+                    <h6>${item.product_name} [Total Supplied: ${item.totalSuppliedQuantity}]</h6>
                     <div style="border-top: solid 1px black;">
-                        <h6 class="mt-2">Current Stock: <span class="totcnt">${item.totalSuppliedQuantity}</span></h6>
+                        <h6 class="mt-2">Current Stock: <span class="totcnt">${item.totalSuppliedQuantity - item.used}</span></h6>
+                        <h6 class="mt-2">Used Quantity: <span class="totcnt">${item.used}</span></h6>
                         <form class="stockForm">
                             <label for="count">Used Quantity: </label>
                             <input type="text" name="count" class="stockCount">
@@ -628,6 +636,8 @@ color: #000; /* New text color */
 
             submitStockButton.addEventListener("click", function (event) {
                 event.preventDefault(); // Prevent the form from submitting
+
+                console.log("submit")
 
                 let currentValue = parseInt(stockCountElement.value) || 0;
 
@@ -682,24 +692,22 @@ window.addEventListener('load', populateProductDivs);
 
 
             document.addEventListener('DOMContentLoaded', () => {
-                const tasksTableBody = document.querySelector('#table tbody');
+                const productContainer = document.getElementById('prod-container');
                 const searchInput = document.getElementById('search-input');
                 const searchButton = document.getElementById('search-button');
-                const allRows = document.getElementById('mato-table-body').getElementsByTagName('tr');
+                const allSection = document.getElementById('prod-container').getElementsByTagName('section');
         
                 function performClientSearch(query) {
                     const searchValue = query.trim().toLowerCase();
         
-                    for (const row of allRows) {
-                        const productNameCell = row.querySelector('td:nth-child(1)'); // Assuming product name is in the first column
-                        const vendorNameCell = row.querySelector('td:nth-child(2)'); // Assuming vendor name is in the second column
+                    for (const row of allSection) {
+                        const productNameCell = row.querySelector('h6:nth-child(1)');
         
-                        if (productNameCell && vendorNameCell) {
+                        if (productNameCell) {
                             const productName = productNameCell.textContent.toLowerCase();
-                            const vendorName = vendorNameCell.textContent.toLowerCase();
         
                             // Check if the search value matches either product name or vendor name
-                            if (productName.includes(searchValue) || vendorName.includes(searchValue)) {
+                            if (productName.includes(searchValue)) {
                                 row.style.display = ''; // Show the row
                             } else {
                                 row.style.display = 'none'; // Hide the row
@@ -723,34 +731,31 @@ window.addEventListener('load', populateProductDivs);
             });
         </script>
             <script>
-            $(function() {
-                $("#search-input").autocomplete({
-                    source: function(request, response) {
-                        // Make an AJAX request to fetch autocomplete suggestions
-                        $.ajax({
-                            url: '/mato/autosearchmato', // URL to fetch autocomplete suggestions
-                            method: 'GET', // Use GET request
-                            dataType: 'json', // Expect JSON response
-                            data: {
-                                term: request.term // Pass the user input as 'term'
-                            },
-                            success: function(data) {
-                                response(data); // Provide the response to the autocomplete widget
-                            },
-                            error: function(error) {
-                                console.error('Error fetching autocomplete suggestions:', error);
-                            }
-                        });
-                    },
-                    minLength: 0, // Minimum number of characters before showing suggestions
-                    select: function(event, ui) {
-                        // Handle selected item
-                        $("#search-input").val(ui.item.value);
-                        // Perform search based on the selected value
-                        searchTasks(ui.item.value);
-                    }
+                $(function() {
+                    $("#search-input").autocomplete({
+                        source: function(request, response) {
+                            $.ajax({
+                                url: '/mato/autosearchmato',
+                                method: 'GET',
+                                dataType: 'json',
+                                data: {
+                                    term: request.term // Pass the user input as 'term'
+                                },
+                                success: function(data) {
+                                    response(data);
+                                },
+                                error: function(error) {
+                                    console.error('Error fetching autocomplete suggestions:', error);
+                                }
+                            });
+                        },
+                        minLength: 0,
+                        select: function(event, ui) {
+                            $("#search-input").val(ui.item.value);
+                            searchTasks(ui.item.value);
+                        }
+                    });
                 });
-            });
             
             
             </script>

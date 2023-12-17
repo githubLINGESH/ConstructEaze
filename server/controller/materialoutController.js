@@ -9,8 +9,7 @@
         exports.updatestocks = async(req,res) =>{
 
             try {
-
-                console.log("comming here in server side")
+                const projectId  = req.session.projectId
                 // Access form fields and product rows from the request body
                 const product_name = req.body.productName;
                 const Used = req.body.usedQuantity;
@@ -19,7 +18,7 @@
                 console.log(Used);
 
 
-                const existingPurchaseOrder = await e_stock.findOne({product_name: product_name});
+                const existingPurchaseOrder = await e_stock.findOne({product_name: product_name , projectId: projectId});
 
                     if(!existingPurchaseOrder){
                         return res.status(404).json({ error: 'PO not found' });
@@ -39,6 +38,7 @@
 
     exports.updateTotalSuppliedQuantity = async (req, res) => {
         try {
+            const projectId  = req.session.projectId
             // Get distinct materials with an order
             const materialsWithOrder = await e_products.distinct('products.nameOfMaterial', { 'products.order': true });
     
@@ -46,7 +46,7 @@
                 // Aggregate to calculate the total supplied quantity for the current nameOfMaterial
                 const totalSuppliedQuantity = await e_products.aggregate([
                     { $unwind: '$products' },
-                    { $match: { 'products.nameOfMaterial': nameOfMaterial, 'products.order': true, 'products.nameOfMaterial': { $ne: null } } },
+                    { $match: {projectId: projectId, 'products.nameOfMaterial': nameOfMaterial, 'products.order': true, 'products.nameOfMaterial': { $ne: null } } },
                     { $group: { _id: '$products.nameOfMaterial', totalSuppliedQuantity: { $sum: '$products.suppliedQuantity' } } },
                 ]);
                 
@@ -71,6 +71,7 @@
                             } else {
                                 // Create a new stock item record
                                 const stockItem = new e_stock({
+                                    projectId: projectId,
                                     product_name: nameOfMaterial,
                                     totalSuppliedQuantity: total,
                                     used: 0,
@@ -102,7 +103,8 @@
     
     exports.getstocks = async (req, res) => {
         try {
-        const totalSuppliedQuantities = await e_stock.find();
+        const projectId  = req.session.projectId
+        const totalSuppliedQuantities = await e_stock.find({projectId: projectId});
     
         res.status(200).json(totalSuppliedQuantities);
         } catch (error) {
@@ -110,8 +112,6 @@
         res.status(500).json({ error: 'Error fetching total supplied quantities' });
         }
     };
-    
-
 
         // Controller to render the material outward page
         exports.getMaterialOutPage = async (req, res) => {
@@ -129,19 +129,15 @@
                 const query = req.query.term.toLowerCase();
             
                 try {
-                    const productSuggestions = await e_products.find({ Name_of_Material: { $regex: query, $options: 'i' } })
-                        .select('Name_of_Material')
+                    const productSuggestions = await e_stock.find({ product_name: { $regex: query, $options: 'i' } })
+                        .select('product_name')
                         .limit(10);
             
-                    const vendorSuggestions = await e_products.find({ Vendor_name: { $regex: query, $options: 'i' } })
-                        .select('Vendor_name')
-                        .limit(10);
             
-                    const productNames = productSuggestions.map(task => task.Name_of_Material);
-                    const vendorNames = vendorSuggestions.map(task => task.Vendor_name);
+                    const productNames = productSuggestions.map(item => item.product_name);
             
                     // Concatenate product and vendor names
-                    const suggestions = [...productNames, ...vendorNames];
+                    const suggestions = [...productNames];
             
                     res.json(suggestions);
                 } catch (error) {
@@ -150,6 +146,67 @@
                 }
             };
         
+
+            const PDFDocument = require('pdfkit');
+
+    exports.download = async (req, res) => {
+    try {
+
+        const productOrders = await e_stock.find({projectId: projectId});
+
+        const doc = new PDFDocument();
+        res.setHeader('Content-Disposition', 'attachment; filename=task_details.pdf');
+        doc.pipe(res);
+
+        doc.fontSize(18).text('Material Wise Details', { align: 'center' });
+        doc.moveDown();
+
+        // Define the table object here
+        const table = {
+        headers: ['Product Name','Total supplied', 'Current Stock', 'Used'],
+        rows: []
+        };
+
+        // Loop through each order and product
+        productOrders.forEach(order => {
+        
+            table.rows.push([
+                order.product_name,
+                order.totalSuppliedQuantity,
+                order.currentStock,
+                order.used,
+            ]);
+            });
+        
+        
+
+        // Now you can generate the table as you intended
+        const initialX = 50;
+        const rowHeight = 25;
+        const columnWidth = 100;
+
+        // Draw the table header
+        doc.fontSize(12);
+        table.headers.forEach((header, i) => {
+        doc.text(header, initialX + i * columnWidth, doc.y, { width: columnWidth });
+        });
+        doc.moveDown();
+
+        // Draw the table rows
+        table.rows.forEach((row, i) => {
+        row.forEach((text, j) => {
+            doc.text(text, initialX + j * columnWidth, doc.y, { width: columnWidth });
+        });
+        doc.moveDown();
+        });
+
+        doc.end();
+    } catch (error) {
+        console.error('Error generating PDF:', error);
+        res.status(500).send('Error generating PDF');
+    }
+    };
+
 
 
             
