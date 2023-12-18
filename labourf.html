@@ -358,6 +358,26 @@ color: black;
                                 <button class="lab_up" type="submit">Upload</button>
                             </form>
                         </div>
+
+
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table id="table" class="table">
+                                    <thead>
+                                        <h1>EXISTING LABOURS</h1>
+                                        <tr>
+                                            <th>NAME</th>
+                                            <th>PHONE NO</th>
+                                            <th>WAGES PER SHIFT</th>
+                                            <th>CATEGORY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lab-table-body">
+        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     
             
@@ -507,14 +527,41 @@ color: black;
             .then((response) => {
                 if (response.ok) {
                     console.log('File uploaded successfully.');
-                    openModal1(); // Show the "myModal1" modal
-                    fileInput.value = null; // Reset the file input field
+                    openModal1();
+                    fileInput.value = null;
                 } else {
                     console.error('Error uploading file.');
                 }
             })
             .catch((error) => console.error('Error uploading file:', error));
         });
+
+        const labTableBody = document.getElementById('lab-table-body');
+
+        const getlabours = () => {
+            fetch('/labour/getlab')
+            .then(response => response.json())
+            .then(tasks => {
+
+                console.log(tasks)
+                labTableBody.innerHTML = '';
+
+                tasks.forEach(task => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${task.w_name}</td>
+                        <td>${task.phone}</td>
+                        <td>${task.sal}</td>
+                        <td>${task.w_type}</td>
+                    `;
+                    labTableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error retrieving tasks:', error));
+
+            };
+
+        getlabours()
 </script>
         
     </body>

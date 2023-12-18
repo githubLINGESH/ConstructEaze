@@ -76,3 +76,15 @@
                 });
             });
         };
+
+        exports.getExlab = async(req,res) =>{
+            try{
+                const projectId = req.session.projectId;
+                const getlabours = await contracts.find({projectId:projectId});
+
+                res.status(200).json(getlabours);
+            }
+            catch(error){
+                res.status(500).send("error",error)
+            }
+        }

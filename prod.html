@@ -471,25 +471,6 @@
 
                   </tbody>
             </table>
-
-              
-              <!--<div class="filter" style="display: flex; align-items: center;">
-                <div id="filterOptions" class="filter-options" style="margin: 10px;">
-                    <label for="filterType">Select Filter:</label>
-                    <select id="filterType" onchange="updateButton()">
-                      <option value="" disabled selected>Select</option>
-                      <option value="vendor">Vendor</option>
-                  </select>
-                </div>
-                  <div>
-                    <button style="width: 110%; margin:40px;" class="btn-block dropdown-toggle" id="optdrop" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">Select a Type</button>
-                    
-                    <ul style="padding: 5px; border-radius: 10px;" id="myDropdown" class="dropdown-menu" aria-labelledby="optdrop">
-                    <input style="margin-left: 10px; width: 90%; margin-bottom:10px ;" id="items" type="text" placeholder="Search" onkeyup="filterFunction()">
-                  </ul>
-              </div>
-            </div>-->
           </div>
           </div>
         </div>
@@ -522,7 +503,6 @@
       const element = document.getElementById('exampleModal');
       
           try {
-          // Save the current height and overflow properties
           const originalHeight = element.style.height;
           const originalOverflow = element.style.overflow;
       
@@ -937,9 +917,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
               // Check if the search value matches either product name or vendor name
               if (productName.includes(searchValue) || vendorName.includes(searchValue)) {
-                  row.style.display = ''; // Show the row
+                  row.style.display = '';
               } else {
-                  row.style.display = 'none'; // Hide the row
+                  row.style.display = 'none';
               }
           }
       }

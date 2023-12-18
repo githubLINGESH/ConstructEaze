@@ -162,6 +162,10 @@
                 display: block !important; /* Ensure the dropdown is visible */
             }
         }
+
+        img:hover{
+            cursor: pointer;
+        }
         
         
             
@@ -277,63 +281,76 @@
             </main>
                 <script>
 
-                    // Declare the global variable to store uploaded files
                     let uploadedFiles = [];
 
-                    document.getElementById('upload').addEventListener('change', function() {
-                        const previewElement = document.getElementById('preview');
 
-                        Array.from(this.files).forEach(file => {
-                            const reader = new FileReader();
-
-                            reader.onload = function() {
-                                const uploadedItem = document.createElement('div');
-                                uploadedItem.classList.add('uploaded-item');
-
-                                if (file.type.includes('image')) {
-                                    // Display image
-                                    const imageElement = document.createElement('img');
-                                    imageElement.src = reader.result;
-                                    uploadedItem.appendChild(imageElement);
-                                } else if (file.type.includes('pdf')) {
-                                    // Display PDF
-                                    const pdfElement = document.createElement('embed');
-                                    pdfElement.src = reader.result;
-                                    uploadedItem.appendChild(pdfElement);
-                                } else if (file.type.includes('excel')) {
-                                    // Display Excel
-                                    const excelElement = document.createElement('embed');
-                                    excelElement.src = reader.result;
-                                    uploadedItem.appendChild(excelElement);
-                                } else {
-                                    // Handle other file types as needed
-                                    const genericElement = document.createElement('div');
-                                    genericElement.textContent = 'Unsupported file type';
-                                    uploadedItem.appendChild(genericElement);
+                                function getFileExtension(filename) {
+                                    return filename.split('.').pop().toLowerCase();
                                 }
+                            
+                                document.getElementById('upload').addEventListener('change', function() {
+                                    const previewElement = document.getElementById('preview');
+                            
+                                    Array.from(this.files).forEach(file => {
+                                        const reader = new FileReader();
+                            
+                                        reader.onload = function() {
+                                            const uploadedItem = document.createElement('div');
+                                            uploadedItem.classList.add('uploaded-item');
 
-                                const closeButton = document.createElement('div');
-                                closeButton.classList.add('close-button');
-                                closeButton.innerHTML = '&#x2715;';
-                                closeButton.addEventListener('click', function() {
-                                    // Remove the item from the preview
-                                    uploadedItem.remove();
-                                    // Remove the file from the uploadedFiles array
-                                    const fileIndex = uploadedFiles.indexOf(file);
-                                    if (fileIndex !== -1) {
-                                        uploadedFiles.splice(fileIndex, 1);
-                                    }
+                                            const fileExtension = getFileExtension(file.name);
+                            
+                                            if (file.type.includes('image')) {
+                                                const imageElement = document.createElement('img');
+                                                imageElement.src = reader.result;
+                                                uploadedItem.appendChild(imageElement);
+                                            } else if (file.type.includes('pdf')) {
+                                                const embedElement = document.createElement('iframe');
+                                                embedElement.src = reader.result;
+                                                uploadedItem.appendChild(embedElement);
+                                            
+                                            }else if (file.type.includes('word') || file.type.includes('csv') || fileExtension === 'xlsx') {
+                                                const downloadLink = document.createElement('a');
+                                                downloadLink.href = reader.result;
+                                                downloadLink.download = file.name;
+                                                downloadLink.textContent = `Download ${file.name}`;
+                                                uploadedItem.appendChild(downloadLink);
+                                            }
+                                            else if (fileExtension === 'dwg') {
+                                                const downloadLink = document.createElement('a');
+                                                downloadLink.href = reader.result;
+                                                downloadLink.download = file.name;
+                                                downloadLink.textContent = `Download ${file.name}`;
+                                                uploadedItem.appendChild(downloadLink);
+                                            }
+                                            else {
+                                                const genericElement = document.createElement('div');
+                                                genericElement.textContent = 'No Preview Available for file format';
+                                                uploadedItem.appendChild(genericElement);
+                                            }
+                            
+                                            const closeButton = document.createElement('div');
+                                            closeButton.classList.add('close-button');
+                                            closeButton.innerHTML = '&#x2715;';
+                                            closeButton.addEventListener('click', function() {
+                                                // Remove the item from the preview
+                                                uploadedItem.remove();
+                                                // Remove the file from the uploadedFiles array
+                                                const fileIndex = uploadedFiles.indexOf(file);
+                                                if (fileIndex !== -1) {
+                                                    uploadedFiles.splice(fileIndex, 1);
+                                                }
+                                            });
+                                            uploadedItem.appendChild(closeButton);
+                            
+                                            previewElement.appendChild(uploadedItem);
+                                        };
+                            
+                                        reader.readAsDataURL(file);
+                                        // Append the file to the uploadedFiles array
+                                        uploadedFiles.push(file);
+                                    });
                                 });
-                                uploadedItem.appendChild(closeButton);
-
-                                previewElement.appendChild(uploadedItem);
-                            };
-
-                            reader.readAsDataURL(file);
-                            // Append the file to the uploadedFiles array
-                            uploadedFiles.push(file);
-                        });
-                    });
 
                     document.getElementById('uploadFilesButton').addEventListener('click', function() {
 
@@ -396,15 +413,57 @@
                                             imageElement.src = createBlobUrl(fileData.data, fileData.contentType);
                                             imageElement.addEventListener('click', () => showPopup(imageElement.src));
                                             fileBox.appendChild(imageElement);
-                                        } else if (fileData.contentType.includes('pdf') || fileData.contentType.includes('excel')) {
+                                        } else if (fileData.contentType.includes('pdf')) {
                                             // Display PDF or Excel
                                             console.log(`Displaying ${fileData.contentType}:`, fileData);
                                             const embedElement = document.createElement('iframe');
                                             embedElement.src = createBlobUrl(fileData.data, fileData.contentType);
                                             popupPdf.addEventListener('click', () => showPopupPdf(fileData.data));
                                             fileBox.appendChild(embedElement);
-                                        } else {
-                                            // Handle other file types as needed
+                                        }
+                                        else if (fileData.contentType.includes('word')) {
+                                            // Provide download link for Word or Excel
+                                            console.log(`Displaying ${fileData.contentType}:`, fileData);
+                                            const downloadLink = document.createElement('a');
+                                            downloadLink.href = createBlobUrl(fileData.data, fileData.contentType);
+                                            downloadLink.download = `download_word.docx`;
+                                            downloadLink.textContent = `Download word.docx`;
+                                            fileBox.appendChild(downloadLink);
+                                        }
+                                        else if (fileData.contentType.includes('vnd') || fileData.contentType.includes('csv')) {
+                                            // Provide download link for Word or Excel
+                                            console.log(`Displaying ${fileData.contentType}:`, fileData);
+                                            const downloadLink = document.createElement('a');
+                                            downloadLink.href = createBlobUrl(fileData.data, fileData.contentType);
+                                            downloadLink.download = `download_csv.csv`;
+                                            downloadLink.textContent = `Download excel.csv`;
+                                            fileBox.appendChild(downloadLink);
+                                        }
+
+                                    else if (fileData.contentType.includes('dwg') || fileData.contentType === 'application/octet-stream') {
+                                        console.log(`Displaying ${fileData.contentType}:`, fileData);
+
+                                        // Create a Blob from the base64-encoded DWG data
+                                        const byteCharacters = atob(fileData.data);
+                                        const byteNumbers = new Array(byteCharacters.length);
+
+                                        for (let i = 0; i < byteCharacters.length; i++) {
+                                            byteNumbers[i] = byteCharacters.charCodeAt(i);
+                                        }
+
+                                        const byteArray = new Uint8Array(byteNumbers);
+                                        const blob = new Blob([byteArray], { type: 'application/dwg' });
+
+                                        // Create a download link
+                                        const downloadLink = document.createElement('a');
+                                        downloadLink.href = URL.createObjectURL(blob);
+                                        downloadLink.download = `download.dwg`;
+                                        downloadLink.textContent = `Download DWG`;
+                                        fileBox.appendChild(downloadLink);
+                                    }
+
+
+                                        else {
                                             console.log('Unsupported file type:', fileData);
                                             const genericElement = document.createElement('div');
                                             genericElement.textContent = 'Unsupported file type';
@@ -463,7 +522,6 @@
                             
                             // Clear the existing content in the modal
                             popupFile.innerHTML = '';
-                            console.log(fileSrc);
                             popupFile.src = fileSrc;
 
                             overlay.style.display = 'block';

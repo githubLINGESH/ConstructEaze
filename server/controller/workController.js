@@ -54,6 +54,7 @@ const PDFDocument = require('pdfkit');
 
 exports.downloadPDF = async (req, res) => {
   try {
+    console.log("comes here");
     const projectId = req.session.projectId;
 
       const productOrders = await WorkDone.find({projectId:projectId});
