@@ -2,8 +2,8 @@
 
 
     const toDoSchema = new mongoose.Schema({
+    projectId : String,
     userId:Number,
-    role:String,
     Task_name: String,
     Start_date: String,
     End_date: String,
