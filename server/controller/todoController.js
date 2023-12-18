@@ -73,7 +73,8 @@
 
     exports.getTaskDetails = async(req,res) =>{
         try {
-            const tasks = await s_todo.find();
+            const projectId = req.session.projectId;
+            const tasks = await s_todo.find({projectId:projectId});
             return tasks;
         } catch (error) {
             console.error('Error retrieving tasks:', error);
@@ -88,8 +89,7 @@
 
     exports.downloadPDF = async (req, res) => {
     try {
-
-        const productOrders = await getTaskDetails(); // Fetch details from the database
+        const productOrders = await getTaskDetails();
 
         const doc = new PDFDocument();
         res.setHeader('Content-Disposition', 'attachment; filename=task_details.pdf');

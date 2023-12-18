@@ -92,7 +92,8 @@
             }
             .koo
             {
-               color:black;
+                
+                color:black;
             }
 
             #closePopupBtn {
@@ -222,20 +223,21 @@
                                         <div class="input-group-addon">
                                             <i class="fas fa-search"></i>
                                         </div>
-                                        <input type="text" name="search" id="search" class="form-control" placeholder="Search Work">
+                                        <input type="text" id="search-input" class="form-control" placeholder="Search Work">
                                     </div>
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group">
-                                        <button type="button" class="btn-block" data-toggle="modal" data-target="#add_mt">
-                                            <i class="fas fa-download"></i>
-                                        Download Report
-                                        </button>
-                                        <!-- Button in HTML -->
                                         <button type="button" class="btn-block" id="openPopupBtn">ADD WORK DONE</button>
-
                                     </div>
                                 </div>
+                                <form action="/work/download-pdf" method="POST">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 form-group">
+                                                <button type="submit" class="btn-block">
+                                                    <i class="fas fa-download"></i>
+                                                    Download
+                                                </button>
+                                            </div>
+                                        </form>
                             </div>
                         </form>
 
@@ -243,11 +245,13 @@
                         <div id="popup" class="container">
                             <span id ="closePopupBtn" class="btn btn-md" data-bs-dismiss="modal">X</span>
                             <div class="text" style="margin:30px;">Work Done</div>
-                            <form id="workDoneForm" action="/workdone" method="POST">
-                                <div class="data" style="margin:30px;">
-                                    <input type="date" id="dateInput" required placeholder="Date" name="date">
-                                </div>
+                            <form id="workDoneForm" action="/work/workdone" method="POST" style="margin-bottom:30px;">
+                                <input type="text" id="name" required placeholder="work name" name="workname">
+                                <input type="date" id="dateInput" required placeholder="Date" name="date">
                                 <textarea id="workdoneInput" required placeholder="Work Done" name="workdone"></textarea>
+                                <input type="Number" id="qty" required placeholder="Quantity" name="Qty">
+                                <input type="text" id="unit" required placeholder="Unit" name="unit">
+                                <input type="text" id="lab" required placeholder="labour" name="labour">
                                 <div class="btn1" style="margin:30px;">
                                     <div class="inner"></div>
                                     <button type="submit">Submit</button>
@@ -261,8 +265,8 @@
                             </div>
 
                     </div>
-
 <script>
+
     document.addEventListener("DOMContentLoaded", function() {
         const openPopupBtn = document.getElementById("openPopupBtn");
         const closePopupBtn = document.getElementById("closePopupBtn");
@@ -283,8 +287,13 @@
             // Gather form data
             const formData = new FormData(workDoneForm);
             const data = {
+                workName: formData.get("workname"),
                 workdone: formData.get("workdone"),
                 date: formData.get("date"),
+                workname: formData.get("workname"),
+                quantity: formData.get("Qty"),
+                unit: formData.get("unit"),
+                labour: formData.get("labour"),
             };
 
             // Send data to the server using fetch or other AJAX methods
@@ -297,7 +306,6 @@
             });
 
             if (response.ok) {
-                // Data successfully saved, you can close the popup or display a success message
                 popup.style.display = "none";
                 fetchAndDisplayworks();
             } else {
@@ -307,6 +315,32 @@
         });
     });
 
+    function deleteWork(element) {
+
+        const workName = element.closest('.border').querySelector('[data-worker-id]').getAttribute('data-worker-id');
+        console.log(workName);
+    
+        // Send a DELETE request to the server to delete the supervisor
+        fetch('/work/DeleteWork', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ workName: workName })
+        })
+        .then((response) => {
+            if (response.ok) {
+                const row = element.closest('div');
+                row.remove();
+            } else {
+                console.error('Delete request failed');
+            }
+        })
+        .catch((error) => {
+            console.error('Error deleting supervisor:', error);
+        });
+    }
+
     const fetchAndDisplayworks = () => {
     fetch('/work/getwork')
     .then(response => response.json())
@@ -314,26 +348,97 @@
                         console.log(works);
 
                         const getwork = document.getElementById('projectDetails')
-                        getwork.innerHTML = ''; // Clear existing table rows
+                        getwork.innerHTML = '';
         
                         works.forEach(work => {
                             const workdone = document.createElement('div');
                             workdone.innerHTML = `
-                            <p>${work.workdone}</p>
+                            <div class="border" style="margin:30px;">
+                            <textarea>${work.workdone}</textarea>
                             <p>${work.date}</p>
+                            <p data-worker-id="${work.workName}">${work.workName}</p>
+                            <p><h5>${work.unit}</h5></p>
+                            <p>${work.quantity}</p>
+                            <p>${work.labour}</p>
+                            <td><div style="cursor: pointer;" onclick="deleteWork(this)"><i class="fas fa-trash-alt"></i></div></td>
+                            </div>
                             `;
                             getwork.appendChild(workdone);
                         });
                     })
                     .catch(error => console.error('Error retrieving tasks:', error));
             };
-        
-            // Fetch tasks when the page loads
             fetchAndDisplayworks();
 
-    
-</script>
 
+document.addEventListener('DOMContentLoaded', () => {
+    const productContainer = document.getElementById('projectDetails');
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const allSection = document.getElementById('projectDetails').getElementsByTagName('div');
+
+    function performClientSearch(query) {
+        const searchValue = query.trim().toLowerCase();
+
+        for (const row of allSection) {
+            const productNameCell = row.querySelector('p:nth-child(3)');
+
+            if (productNameCell) {
+                const productName = productNameCell.textContent.toLowerCase();
+
+                // Check if the search value matches either product name or vendor name
+                if (productName.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    searchInput.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent form submission if needed
+            const searchValue = searchInput.value.trim();
+            performClientSearch(searchValue); // Perform client-side search
+        }
+    });
+
+    searchButton.addEventListener('click', function () {
+        const searchValue = searchInput.value.trim();
+        performClientSearch(searchValue); // Perform client-side search
+    });
+});
+</script>
+<script>
+    $(function() {
+        $("#search-input").autocomplete({
+            source: function(request, response) {
+                $.ajax({
+                    url: '/mato/autosearchmato',
+                    method: 'GET',
+                    dataType: 'json',
+                    data: {
+                        term: request.term // Pass the user input as 'term'
+                    },
+                    success: function(data) {
+                        response(data);
+                    },
+                    error: function(error) {
+                        console.error('Error fetching autocomplete suggestions:', error);
+                    }
+                });
+            },
+            minLength: 0,
+            select: function(event, ui) {
+                $("#search-input").val(ui.item.value);
+                searchTasks(ui.item.value);
+            }
+        });
+    });
+
+
+</script>
 
     </body>
     </html>

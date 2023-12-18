@@ -5,6 +5,10 @@ const workSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    workName:{
+        type:String,
+        required:true
+    },
     workdone:{
         type:String,
         required:true,
@@ -12,6 +16,18 @@ const workSchema = new mongoose.Schema({
     date:{
         type:Date,
         required:true,
+    },
+    labour:{
+        type:String,
+        required:true
+    },
+    quantity:{
+        type:Number,
+        required:true
+    },
+    unit : {
+        type:String,
+        required:true
     }
 });
 

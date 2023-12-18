@@ -18,5 +18,6 @@ const upload = multer({ storage: storage });
 router.post('/uploadFiles', upload.array('file', 10), drawController.uploadFiles);
 router.get('/getFiles', drawController.getFiles);
 router.delete('/removeFile/:id', drawController.removeFile);
+router.post('/uploadCad', drawController.uploadCad);
 
 module.exports = router;

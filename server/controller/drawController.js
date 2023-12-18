@@ -94,3 +94,40 @@ exports.removeFile = async (req, res) => {
         res.status(500).send('Error deleting file.');
     }
 };
+
+
+
+exports.uploadCad = async (req, res) => {
+    try {
+        const files = req.files;
+        const projectId = req.session.projectId;
+
+        const filePromises = files.map(async file => {
+            try {
+                if (!file || !file.path) {
+                    throw new Error('Invalid file data');
+                }
+
+                const document = new drawing({
+                    projectId: projectId,
+                    files: [{
+                        data: fs.readFileSync(file.path),
+                        contentType: file.mimetype,
+                    }],
+                });
+
+                await document.save();
+                await unlinkFile(file.path);
+            } catch (uploadError) {
+                console.error(`Error uploading file: ${uploadError.message}`, file);
+            }
+        });
+
+        await Promise.all(filePromises);
+
+        res.send('Files uploaded successfully.');
+    } catch (err) {
+        console.error('Error:', err);
+        res.status(500).send(err);
+    }
+};
