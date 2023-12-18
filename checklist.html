@@ -287,103 +287,6 @@
                                 function getFileExtension(filename) {
                                     return filename.split('.').pop().toLowerCase();
                                 }
-                            
-                                document.getElementById('upload').addEventListener('change', function() {
-                                    const previewElement = document.getElementById('preview');
-                            
-                                    Array.from(this.files).forEach(file => {
-                                        const reader = new FileReader();
-                            
-                                        reader.onload = function() {
-                                            const uploadedItem = document.createElement('div');
-                                            uploadedItem.classList.add('uploaded-item');
-
-                                            const fileExtension = getFileExtension(file.name);
-                            
-                                            if (file.type.includes('image')) {
-                                                const imageElement = document.createElement('img');
-                                                imageElement.src = reader.result;
-                                                uploadedItem.appendChild(imageElement);
-                                            } else if (file.type.includes('pdf')) {
-                                                const embedElement = document.createElement('iframe');
-                                                embedElement.src = reader.result;
-                                                uploadedItem.appendChild(embedElement);
-                                            
-                                            }else if (file.type.includes('word') || file.type.includes('csv') || fileExtension === 'xlsx') {
-                                                const downloadLink = document.createElement('a');
-                                                downloadLink.href = reader.result;
-                                                downloadLink.download = file.name;
-                                                downloadLink.textContent = `Download ${file.name}`;
-                                                uploadedItem.appendChild(downloadLink);
-                                            }
-                                            else if (fileExtension === 'dwg') {
-                                                const downloadLink = document.createElement('a');
-                                                downloadLink.href = reader.result;
-                                                downloadLink.download = file.name;
-                                                downloadLink.textContent = `Download ${file.name}`;
-                                                uploadedItem.appendChild(downloadLink);
-                                            }
-                                            else {
-                                                const genericElement = document.createElement('div');
-                                                genericElement.textContent = 'No Preview Available for file format';
-                                                uploadedItem.appendChild(genericElement);
-                                            }
-                            
-                                            const closeButton = document.createElement('div');
-                                            closeButton.classList.add('close-button');
-                                            closeButton.innerHTML = '&#x2715;';
-                                            closeButton.addEventListener('click', function() {
-                                                // Remove the item from the preview
-                                                uploadedItem.remove();
-                                                // Remove the file from the uploadedFiles array
-                                                const fileIndex = uploadedFiles.indexOf(file);
-                                                if (fileIndex !== -1) {
-                                                    uploadedFiles.splice(fileIndex, 1);
-                                                }
-                                            });
-                                            uploadedItem.appendChild(closeButton);
-                            
-                                            previewElement.appendChild(uploadedItem);
-                                        };
-                            
-                                        reader.readAsDataURL(file);
-                                        // Append the file to the uploadedFiles array
-                                        uploadedFiles.push(file);
-                                    });
-                                });
-
-                    document.getElementById('uploadFilesButton').addEventListener('click', function() {
-
-                        if (uploadedFiles.length === 0) {
-                            alert('Please select files to upload.');
-                            return;
-                        }
-
-                        // Create a FormData object to send files as multipart/form-data
-                        const formData = new FormData();
-                        uploadedFiles.forEach(file => {
-                            formData.append('file', file);
-                        });
-
-                        console.log(formData);
-
-                        // Use the Fetch API to send the files to your server
-                        fetch('/check/uploadFiles', {
-                            method: 'POST',
-                            body: formData,
-                        })
-                        .then(response => {
-                            if (response.ok) {
-                                alert('Files uploaded successfully.');
-                            } else {
-                                alert('Error uploading files.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('An error occurred while uploading files.');
-                        });
-                    });
                     
                     
                     document.addEventListener('DOMContentLoaded', () => {
@@ -394,6 +297,8 @@
                             const popupPdf = document.getElementById('popupPdf');
                             const popupFile = document.getElementById('popupFile');
                             const popupPdfd = document.getElementById('popupPdfd');
+
+                            fileContainer.innerHTML='';
                         
                             // Make a GET request to retrieve the files
                             fetch('/check/getFiles')
@@ -517,6 +422,105 @@
                             return dataUrl;
                         };
 
+                        document.getElementById('upload').addEventListener('change', function() {
+                            const previewElement = document.getElementById('preview');
+                    
+                            Array.from(this.files).forEach(file => {
+                                const reader = new FileReader();
+                    
+                                reader.onload = function() {
+                                    const uploadedItem = document.createElement('div');
+                                    uploadedItem.classList.add('uploaded-item');
+
+                                    const fileExtension = getFileExtension(file.name);
+                    
+                                    if (file.type.includes('image')) {
+                                        const imageElement = document.createElement('img');
+                                        imageElement.src = reader.result;
+                                        uploadedItem.appendChild(imageElement);
+                                    } else if (file.type.includes('pdf')) {
+                                        const embedElement = document.createElement('iframe');
+                                        embedElement.src = reader.result;
+                                        uploadedItem.appendChild(embedElement);
+                                    
+                                    }else if (file.type.includes('word') || file.type.includes('csv') || fileExtension === 'xlsx') {
+                                        const downloadLink = document.createElement('a');
+                                        downloadLink.href = reader.result;
+                                        downloadLink.download = file.name;
+                                        downloadLink.textContent = `Download ${file.name}`;
+                                        uploadedItem.appendChild(downloadLink);
+                                    }
+                                    else if (fileExtension === 'dwg') {
+                                        const downloadLink = document.createElement('a');
+                                        downloadLink.href = reader.result;
+                                        downloadLink.download = file.name;
+                                        downloadLink.textContent = `Download ${file.name}`;
+                                        uploadedItem.appendChild(downloadLink);
+                                    }
+                                    else {
+                                        const genericElement = document.createElement('div');
+                                        genericElement.textContent = 'No Preview Available for file format';
+                                        uploadedItem.appendChild(genericElement);
+                                    }
+                    
+                                    const closeButton = document.createElement('div');
+                                    closeButton.classList.add('close-button');
+                                    closeButton.innerHTML = '&#x2715;';
+                                    closeButton.addEventListener('click', function() {
+                                        // Remove the item from the preview
+                                        uploadedItem.remove();
+                                        // Remove the file from the uploadedFiles array
+                                        const fileIndex = uploadedFiles.indexOf(file);
+                                        if (fileIndex !== -1) {
+                                            uploadedFiles.splice(fileIndex, 1);
+                                        }
+                                    });
+                                    uploadedItem.appendChild(closeButton);
+                    
+                                    previewElement.appendChild(uploadedItem);
+                                };
+                    
+                                reader.readAsDataURL(file);
+                                // Append the file to the uploadedFiles array
+                                uploadedFiles.push(file);
+                            });
+                        });
+
+            document.getElementById('uploadFilesButton').addEventListener('click', function() {
+                const inputFile = document.getElementById('upload')
+                if (uploadedFiles.length === 0) {
+                    alert('Please select files to upload.');
+                    return;
+                }
+
+                // Create a FormData object to send files as multipart/form-data
+                const formData = new FormData();
+                uploadedFiles.forEach(file => {
+                    formData.append('file', file);
+                });
+
+                console.log(formData);
+
+                
+                fetch('/check/uploadFiles', {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert('Files uploaded successfully.');
+                        inputFile.value = '';
+                        displayFiles();
+                    } else {
+                        alert('Error uploading files.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while uploading files.');
+                });
+            });
+
 
                         const showPopup = (fileSrc) => {
                             
@@ -533,6 +537,8 @@
                             overlay.style.display = 'none';
                             popup.style.display = 'none';
                         };
+
+
 
                         const showPopupPdf = (base64Data) => {
                             // Clear the existing content in the modal
