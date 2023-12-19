@@ -133,4 +133,35 @@ exports.getClientDet = async(clientName,projectId) =>{
 };
 
 
+exports.getClients = async (req, res) => {
+  try {
+    const projectId = req.session.projectId;
+
+    // Fetch all clients for the given projectId
+    const clients = await E_client.find({ projectId: projectId });
+
+    console.log("Clients in project:", clients);
+    res.status(200).json(clients);
+  } catch (error) {
+    console.error('Error retrieving clients:', error);
+    res.status(500).send('Error retrieving clients.');
+  }
+};
+
+
+exports.deleteclient = async (req, res) => {
+  try {
+    const projectId = req.session.projectId;
+    const name = req.body.name
+
+    // Fetch all clients for the given projectId
+    const clients = await E_client.deleteOne({ projectId: projectId ,name:name});
+
+    res.status(200).json(clients);
+  } catch (error) {
+    console.error('Error retrieving clients:', error);
+    res.status(500).send('Error retrieving clients.');
+  }
+};
+
 

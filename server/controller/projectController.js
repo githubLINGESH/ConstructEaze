@@ -50,7 +50,7 @@
                 // Store the projectId in req.session.projectId
                 req.session.projectId = projectId;
                 console.log(projectId);
-                res.sendFile(path.join(__dirname, '..', '..', 'masnode.html'));
+                res.sendFile(path.join(__dirname, '..', '..', 'clientf.html'));
             };
 
             exports.getRole = (req, res) => {
