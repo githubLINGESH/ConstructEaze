@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="assets/css/pent.css"> 
+    <link rel="stylesheet" href="assets/css/pent.css">
     <title>Document</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -255,7 +255,7 @@ color: black;
         .data-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Aligns items to the left */
+            align-items: flex-start;
             margin: 0 auto; /* Centers the container */
             max-width: 600px; /* Adjust as needed */
             padding: 20px;
@@ -271,23 +271,23 @@ color: black;
 </head>
 <body>
     
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid" style="margin: 10px 20px;">
-        <a class="navbar-brand" href="index.html">
-            <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
-        </a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 0px; border-bottom-left-radius: 0px;">
+        <div class="container-fluid" style="margin: 10px 20px;" >
+            <a class="navbar-brand" href="home.html">
+                <img src="assets/img/logo.png" alt="Construct Eaze" style="width: 280px;">
+            </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"  style="margin-left: 15%;">
+        <div class="collapse navbar-collapse" style="justify-content: space-evenly; text-align: center; " id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="margin-left: 15%;">
             
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="siteActivityDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Master
                     </a>
                     <div class="dropdown-menu" aria-labelledby="siteActivityDropdown">
-                        <a class="dropdown-item" href="masnode.html" style="  color: white !important;
+                        <a class="dropdown-item" href="clientf.html" style="color: white !important;
                         background-color: rgba(0, 0, 0, 0.2);
                         border-left: 3px solid #F2D200;">client form</a>
                         <a class="dropdown-item" href="prodf.html">product form</a>
@@ -310,17 +310,18 @@ color: black;
                 <a class="nav-link" href="labrep.html">Report Generation</a>
             </li>
             </ul>
+        </div>
             <form class="d-flex" style="padding-left: 190px; padding-top: 5px;" action="/login/logout" method="GET">
             <button class="btn" type="submit"><span class="txt">Logout</span></button>
             </form>
-        </div>
+        
         </div>
     </nav>
 
-    <div class="row content" style="display: flex; width: 100%; height: 100%;" >
+    <div class="row content" style="display: flex; width: 100%; height: 100%;">
         <div class="col-lg-2">
         <div class="sidebar" style="height: 100%;">
-            <nav class="nav flex-column" style="padding-top: 100px; ">
+            <nav class="nav flex-column" style="padding-top: 100px;">
                 <a class="nav-link space active" href="#">client form</a>
                 <a class="nav-link space" href="prodf.html">product form</a>
                 <a class="nav-link space" href="labourf.html">labour form</a>
@@ -329,7 +330,8 @@ color: black;
             </nav>
         </div>
         </div>
-        <div class="col-lg-10">
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4" style="margin-top: 100px;">
+                
     
             <div class="cli">
     
@@ -401,7 +403,7 @@ color: black;
 
 
 
-        </div>
+        </main>
 
 
     </div>
