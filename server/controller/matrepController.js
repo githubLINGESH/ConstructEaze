@@ -2,7 +2,6 @@
   const PDFDocument = require('pdfkit');
   const ExcelJS = require('exceljs');
 
-  // Assuming you have a function to fetch the product order details from the database
   const { getProductOrders } = require('../controller/prodController');
 
   exports.downloadPDF = async (req, res) => {

@@ -2,7 +2,7 @@ const path = require('path');
 const e_products = require('../model/prodModel');
 const prods = require('../model/prodfModel');
 const e_projects = require('../model/projectModel');
-const session = require('express-session');
+
 
 
 exports.getProductPage = (req, res) => {

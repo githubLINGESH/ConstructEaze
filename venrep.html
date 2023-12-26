@@ -203,6 +203,8 @@ populateDropdown();
         let selectedName = "";
 
         function storeDates() {
+
+          const filterType = document.getElementById("filterType").value;
             // Get the values of the "Start Date" and "End Date" inputs by their id names
             const startDateValue = document.getElementById('startdate').value;
             const endDateValue = document.getElementById('enddate').value;
@@ -227,9 +229,14 @@ populateDropdown();
 
             // Create a form element dynamically to trigger the download
             const form = document.createElement('form');
+            if(filterType === 'vendor'){
             form.action = `/prod/download-pdf/${selectedName}`; // Set the URL for PDF download
             form.method = 'POST';
-    
+            }
+            else{
+              form.action = '/prod/download-all-vendor-excel';
+              form.method = 'POST';
+            }
             // Create an input field for dateArray
             const input = document.createElement('input');
             input.type = 'hidden';
@@ -249,6 +256,8 @@ populateDropdown();
 
 
       function downloadExcel() {
+
+        const filterType = document.getElementById("filterType").value;
       // Get the values of the "Start Date" and "End Date" inputs by their id names
       const startDateValue = document.getElementById('startdate').value;
       const endDateValue = document.getElementById('enddate').value;
@@ -270,8 +279,18 @@ populateDropdown();
 
       // Create a form element dynamically to trigger the download
       const form = document.createElement('form');
+
+    if (filterType === 'vendor')
+    {
       form.action = `/prod/download-excel/${selectedName}`; // Set the URL for PDF download
       form.method = 'POST';
+    }
+
+    else{
+      form.action = `/prod/download-all-vendor-excel`;
+      form.method = 'POST';
+    }
+
 
       // Create an input field for dateArray
       const input = document.createElement('input');
