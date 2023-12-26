@@ -32,7 +32,6 @@ exports.generatePNo = async (req, res) => {
       .sort({ purchaseOrderNo: -1 })
       .limit(1);
 
-    // Check if maxPurchaseOrder is null (no existing purchase order for the projectId)
     if (!maxPurchaseOrder) {
       // If no purchase order found, set the purchase order number to 1
       res.status(200).json({ purchaseOrderNo: 0 });
@@ -107,7 +106,6 @@ exports.submitMaterial = async (req, res) => {
         grandTotal:grandTotal
       });
 
-      // Save the new purchase order document to the database
       await newPurchaseOrder.save();
 
       res.status(201).json(newPurchaseOrder);
@@ -237,7 +235,7 @@ exports.gettableTasks = async (vendorName,res) => {
         return vendorDetails;
       } catch (error) {
         console.error('Error fetching vendor details:', error);
-        throw error; // Re-throw the error to handle it in the calling function
+        throw error;
       }
     };
 

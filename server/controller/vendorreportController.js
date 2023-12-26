@@ -7,7 +7,8 @@ const { getVendorDetails } = require('../controller/prodController');
 
 exports.downloadPDF = async (req, res) => {
   try {
-
+    const vendorName = req.params.vendorName;
+    const dateArray = JSON.parse(req.body.dateArray);
     const productOrders = await getVendorDetails(vendorName);
 
     const doc = new PDFDocument();
