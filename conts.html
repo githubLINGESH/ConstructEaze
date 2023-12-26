@@ -391,7 +391,7 @@
                     <a class="dropdown-item" href="#" style="color: white !important;
                     background-color: rgba(0, 0, 0, 0.2);
                     border-left: 3px solid #F2D200;">Attendance</a>
-                    <a class="dropdown-item" id="supervisor" href="superATT.html">Supervisor Attendance</a>
+                    <a class="dropdown-item" id="supervisorr" href="superATT.html">Supervisor Attendance</a>
                 </div>
             </li>
             <li class="nav-item">
@@ -726,7 +726,8 @@
                 .then(data => {
                     
                     const tasks = data.tasks;
-                    const userRole = data.role; // Get the user's role from the response
+                    const userRole = data.role; 
+                    console.log(userRole);// Get the user's role from the response
 
                     const absBut = document.getElementById('logoutButton');
 
@@ -742,10 +743,12 @@
                     }
 
                     const supervisorAtt = document.getElementById('supervisor');
+                    const supervisorAttt = document.getElementById('supervisorr')
 
                     if(userRole == 'Supervisor')
                     {
                         supervisorAtt.style.display = 'none';
+                        supervisorAttt.style.display = 'none';
                     }
             
                     const loginButton = document.getElementById('loginButton');

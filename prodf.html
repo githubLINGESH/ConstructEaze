@@ -497,7 +497,7 @@ font-weight: 400 !important;}
                         border-left: 3px solid #F2D200;">product form</a>
                         <a class="dropdown-item" href="labourf.html">labour form</a>
                         <a class="dropdown-item" href="vendorf.html">vendor form</a>
-                        <a class="dropdown-item" href="supmas.html">Supervisor</a>
+                        <a id="superr" class="dropdown-item" href="supmas.html">Supervisor</a>
                     </div>
                 </li>
             <li class="nav-item">
@@ -653,14 +653,15 @@ font-weight: 400 !important;}
 
             getRole();
 
-            handleRole = () => {
-            superPage = document.getElementById('super');
-
-            if(role == 'Supervisor')
-            {
-                superPage.style.display = 'none';
-            }
-        }
+            const handleRole = () => {
+                superPage = document.getElementById('super');
+                superpage = document.getElementById('superr')
+    
+                if (role === 'Supervisor') {
+                    superPage.style.display = 'none';
+                    superpage.style.display = 'none';
+                }
+            };
         
 
 

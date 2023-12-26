@@ -273,7 +273,7 @@ color: black;
                             background-color: rgba(0, 0, 0, 0.2);
                             border-left: 3px solid #F2D200;">labour form</a>
                             <a class="dropdown-item" href="vendorf.html">vendor form</a>
-                            <a class="dropdown-item" href="supmas.html">Supervisor</a>
+                            <a id="superr" class="dropdown-item" href="supmas.html">Supervisor</a>
                         </div>
                     </li>
                 <li class="nav-item">
@@ -436,15 +436,15 @@ color: black;
 
             getRole();
 
-            const handleRole= () =>{
-
-            superPage = document.getElementById('super');
-
-            if(role == 'Supervisor')
-            {
-                superPage.style.display = 'none';
-            }
-            }
+            const handleRole = () => {
+                superPage = document.getElementById('super');
+                superpage = document.getElementById('superr')
+    
+                if (role === 'Supervisor') {
+                    superPage.style.display = 'none';
+                    superpage.style.display = 'none';
+                }
+            };
 
             function openModal() {
                 const modal = document.getElementById("myModal");

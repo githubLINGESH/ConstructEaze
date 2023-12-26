@@ -293,7 +293,7 @@ color: black;
                         <a class="dropdown-item" href="prodf.html">product form</a>
                         <a class="dropdown-item" href="labourf.html">labour form</a>
                         <a class="dropdown-item" href="vendorf.html">vendor form</a>
-                        <a class="dropdown-item" href="supmas.html">Supervisor</a>
+                        <a id="superr" class="dropdown-item" href="supmas.html">Supervisor</a>
                     </div>
                 </li>
                 
@@ -450,9 +450,11 @@ color: black;
 
         const handleRole = () => {
             superPage = document.getElementById('super');
+            superpage = document.getElementById('superr')
 
             if (role === 'Supervisor') {
                 superPage.style.display = 'none';
+                superpage.style.display = 'none';
             }
         };
 
