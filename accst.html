@@ -96,6 +96,8 @@
                     <option value="vendor">Vendor</option>
                     <option value="product">Product</option>
                     <option value="Overall">Overall</option>
+                    <option value="allvendors">all vendors</option>
+                    <option value="allproducts">all products</option>
                 </select>
               </div>
                 <div>
@@ -257,9 +259,9 @@ function storeDates() {
       form.method = 'GET';
     }
        //ALL VENDOR
-    else if(filterType ==='vendor' || filterType ==='product' && filterType !== 'Overall')
+      else if(filterType ==='allvendors' || filterType ==='allproducts' && filterType !== 'Overall')
     {
-      form.action = `/acc/download-all-${filterType}-pdf`;
+      form.action = `/acc/download-${filterType}-pdf`;
       form.method = 'POST';
     }
     else{
@@ -314,10 +316,9 @@ if (filterType == 'Overall')
       form.action = '/acc/download-excel-overall';
       form.method = 'GET';
     }
-      //ALL PRODUCT
-  else if(filterType ==='vendor' || filterType ==='product' && filterType !== 'Overall')
+  else if(filterType ==='allvendors' || filterType ==='allproducts' && filterType !== 'Overall')
     {
-      form.action = `/acc/download-all-${filterType}-excel`;
+      form.action = `/acc/download-${filterType}-excel`;
       form.method = 'POST';
     }
     else{

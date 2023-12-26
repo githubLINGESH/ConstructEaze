@@ -113,7 +113,7 @@ exports.submitlab = async (req, res) => {
             return vendorDetails;
             } catch (error) {
             console.error('Error fetching vendor details:', error);
-            throw error; // Re-throw the error to handle it in the calling function
+            throw error;
             }
         };
 

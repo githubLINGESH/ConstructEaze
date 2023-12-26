@@ -85,7 +85,7 @@
             try {
             const projectId = req.session.projectId;
             const vendorName = req.params.vendorName;
-            const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
+            const dateArray = JSON.parse(req.body.dateArray);
         
             const productOrders = await getVendorDetails(vendorName , projectId); // Fetch details from the database
         
@@ -162,7 +162,6 @@
             });
             
         
-            // Now you can generate the table as you intended
         const initialY = doc.y + 10; // Added padding
         const columnWidth = 60; // Adjusted column width
         const totalWidth = table.headers.length * columnWidth;
@@ -203,10 +202,11 @@
             try {
             const vendorName = req.params.vendorName;
             const dateArray = JSON.parse(req.body.dateArray);
+            const projectId = req.session.projectId;
         
             console.log('Date Array:', dateArray);
         
-            const productOrders = await getVendorDetails(vendorName);
+            const productOrders = await getVendorDetails(vendorName,projectId);
             console.log('Product Orders:', productOrders);
         
             const workbook = new ExcelJS.Workbook();
@@ -826,7 +826,6 @@
                 res.status(500).send('Error generating Excel');
                 }
             };
-        
         
         
             exports.downloadPDFallproduct = async (req, res) => {

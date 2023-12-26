@@ -231,7 +231,7 @@ exports.gettableTasks = async (vendorName,res) => {
     exports.getVendorDetails = async (vendorName , projectId) => {
       try {
         // Use the provided vendorName parameter to filter vendor details
-        const vendorDetails = await e_products.find({projectId : projectId},{ 'vendor.vendorName': vendorName });
+        const vendorDetails = await e_products.find({projectId : projectId, 'vendor.vendorName': vendorName });
         return vendorDetails;
       } catch (error) {
         console.error('Error fetching vendor details:', error);

@@ -8,126 +8,138 @@ const { getVendorDetails } = require('../controller/prodController');
 
 exports.downloadPDF = async (req, res) => {
   try {
-    const vendorName = req.params.vendorName;
-    const dateArray = JSON.parse(req.body.dateArray);
-    const productOrders = await getVendorDetails(vendorName);
+  const projectId = req.session.projectId;
+  const vendorName = req.params.vendorName;
+  const dateArray = JSON.parse(req.body.dateArray); // Parse the JSON string back to an array
 
-    const doc = new PDFDocument();
-    res.setHeader('Content-Disposition', 'attachment; filename=material_details.pdf');
-    doc.pipe(res);
+  const productOrders = await getVendorDetails(vendorName , projectId); // Fetch details from the database
 
-    doc.fontSize(18).text('Material Wise Details', { align: 'center' });
-    doc.moveDown();
+  const doc = new PDFDocument();
+  res.setHeader('Content-Disposition', 'attachment; filename=material_details.pdf');
+  doc.pipe(res);
 
-    // Define the table object here
-    const table = {
+  doc.fontSize(18).text('Material Wise Details', { align: 'center' });
+  doc.moveDown();
+
+  // Define the table object here
+  const table = {
       headers: ['Date', 'Vendor', 'Address', 'GST', 'Site', 'Material', 'Used', 'Current Stock'],
       rows: []
-    };
+  };
 
-    // Loop through each order and product
-    productOrders.forEach(order => {
+  // Loop through each order and product
+  productOrders.forEach(order => {
       if (!dateArray || dateArray.length === 0) {
-        // Handle the case where dateArray is not provided
-        if (order.products) {
-        order.products.forEach(product => {
+      // Handle the case where dateArray is not provided
+      if (order.products) {
+      order.products.forEach(product => {
           const orderDateObj = new Date(order.date);
           const formattedDate = orderDateObj.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
           });
-    
+  
           table.rows.push([
-            formattedDate,
-            order.vendor.vendorName,
-            order.vendor.address,
-            order.vendor.gst,
-            order.vendor.site,
-            product.nameOfMaterial,
-            product.used,
-            product.currentStock
+          formattedDate,
+          order.vendor.vendorName,
+          order.vendor.address,
+          order.vendor.gst,
+          order.vendor.site,
+          product.nameOfMaterial,
+          product.used,
+          product.currentStock
           ]);
-        });
+      });
       }
       } else {
-        dateArray.forEach(selectedDate => {
+      dateArray.forEach(selectedDate => {
           const selectedDateObj = new Date(selectedDate);
           if (order.products) {
           order.products.forEach(product => {
-            const orderDateObj = new Date(order.date);
-            if (
+          const orderDateObj = new Date(order.date);
+          if (
               selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
               selectedDateObj.getMonth() === orderDateObj.getMonth() &&
               selectedDateObj.getDate() === orderDateObj.getDate()
-            ) {
+          ) {
               const formattedDate = selectedDateObj.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
               });
-    
+  
               table.rows.push([
-                formattedDate,
-                order.vendor.vendorName,
-                order.vendor.address,
-                order.vendor.gst,
-                order.vendor.site,
-                product.nameOfMaterial,
-                product.used,
-                product.currentStock
+              formattedDate,
+              order.vendor.vendorName,
+              order.vendor.address,
+              order.vendor.gst,
+              order.vendor.site,
+              product.nameOfMaterial,
+              product.used,
+              product.currentStock
               ]);
-            }
+          }
           });
-        }
+      }
       });
-    }
+  }
   });
-    
+  
 
-    // Now you can generate the table as you intended
-    const initialX = 50;
-    const rowHeight = 25;
-    const columnWidth = 100;
+  // Now you can generate the table as you intended
+const initialY = doc.y + 10; // Added padding
+const columnWidth = 60; // Adjusted column width
+const totalWidth = table.headers.length * columnWidth;
 
-    // Draw the table header
-    doc.fontSize(12);
-    table.headers.forEach((header, i) => {
-      doc.text(header, initialX + i * columnWidth, doc.y, { width: columnWidth });
-    });
-    doc.moveDown();
+// Center the table horizontally
+const initialX = (doc.page.width - totalWidth) / 2;
 
-    // Draw the table rows
-    table.rows.forEach((row, i) => {
-      row.forEach((text, j) => {
-        doc.text(text, initialX + j * columnWidth, doc.y, { width: columnWidth });
-      });
-      doc.moveDown();
-    });
+// Draw the table header
+doc.fontSize(12).fillColor('#000');
+table.headers.forEach((header, i) => {
+  doc.text(header, initialX + i * columnWidth, initialY, { width: columnWidth, align: 'center' });
+});
+doc.moveDown();
 
-    doc.end();
+// Set the initial y position for the rows
+const rowHeight = 25;
+let currentY = doc.y;
+
+// Draw the table rows
+table.rows.forEach((row, i) => {
+  doc.fontSize(10).fillColor('#333');
+  row.forEach((text, j) => {
+  doc.text(text, initialX + j * columnWidth, currentY, { width: columnWidth, align: 'center' });
+  });
+  currentY += rowHeight;
+  doc.moveDown();
+});
+
+  doc.end();
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    res.status(500).send('Error generating PDF');
+  console.error('Error generating PDF:', error);
+  res.status(500).send('Error generating PDF');
   }
 };
 
 
 exports.downloadExcel = async (req, res) => {
   try {
-    const vendorName = req.params.vendorName;
-    const dateArray = JSON.parse(req.body.dateArray);
+  const vendorName = req.params.vendorName;
+  const dateArray = JSON.parse(req.body.dateArray);
+  const projectId = req.session.projectId;
 
-    console.log('Date Array:', dateArray);
+  console.log('Date Array:', dateArray);
 
-    const productOrders = await getVendorDetails(vendorName);
-    console.log('Product Orders:', productOrders);
+  const productOrders = await getVendorDetails(vendorName,projectId);
+  console.log('Product Orders:', productOrders);
 
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Material Report');
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet('Vendor Report');
 
-    // Define the columns
-    worksheet.columns = [
+  // Define the columns
+  worksheet.columns = [
       { header: 'Date', key: 'date' },
       { header: 'Vendor', key: 'vendorName' },
       { header: 'Address', key: 'address' },
@@ -136,60 +148,186 @@ exports.downloadExcel = async (req, res) => {
       { header: 'Material', key: 'nameOfMaterial' },
       { header: 'Unit', key: 'unit' },
       { header: 'Used', key: 'used' },
-    ];
+  ];
 
-    for (const order of productOrders) {
+  for (const order of productOrders) {
       let includeRecord = true;
       let formattedDate = '';
 
       if (dateArray && dateArray.length > 0) {
-        includeRecord = false;
+      includeRecord = false;
 
-        for (const selectedDate of dateArray) {
+      for (const selectedDate of dateArray) {
           const selectedDateObj = new Date(selectedDate);
           const orderDateObj = new Date(order.date);
 
           if (
-            selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
-            selectedDateObj.getMonth() === orderDateObj.getMonth() &&
-            selectedDateObj.getDate() === orderDateObj.getDate()
+          selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+          selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+          selectedDateObj.getDate() === orderDateObj.getDate()
           ) {
-            includeRecord = true;
-            formattedDate = selectedDateObj.toLocaleDateString('en-US', {
+          includeRecord = true;
+          formattedDate = selectedDateObj.toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'short',
               day: 'numeric',
-            });
-            break;
+          });
+          break;
           }
-        }
+      }
       }
 
       if (includeRecord && order.products && order.products.length > 0) {
-        for (const product of order.products) {
+      for (const product of order.products) {
           worksheet.addRow({
-            date: formattedDate,
-            vendorName: order.vendor.vendorName,
-            address: order.vendor.address,
-            gst: order.vendor.gst,
-            site: order.vendor.site,
-            nameOfMaterial: product.nameOfMaterial,
-            unit: product.unit,
-            used: product.used ? 'Yes' : 'No',
+          date: formattedDate,
+          vendorName: order.vendor.vendorName,
+          address: order.vendor.address,
+          gst: order.vendor.gst,
+          site: order.vendor.site,
+          nameOfMaterial: product.nameOfMaterial,
+          unit: product.unit,
+          used: product.used ? 'Yes' : 'No',
           });
-        }
       }
-    }
+      }
+  }
 
-    const buffer = await workbook.xlsx.writeBuffer();
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.setHeader('Content-Disposition', 'attachment; filename="material_details.xlsx"');
-    res.send(buffer);
+  const buffer = await workbook.xlsx.writeBuffer();
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename="material_details.xlsx"');
+  res.send(buffer);
   } catch (error) {
-    console.error('Error generating Excel:', error);
-    res.status(500).send('Error generating Excel');
+  console.error('Error generating Excel:', error);
+  res.status(500).send('Error generating Excel');
   }
 };
+
+
+const { getProductOrders } = require('../controller/prodController');
+
+exports.downloadPDFProd = async (req, res) => {
+  try {
+      const productName = req.params.productName;
+      const dateArray = JSON.parse(req.body.dateArray);
+  
+      const productOrders = await getProductOrders(productName);
+  
+      const doc = new PDFDocument();
+      res.setHeader('Content-Disposition', 'attachment; filename=material_details.pdf');
+      doc.pipe(res);
+  
+      // Set font style for the document
+      doc.font('Helvetica-Bold');
+  
+      doc.fontSize(18).text('Material Wise Details', { align: 'center' });
+      doc.moveDown();
+  
+      // Define the table object here
+      const table = {
+          headers: ['Date', 'Vendor', 'Address', 'GST', 'Site', 'Material'],
+          rows: []
+      };
+  
+      // Populate the table rows
+      productOrders.forEach(order => {
+          if (!dateArray || dateArray.length === 0) {
+          // If dateArray is null or empty, include all records
+          order.products.forEach(product => {
+              const orderDateObj = new Date(order.date);
+              const formattedDate = orderDateObj.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
+              });
+              const nameOfMaterial = product.nameOfMaterial;
+              const currentStock = product.currentStock;
+  
+              table.rows.push([
+              formattedDate,
+              order.vendor.vendorName,
+              order.vendor.address,
+              order.vendor.gst,
+              order.vendor.site,
+              nameOfMaterial,
+              product.used,
+              currentStock
+              ]);
+          });
+          } else {
+          // If dateArray is not null, filter records based on date
+          dateArray.forEach(selectedDate => {
+              const selectedDateObj = new Date(selectedDate);
+              order.products.forEach(product => {
+              const orderDateObj = new Date(order.date);
+  
+              if (
+                  selectedDateObj.getFullYear() === orderDateObj.getFullYear() &&
+                  selectedDateObj.getMonth() === orderDateObj.getMonth() &&
+                  selectedDateObj.getDate() === orderDateObj.getDate()
+              ) {
+                  const formattedDate = orderDateObj.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                  });
+                  const nameOfMaterial = product.nameOfMaterial;
+                  const currentStock = product.currentStock;
+  
+                  table.rows.push([
+                  formattedDate,
+                  order.vendor.vendorName,
+                  order.vendor.address,
+                  order.vendor.gst,
+                  order.vendor.site,
+                  nameOfMaterial,
+                  product.used,
+                  currentStock
+                  ]);
+              }
+              });
+          });
+          }
+      });
+  
+      // Set font style for the table
+      doc.font('Helvetica');
+  
+      const initialY = doc.y + 10; // Added padding
+      const columnWidth = 60; // Adjusted column width
+      const totalWidth = table.headers.length * columnWidth;
+  
+      // Center the table horizontally
+      const initialX = (doc.page.width - totalWidth) / 2;
+  
+      // Draw the table header
+      doc.fontSize(12).fillColor('#000');
+      table.headers.forEach((header, i) => {
+      doc.text(header, initialX + i * columnWidth, initialY, { width: columnWidth, align: 'center' });
+      });
+      doc.moveDown();
+  
+      // Set the initial y position for the rows
+      const rowHeight = 25;
+      let currentY = doc.y;
+  
+      // Draw the table rows
+      table.rows.forEach((row, i) => {
+      doc.fontSize(10).fillColor('#333');
+      row.forEach((text, j) => {
+          doc.text(text, initialX + j * columnWidth, currentY, { width: columnWidth, align: 'center' });
+      });
+      currentY += rowHeight;
+      doc.moveDown();
+      });
+  
+      doc.end();
+  
+      } catch (error) {
+      console.error('Error generating PDF:', error);
+      res.status(500).send('Error generating PDF');
+      }
+  };
 
 
 exports.downloadPDFallvendor = async (req, res) => {

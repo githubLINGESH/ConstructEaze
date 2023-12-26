@@ -26,11 +26,11 @@ router.post('/download-product-excel/:productName', accountStatementController.d
 router.get('/download-pdf-overall', accountStatementController.downloadPDFOverall);
 router.get('/download-excel-overall', accountStatementController.downloadExcelOverall);
 
-router.post('/download-all-vendor-pdf', accountStatementController.downloadPDFallvendor);
-router.post('/download-all-vendor-excel', accountStatementController.downloadExcelallvendor);
+router.post('/download-allvendors-pdf', accountStatementController.downloadPDFallvendor);
+router.post('/download-allvendors-excel', accountStatementController.downloadExcelallvendor);
 
-router.post('/download-all-product-pdf', accountStatementController.downloadPDFallproduct);
-router.post('/download-all-product-excel', accountStatementController.downloadExcelallproduct);
+router.post('/download-allproducts-pdf', accountStatementController.downloadPDFallproduct);
+router.post('/download-allproducts-excel', accountStatementController.downloadExcelallproduct);
 
 
 
